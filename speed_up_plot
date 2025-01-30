@@ -1,0 +1,13 @@
+N = np.array([4, 8, 16])
+
+T_1 = 9.95
+
+T_N = np.array([5.96, 3.05, 1.91])
+
+S_N = []
+for t in T_N:
+    S_N.append(T_1/t)
+
+plt.plot(N, np.array(S_N))
+plt.xlabel("Number of processors")
+plt.ylabel("Speedup")
