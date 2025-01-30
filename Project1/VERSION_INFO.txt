@@ -1,0 +1,3 @@
+ver1: poorly optimised, doesn't use rank 0 but does work
+ver2: uses rank 0, also works
+ver3: implementing time measurements. print statements for communication removed

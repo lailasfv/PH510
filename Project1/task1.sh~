@@ -1,0 +1,59 @@
+#!/bin/bash
+
+#======================================================
+#
+# Job script for week 5
+#
+#======================================================
+
+#======================================================
+# Propogate environment variables to the compute node
+#SBATCH --export=ALL
+#
+# Run in the standard partition (queue)
+#SBATCH --partition=teaching-gpu
+#
+# Specify project account
+#SBATCH --account=teaching
+#
+# No. of tasks required (ntasks=1 for a single-core job)
+#SBATCH --ntasks=16
+#SBATCH --distribution=block:block
+#
+# Specify (hard) runtime (HH:MM:SS)
+#SBATCH --time=1:00:00
+#
+# Job name
+#SBATCH --job-name=week5
+#
+# Output file
+#SBATCH --output=slurm-%j.out
+#======================================================
+
+module purge
+
+#Example module load command. 
+#Load any modules appropriate for your program's requirements
+
+module load fftw/gcc-8.5.0/3.3.10
+module load openmpi/gcc-8.5.0/4.1.1
+
+#======================================================
+# Prologue script to record job details
+# Do not change the line below
+#======================================================
+/opt/software/scripts/job_prologue.sh  
+#------------------------------------------------------
+
+echo "Ring rotation method"
+mpirun -np 16 ./task3a.py
+
+echo "Allreduce method"
+mpirun -np 16 ./task3b.py
+
+#======================================================
+# Epilogue script to record job endtime and runtime
+# Do not change the line below
+#======================================================
+/opt/software/scripts/job_epilogue.sh 
+#------------------------------------------------------
