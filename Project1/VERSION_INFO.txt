@@ -1,3 +1,4 @@
 ver1: poorly optimised, doesn't use rank 0 but does work
 ver2: uses rank 0, also works
 ver3: implementing time measurements. print statements for communication removed. 2 core does not parallelise?
+ver4 (pi_final): increased points from 10m->100m (oops) and clarified number of significant figures in print statement. Further fixed to pylint, comments, licensing and docstring also added

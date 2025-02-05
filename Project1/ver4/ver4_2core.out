@@ -1,0 +1,24 @@
+===================================================================================
+SLURM Job ID:            11723056
+Submit time:             Wed Feb 05 19:55:27 GMT 2025 (Unix Epoch time: 1738785327)
+Start time:              Wed Feb 05 19:56:39 GMT 2025 (Unix Epoch time: 1738785399)
+No. nodes:               1
+No. tasks:               2
+Job name:                Task1PH510
+Account:                 teaching
+QoS:                     teaching
+Partition (queue):       teaching-gpu
+Submit directory:        /users/xgb19123/PH510/PH510/Project1/ver4
+Script name:             /users/xgb19123/PH510/PH510/Project1/ver4/ver4_2core.sh
+Master node:             weegpu4
+Nodes used:              weegpu4
+Task distribution:       block:block
+===================================================================================
+
+The final calculation of pi for 2 workers is equal to 3.141592653591297
+Total time taken: 117.83849287033081 s
+===================================================================================
+SLURM job 11723056 ended:     Wed Feb 05 19:57:07 GMT 2025 (Unix Epoch time: 1738785427)
+This is an estimated end time using the 'date' command from node weegpu4.hpc.strath.ac.uk
+For accurate timings, use 'sacct -j 11723056 -X --format=Submit,Start,End,Elapsed'
+======================================================================================

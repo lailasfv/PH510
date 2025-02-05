@@ -19,7 +19,7 @@ sum1 = np.array(0, dtype=np.float64)
 # Assuming same total number of points regardless of no. processors
 # Confirming parallelisation requires all test to run over the same
 # total number of points
-num_points = int(10000000/nworkers)
+num_points = int(100000000/nworkers)
 dx = (nworkers*(num_points-1))**(-1)
 
 
@@ -61,6 +61,6 @@ else:  # Leader rank 0 calculates its own "chunk" and receives
     timeEnd = time.time()
     timeTaken = timeEnd-timeStart
 
-    print("The final calculation of pi for", nworkers, "workers is equal to",
+    print("The final calculation of pi for", nworkers, "workers is equal to %.15f" %
           FINALSUM)
     print("Total time taken:", timeTaken, "s")

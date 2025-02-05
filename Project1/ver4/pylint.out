@@ -1,0 +1,27 @@
+===================================================================================
+SLURM Job ID:            11723143
+Submit time:             Wed Feb 05 20:57:23 GMT 2025 (Unix Epoch time: 1738789043)
+Start time:              Wed Feb 05 20:58:39 GMT 2025 (Unix Epoch time: 1738789119)
+No. nodes:               1
+No. tasks:               1
+Job name:                PH510pylint
+Account:                 teaching
+QoS:                     teaching
+Partition (queue):       teaching-gpu
+Submit directory:        /users/xgb19123/PH510/PH510/Project1/ver4
+Script name:             /users/xgb19123/PH510/PH510/Project1/ver4/pylint.sh
+Master node:             weegpu4
+Nodes used:              weegpu4
+Task distribution:       block:block
+===================================================================================
+
+
+--------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+
+===================================================================================
+SLURM job 11723143 ended:     Wed Feb 05 20:57:10 GMT 2025 (Unix Epoch time: 1738789030)
+This is an estimated end time using the 'date' command from node weegpu4.hpc.strath.ac.uk
+For accurate timings, use 'sacct -j 11723143 -X --format=Submit,Start,End,Elapsed'
+======================================================================================
+slurmstepd: error: Pid 709744 is still in the freezer job cgroup.  It might be left uncleaned after the job.
