@@ -1,5 +1,7 @@
 import numpy as np
 
+# Task 1
+
 
 class Vector:
     def __init__(self, x, y, z):
@@ -28,22 +30,50 @@ class Vector:
                       (self.z*other.x-self.x*other.z),
                       (self.x*other.y-self.y*other.x))
 
+# Task 2
+
 
 class Vector_spherical(Vector):
     def __init__(self, rho, theta, phi):
-        self.x = rho*np.sin(phi)*np.cos(theta)  # this is in radiants DO WE NEED TO USE DEGREES
+        self.x = rho*np.sin(phi)*np.cos(theta)  # this is in radiants
+        # DO WE NEED TO USE DEGREES?
         self.y = rho*np.sin(phi)*np.sin(theta)
         self.z = rho*np.cos(phi)
 
     def __str__(self):
         rho = np.sqrt((self.x)**2+(self.y)**2+(self.z)**2)
-        theta = np.arctan(self.y/self.x)  # HERE WE MIGHT GET THE ISSUE OF THE TAN NOT SELECTING THE CORRECT ANGLE, FIND A WORK AROUND
+        theta = np.arctan(self.y/self.x)  # HERE WE MIGHT GET THE ISSUE OF
+        # THE TAN NOT SELECTING THE CORRECT ANGLE, FIND A WORK AROUND
         phi = np.arccos(self.z/rho)
         return f"({rho},{theta},{phi})"
 
 
 # you can use to test:
-v1 = Vector(3., 1.22, -0.5)
-v2 = Vector(5, -2, 10)
+# v1 = Vector(3., 1.22, -0.5)
+# v2 = Vector(5, -2, 10)
+# v3_sph = Vector_spherical(2, np.pi/2, np.pi/6)
 
-v3_sph = Vector_spherical(2, np.pi/2, np.pi/6)
+# Task 3
+# (a)
+def area_triangle(v1, v2):
+    # SEE IF WE PUT THIS IN CLASS
+    return (Vector.__cross__(v1, v2)).norm()/2
+
+
+v1_a_cart = Vector(1, 0, 0)
+v1_b_cart = Vector(0, 1, 0)
+# area_1_cart = (Vector.__cross__(v1_a_cart,v1_b_cart)).norm()/2
+area_1_cart = area_triangle(v1_a_cart, v1_b_cart)
+
+v2_a_cart = Vector(-1, -1+1, -1+1)
+v2_b_cart = Vector(-1+1, -1, -1+1)
+area_2_cart = area_triangle(v2_a_cart, v2_b_cart)
+
+v3_a_cart = Vector(1, 0, -1)
+v3_b_cart = Vector(1, 0, 0)
+area_3_cart = area_triangle(v3_a_cart, v3_b_cart)
+
+v4_a_cart = Vector(-1, 1, 0)
+v4_b_cart = Vector(0, 0, -1)
+area_4_cart = area_triangle(v4_a_cart, v4_b_cart)
+# I DO SEEM TO HAVE ISSUE WITH CALCULATION SLIGHTLY OFF FOR EVERYTHING??
