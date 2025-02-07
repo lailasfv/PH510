@@ -29,6 +29,21 @@ class Vector:
                       (self.x*other.y-self.y*other.x))
 
 
+class Vector_spherical(Vector):
+    def __init__(self, rho, theta, phi):
+        self.x = rho*np.sin(phi)*np.cos(theta)  # this is in radiants DO WE NEED TO USE DEGREES
+        self.y = rho*np.sin(phi)*np.sin(theta)
+        self.z = rho*np.cos(phi)
+
+    def __str__(self):
+        rho = np.sqrt((self.x)**2+(self.y)**2+(self.z)**2)
+        theta = np.arctan(self.y/self.x)  # HERE WE MIGHT GET THE ISSUE OF THE TAN NOT SELECTING THE CORRECT ANGLE, FIND A WORK AROUND
+        phi = np.arccos(self.z/rho)
+        return f"({rho},{theta},{phi})"
+
+
 # you can use to test:
 v1 = Vector(3., 1.22, -0.5)
 v2 = Vector(5, -2, 10)
+
+v3_sph = Vector_spherical(2, np.pi/2, np.pi/6)
