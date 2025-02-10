@@ -1,7 +1,7 @@
 import numpy as np
 
 # Task 1
-
+# ADD THAT WE SPECIFY THAT STUFF IS RADIANTS CAUSE WE ARE FANCY
 
 class Vector:
     def __init__(self, x, y, z):
@@ -10,7 +10,7 @@ class Vector:
         self.z = z
 
     def __str__(self):
-        return f"({self.x},{self.y},{self.z})"
+        return f"({self.x},{self.y},{self.z})" # REWRITE THAT WITH THE EXAMPLE
 
     def norm(self):
         return np.sqrt(self.x**2+self.y**2+self.z**2)
@@ -44,8 +44,9 @@ class Vector_spherical(Vector):
         rho = np.sqrt((self.x)**2+(self.y)**2+(self.z)**2)
         theta = np.arctan(self.y/self.x)  # HERE WE MIGHT GET THE ISSUE OF
         # THE TAN NOT SELECTING THE CORRECT ANGLE, FIND A WORK AROUND
+        # arctan2 -> takes 2 values and figures that out issue
         phi = np.arccos(self.z/rho)
-        return f"({rho},{theta},{phi})"
+        return f"({rho},{theta},{phi})" # REWRITE THAT WITH THE EXAMPLE
 
 
 # you can use to test:
@@ -57,6 +58,7 @@ class Vector_spherical(Vector):
 # (a)
 def area_triangle(v1, v2):
     # SEE IF WE PUT THIS IN CLASS
+    # WE COULD PUT THAT IN THE CLASS YEAH
     return (Vector.__cross__(v1, v2)).norm()/2
 
 
