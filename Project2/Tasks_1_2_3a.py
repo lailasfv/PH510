@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Feb 16 21:07:28 2025
+
+@author: skyed
+"""
+
 import numpy as np
 
 # Task 1
@@ -50,6 +57,9 @@ class Vector:
         return Vector((self.y*other.z-self.z*other.y),
                       (self.z*other.x-self.x*other.z),
                       (self.x*other.y-self.y*other.x))
+    def __area__(self, other):
+        """"LOOK HERE"""
+        return (Vector.__cross__(self, other)).norm()/2
 
 # Task 2
 
@@ -152,3 +162,16 @@ print(f"Triangle 4 area:{area_4_cart}")
 angle_4_cart = np.array([internal_angle(v4_a_cart, v4_b_cart), 
         internal_angle(v4_a_cart, v4_c_cart), internal_angle(v4_b_cart, v4_c_cart)]) * 180/np.pi
 print(f"Triangle 4 angles:{angle_4_cart}")
+
+
+"""LOOK HERE"""
+T1 = Vector_spherical(1, np.pi/2, 0)
+T2 = Vector_spherical(1,np.pi/2,np.pi)
+T3 = Vector_spherical(1,np.pi/2, 3*np.pi/2)
+def area_triangle2(v1, v2):
+    # SEE IF WE PUT THIS IN CLASS
+    # WE COULD PUT THAT IN THE CLASS YEAH
+    return (Vector_spherical.__cross__(v1, v2)).norm()/2
+v_sph_a = T2-T1
+v_sph_b = T3-T1
+area_sph = area_triangle2(v_sph_a, v_sph_b)
