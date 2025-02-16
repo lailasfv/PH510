@@ -16,7 +16,7 @@ class Vector:
         """
         Assumes floating point when printing
         """
-        return f"({self.x:6f},{self.y:6f},{self.z:6f})" # REWRITE THAT WITH THE EXAMPLE
+        return f"({self.x:6f},{self.y:6f},{self.z:6f})" 
 
     def norm(self):
         """
@@ -73,13 +73,14 @@ class Vector_spherical(Vector):
         # THE TAN NOT SELECTING THE CORRECT ANGLE, FIND A WORK AROUND
         # arctan2 -> takes 2 values and figures that out issue
         phi = np.arccos(self.z/rho)
-        return f"({rho},{theta},{phi})" # REWRITE THAT WITH THE EXAMPLE
+        return f"({rho},{theta},{phi})" 
 
 
 # you can use to test:
 # v1 = Vector(3., 1.22, -0.5)
 # v2 = Vector(5, -2, 10)
-# v3_sph = Vector_spherical(2, np.pi/2, np.pi/6)
+v3_sph = Vector_spherical(2, np.pi/2, np.pi/6)
+print(f"Spherical vector test: {v3_sph}")
 
 # Task 3
 # (a)
@@ -90,42 +91,64 @@ def area_triangle(v1, v2):
 
 def internal_angle(v1, v2):
     # a.b/|a||b|
-	return np.arccos(Vector.__dot__(v1, v2))/(Vector.norm(v1)*Vector.norm(v2))
+	return np.arccos((Vector.__dot__(v1, v2))/(Vector.norm(v1)*Vector.norm(v2)))
 
 
 
-# REMOVE THIS AFTER
-# v1a = (0, 0, 0)
-# v1b = (1, 0, 0)
-# v1c = (0, 1, 0)
-# What if we make class do this? Gives vector for given coordinates?
-v1_a_cart = Vector(1-0, 0-0, 0-0)
-v1_b_cart = Vector(0-0, 1-0, 0-0)
-v1_c_cart = Vector(0-1, 1-0, 0-0)
-# area_1_cart = (Vector.__cross__(v1_a_cart,v1_b_cart)).norm()/2
-area_1_cart = area_triangle(v1_a_cart, v1_b_cart)
-angle_1ab_cart = internal_angle(v1_a_cart, v1_b_cart)
+v1a = Vector(0, 0, 0)
+v1b = Vector(1, 0, 0)
+v1c = Vector(0, 1, 0)
+
+v1a_sph = Vector_spherical(0, 0, 0)
+v1b_sph = Vector_spherical(1, 0, 0)
+v1c_sph = Vector_spherical(1, np.pi/2, 0)
+
+area_1_cart = area_triangle(Vector.__sub__(v1b, v1a), Vector.__sub__(v1c, v1a))
+area_1_sph = area_triangle(v1b_sph-v1a_sph, v1c_sph - v1a_sph) # THIS DOES NOT WORK - the child class cannot seem to use the parent class methods that are used in the area_triangle function
+print(f"Triangle 1 area (cartesian) :{area_1_cart}")
+print(f"Triangle 1 area (spherical) :{area_1_sph}")
+angle_1_cart = np.array([internal_angle(Vector.__sub__(v1b, v1a), Vector.__sub__(v1c, v1a)), 
+        internal_angle(Vector.__sub__(v1c, v1a), Vector.__sub__(v1c, v1b)), 
+        internal_angle(Vector.__sub__(v1c, v1b), Vector.__sub__(v1b, v1a))]) * 180/np.pi
+print(f"Triangle 1 angles:{angle_1_cart}")
 
 
 # REMOVE THIS AFTER
 # v2a = (-1, -1, -1)
 # v2b = (0, -1, -1)
 # v2c = (-1, 0, -1)
-v2_a_cart = Vector(-1, -1+1, -1+1)
-v2_b_cart = Vector(-1+1, -1, -1+1)
-v2_c_cart = vector(-1-0, 0+1, -1+1)
+v2_a_cart = Vector(0-1, -1+1, -1+1) #b-a
+v2_b_cart = Vector(-1+1, -1, -1+1) #c-a
+v2_c_cart = Vector(-1-0, 0+1, -1+1) #c-b
 area_2_cart = area_triangle(v2_a_cart, v2_b_cart)
-angle_2ab_cart = internal_angle(v2_a_cart, v2_b_cart)
+print(f"Triangle 2 area:{area_2_cart}")
+angle_2_cart = np.array([internal_angle(v2_a_cart, v2_b_cart), 
+        internal_angle(v2_a_cart, v2_c_cart), internal_angle(v2_b_cart, v2_c_cart)]) * 180/np.pi
+print(f"Triangle 2 angles:{angle_2_cart}")
 
-v3_a_cart = Vector(1, 0, -1)
-v3_b_cart = Vector(1, 0, 0)
+# REMOVE THIS AFTER
+# v3a = (1, 0, 0)
+# v3b = (0, 0, 1)
+# v3c = (0, 0, 0)
+v3_a_cart = Vector(-1, 0, 1) #b-a
+v3_b_cart = Vector(-1, 0, 0) #c-a
+v3_c_cart = Vector(0, 0, -1) #c-b
 area_3_cart = area_triangle(v3_a_cart, v3_b_cart)
-angle_3ab_cart = internal_angle(v3_a_cart, v3_b_cart)
+print(f"Triangle 3 area:{area_3_cart}")
+angle_3_cart = np.array([internal_angle(v3_a_cart, v3_b_cart), 
+        internal_angle(v3_a_cart, v3_c_cart), internal_angle(v3_b_cart, v3_c_cart)]) * 180/np.pi
+print(f"Triangle 3 angles:{angle_3_cart}")
 
-v4_a_cart = Vector(-1, 1, 0)
-v4_b_cart = Vector(0, 0, -1)
+
+# REMOVE THIS AFTER
+# v4a = (0, 0, 0)
+# v4b = (1, -1, 0)
+# v4c = (0, 0, 1)
+v4_a_cart = Vector(1, -1, 0) #b-a
+v4_b_cart = Vector(0, 0, 1) #c-a
+v4_c_cart = Vector(-1, 1, 1) #c-b
 area_4_cart = area_triangle(v4_a_cart, v4_b_cart)
-angle_4ab_cart = internal_angle(v4_a_cart, v4_b_cart)
-angle_list = np.array([angle_1_cart, angle_2_cart, angle_3_cart, angle_4_cart])
-angle_degrees = angle_list*180/np.pi
-print(angle_degrees)
+print(f"Triangle 4 area:{area_4_cart}")
+angle_4_cart = np.array([internal_angle(v4_a_cart, v4_b_cart), 
+        internal_angle(v4_a_cart, v4_c_cart), internal_angle(v4_b_cart, v4_c_cart)]) * 180/np.pi
+print(f"Triangle 4 angles:{angle_4_cart}")
