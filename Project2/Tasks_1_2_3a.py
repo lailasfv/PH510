@@ -60,6 +60,11 @@ class Vector:
     def __area__(self, other):
         """"LOOK HERE"""
         return (Vector.__cross__(self, other)).norm()/2
+    def __areaVertices__(self, other,other2):
+        """"LOOK HERE"""
+        v_1 = other - self
+        v_2 = other2 - self
+        return (Vector.__cross__(v_1, v_2)).norm()/2
 
 # Task 2
 
@@ -169,6 +174,28 @@ print(f"Triangle 4 angles:{angle_4_cart}")
 
 """LOOK HERE"""
 # r, theta, phi
+T1_a = Vector_spherical(0, 0, 0)
+T1_b = Vector_spherical(1, 0, 0)
+T1_c = Vector_spherical(1, np.pi/2, 0)
+area_sph_1= Vector_spherical.__areaVertices__(T1_a,T1_b,T1_c)
+
+T2_a = Vector_spherical(1, 0, 0)
+T2_b = Vector_spherical(1, np.pi/2,0)
+T2_c = Vector_spherical(1, np.pi/2, np.pi)
+area_sph_2 = Vector_spherical.__areaVertices__(T2_a,T2_b,T2_c)
+
+T3_a = Vector_spherical(0, 0, 0)
+T3_b = Vector_spherical(2, 0, 0)
+T3_c = Vector_spherical(2, np.pi/2, 0)
+area_sph_3 = Vector_spherical.__areaVertices__(T3_a,T3_b,T3_c)
+
+T4_a = Vector_spherical(1, np.pi/2, 0)
+T4_b = Vector_spherical(1,np.pi/2,np.pi)
+T4_c = Vector_spherical(1,np.pi/2, 3*np.pi/2)
+area_sph_4 = Vector_spherical.__areaVertices__(T4_a,T4_b,T4_c)
+
+
+"""
 T1 = Vector_spherical(1, np.pi/2, 0) # HERE
 T2 = Vector_spherical(1,np.pi/2,np.pi)
 T3 = Vector_spherical(1,np.pi/2, 3*np.pi/2)
@@ -202,3 +229,6 @@ T3_c = Vector_spherical(2, np.pi/2, 0)
 v_sph_3_a = T3_b - T3_a
 v_sph_3_b = T3_c - T3_a
 area_sph_3 = Vector_spherical.__area__(v_sph_3_a, v_sph_3_b)
+
+# areas sph: 1) = 0.5,  2)=1.0, 3)=2.0, 4)=1.0
+"""
