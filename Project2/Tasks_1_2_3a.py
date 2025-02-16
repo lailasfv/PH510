@@ -73,17 +73,20 @@ class Vector_spherical(Vector):
         """
         Initialises instance with cartesian vector components
         """
-        self.x = rho*np.sin(phi)*np.cos(theta)  # this is in radians
-        self.y = rho*np.sin(phi)*np.sin(theta)
-        self.z = rho*np.cos(phi)
+        self.x = rho*np.sin(theta)*np.cos(phi)  # this is in radians
+        self.y = rho*np.sin(theta)*np.sin(phi)
+        self.z = rho*np.cos(theta)
 
     def __str__(self):
         rho = np.sqrt((self.x)**2+(self.y)**2+(self.z)**2)
-        theta = np.arctan(self.y/self.x)  # HERE WE MIGHT GET THE ISSUE OF
+        # theta = np.arctan(self.y/self.x)  # HERE WE MIGHT GET THE ISSUE OF
+        # theta = np.arctan2(self.y,self.x)
+        theta=np.arccos(self.z/np.sqrt(self.x**2+self.y**2+self.z**2))
         # THE TAN NOT SELECTING THE CORRECT ANGLE, FIND A WORK AROUND
         # arctan2 -> takes 2 values and figures that out issue
-        phi = np.arccos(self.z/rho)
-        return f"({rho},{theta},{phi})" 
+        # phi = np.arccos(self.z/np.sqrt((self.x)**2+(self.y)**2+(self.z)**2))
+        phi = np.arctan2(self.y,self.x)
+        return f"({rho},{theta},{phi})"
 
 
 # you can use to test:
@@ -165,7 +168,8 @@ print(f"Triangle 4 angles:{angle_4_cart}")
 
 
 """LOOK HERE"""
-T1 = Vector_spherical(1, np.pi/2, 0)
+# r, theta, phi
+T1 = Vector_spherical(1, np.pi/2, 0) # HERE
 T2 = Vector_spherical(1,np.pi/2,np.pi)
 T3 = Vector_spherical(1,np.pi/2, 3*np.pi/2)
 def area_triangle2(v1, v2):
@@ -174,4 +178,27 @@ def area_triangle2(v1, v2):
     return (Vector_spherical.__cross__(v1, v2)).norm()/2
 v_sph_a = T2-T1
 v_sph_b = T3-T1
-area_sph = area_triangle2(v_sph_a, v_sph_b)
+# area_sph = area_triangle2(v_sph_a, v_sph_b)
+area_sph_4 = Vector_spherical.__area__(v_sph_a,v_sph_b)
+
+T1_a = Vector_spherical(0, 0, 0)
+T1_b = Vector_spherical(1, 0, 0)
+T1_c = Vector_spherical(1, np.pi/2, 0)
+v_sph_1_a = T1_b - T1_a
+v_sph_1_b = T1_c - T1_a
+area_sph_1= Vector_spherical.__area__(v_sph_1_a,v_sph_1_b)
+
+T2_a = Vector_spherical(1, 0, 0)
+T2_b = Vector_spherical(1, np.pi/2,0)
+T2_c = Vector_spherical(1, np.pi/2, np.pi)
+v_sph_2_a = T2_b - T2_a
+v_sph_2_b = T2_c - T2_a
+area_sph_2 = Vector_spherical.__area__(v_sph_2_a, v_sph_2_b)
+
+T3_a = Vector_spherical(0, 0, 0)
+T3_b = Vector_spherical(2, 0, 0)
+T3_c = Vector_spherical(2, np.pi/2, 0)
+
+v_sph_3_a = T3_b - T3_a
+v_sph_3_b = T3_c - T3_a
+area_sph_3 = Vector_spherical.__area__(v_sph_3_a, v_sph_3_b)
