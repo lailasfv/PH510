@@ -178,21 +178,25 @@ T1_a = Vector_spherical(0, 0, 0)
 T1_b = Vector_spherical(1, 0, 0)
 T1_c = Vector_spherical(1, np.pi/2, 0)
 area_sph_1= Vector_spherical.__areaVertices__(T1_a,T1_b,T1_c)
+print(f"Triangle 1 area (spherical): {area_sph_1}")
 
 T2_a = Vector_spherical(1, 0, 0)
 T2_b = Vector_spherical(1, np.pi/2,0)
 T2_c = Vector_spherical(1, np.pi/2, np.pi)
 area_sph_2 = Vector_spherical.__areaVertices__(T2_a,T2_b,T2_c)
+print(f"Triangle 2 area (spherical): {area_sph_2}")
 
 T3_a = Vector_spherical(0, 0, 0)
 T3_b = Vector_spherical(2, 0, 0)
 T3_c = Vector_spherical(2, np.pi/2, 0)
 area_sph_3 = Vector_spherical.__areaVertices__(T3_a,T3_b,T3_c)
+print(f"Triangle 3 area (spherical): {area_sph_3}")
 
 T4_a = Vector_spherical(1, np.pi/2, 0)
 T4_b = Vector_spherical(1,np.pi/2,np.pi)
 T4_c = Vector_spherical(1,np.pi/2, 3*np.pi/2)
 area_sph_4 = Vector_spherical.__areaVertices__(T4_a,T4_b,T4_c)
+print(f"Triangle 4 area (spherical): {area_sph_4}")
 
 
 """
