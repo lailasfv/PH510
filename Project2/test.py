@@ -1,9 +1,28 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Feb 16 21:07:28 2025
+"""This module establishes a 3D vector class for use in doing simple
+vector calculations; particularly with vertices of triangles.
 
-@author: skyed
-"""
+MIT License
+
+Copyright (c) 2025 by Tyler Chauvy, Laila Safavi - University of Strathclyde
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE."""
 
 import numpy as np
 
@@ -142,8 +161,6 @@ print(f"Triangle 1 angles (spherical):{angle_1_sph*180/np.pi}")
 
 #------------------------------
 # TRIANGLE 2
-# THESE TRIANGLES DO NOT APPEAR TO BE THE SAME??
-# also cartesian angles broke and add to 90 degrees total lol
 
 v2a = Vector(-1.0, -1.0, -1.0)
 v2b = Vector(0, -1.0, -1.0)
@@ -165,8 +182,6 @@ print(f"Triangle 2 angles (spherical):{angle_2_sph*180/np.pi}")
 
 #------------------------------
 # TRIANGLE 3
-# DIFFERENT AREA FOR THIS ONE TOO??
-# also the angles are backwards
 
 v3a = Vector(1.0, 0, 0)
 v3b = Vector(0, 0, 1.0)
@@ -189,7 +204,9 @@ print(f"Triangle 3 angles (spherical):{angle_3_sph*180/np.pi}")
 
 #------------------------------
 # TRIANGLE 4
-# different area and angles AGAIN
+# WHY DO THE CARTESIAN ANGLES ADD TO 290 DEGREES?? arctan choosing the wrong angle??
+# because the second angle is being calculated as 135 but if it was 180-135 then
+# it would add to 180 as it should
 
 v4a = Vector(0, 0, 0)
 v4b = Vector(1.0, -1.0, 0)
