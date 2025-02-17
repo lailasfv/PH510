@@ -8,7 +8,6 @@ Created on Sun Feb 16 21:07:28 2025
 import numpy as np
 
 # Task 1
-# ADD THAT WE SPECIFY THAT STUFF IS RADIANS CAUSE WE ARE FANCY
 
 class Vector:
     """
@@ -59,17 +58,29 @@ class Vector:
                       (self.x*other.y-self.y*other.x))
 
     def __area__(self, other):
+        """
+        Given two instance vectors, returns value for area of triangle.
+        """
         return (Vector.__cross__(self, other)).norm()/2
 
     def __angle__(self, other):
+        """
+        Given two instance vectors, returns value (in radians) for angle between them.
+        """
         return np.arccos((Vector.__dot__(self, other))/(Vector.norm(self)*Vector.norm(other)))
 
     def __areaVertices__(self, other,other2):
+        """
+        Given three instance vertices, calculates vectors and returns value for area of triangle.
+        """
         v_1 = other - self
         v_2 = other2 - self
         return (Vector.__cross__(v_1, v_2)).norm()/2
 
     def __angleVertices__(self, other, other2):
+        """
+        Given three vertices of a triangle, calculates vectors and returns values (in radians) for all internal angles
+        """
         v_1 = other - self
         v_2 = other2 - self
         v_3 = other2 - other
@@ -90,7 +101,7 @@ class Vector_spherical(Vector):
     """
     def __init__(self, rho, theta, phi):
         """
-        Initialises instance with cartesian vector components
+        Given spherical polar coordinates (in radians), initialises instance with cartesian vector components
         """
         self.x = rho*np.sin(theta)*np.cos(phi)  # this is in radians
         self.y = rho*np.sin(theta)*np.sin(phi)
@@ -105,42 +116,19 @@ class Vector_spherical(Vector):
         # arctan2 -> takes 2 values and figures that out issue
         # phi = np.arccos(self.z/np.sqrt((self.x)**2+(self.y)**2+(self.z)**2))
         phi = np.arctan2(self.y,self.x)
-        return f"({rho},{theta},{phi})"
+        return f"({rho:6f},{theta:6f},{phi:6f})"
 
-
-# you can use to test:
-# v1 = Vector(3., 1.22, -0.5)
-# v2 = Vector(5, -2, 10)
-v3_sph = Vector_spherical(2, np.pi/2, np.pi/6)
-print(f"Spherical vector test: {v3_sph}")
-
-# Task 3
-# (a)
-def area_triangle(v1, v2):
-    # REMOVE THESE?
-    return (Vector.__cross__(v1, v2)).norm()/2
-
-def area_triangle2(v1, v2):
-    return (Vector_spherical.__cross__(v1, v2)).norm()/2
-
-def internal_angle(v1, v2):
-    # a.b/|a||b|
-	return np.arccos((Vector.__dot__(v1, v2))/(Vector.norm(v1)*Vector.norm(v2)))
-
-def internal_angle2(v1, v2):
-    # a.b/|a||b|
-	return np.arccos((Vector_spherical.__dot__(v1, v2))/(Vector_spherical.norm(v1)*Vector_spherical.norm(v2)))
 
 #------------------------------
 # TRIANGLE 1
 
 v1a = Vector(0, 0, 0)
-v1b = Vector(1, 0, 0)
-v1c = Vector(0, 1, 0)
+v1b = Vector(1.0, 0, 0)
+v1c = Vector(0, 1.0, 0)
 
 v1a_sph = Vector_spherical(0, 0, 0)
-v1b_sph = Vector_spherical(1, 0, 0)
-v1c_sph = Vector_spherical(1, np.pi/2, 0)
+v1b_sph = Vector_spherical(1.0, 0, 0)
+v1c_sph = Vector_spherical(1.0, np.pi/2, 0)
 
 area_1_cart = Vector.__areaVertices__(v1a, v1b, v1c)
 area_1_sph = Vector_spherical.__areaVertices__(v1a_sph, v1b_sph, v1c_sph)
@@ -155,15 +143,15 @@ print(f"Triangle 1 angles (spherical):{angle_1_sph*180/np.pi}")
 #------------------------------
 # TRIANGLE 2
 # THESE TRIANGLES DO NOT APPEAR TO BE THE SAME??
-# also cartesian angles broke and add to 90 deg total lol
+# also cartesian angles broke and add to 90 degrees total lol
 
-v2a = Vector(1, -1, -1)
-v2b = Vector(0, -1, -1)
-v2c = Vector(-1, 0, -1)
+v2a = Vector(-1.0, -1.0, -1.0)
+v2b = Vector(0, -1.0, -1.0)
+v2c = Vector(-1.0, 0, -1.0)
 
-v2a_sph = Vector_spherical(1, 0, 0)
-v2b_sph = Vector_spherical(1, np.pi/2, 0)
-v2c_sph = Vector_spherical(1, np.pi/2, np.pi)
+v2a_sph = Vector_spherical(1.0, 0, 0)
+v2b_sph = Vector_spherical(1.0, np.pi/2, 0)
+v2c_sph = Vector_spherical(1.0, np.pi/2, np.pi)
 
 area_2_cart = Vector.__areaVertices__(v2a, v2b, v2c)
 area_2_sph = Vector_spherical.__areaVertices__(v2a_sph, v2b_sph, v2c_sph)
@@ -180,13 +168,13 @@ print(f"Triangle 2 angles (spherical):{angle_2_sph*180/np.pi}")
 # DIFFERENT AREA FOR THIS ONE TOO??
 # also the angles are backwards
 
-v3a = Vector(1, 0, 0)
-v3b = Vector(0, 0, 1)
+v3a = Vector(1.0, 0, 0)
+v3b = Vector(0, 0, 1.0)
 v3c = Vector(0, 0, 0)
 
 v3a_sph = Vector_spherical(0, 0, 0)
-v3b_sph = Vector_spherical(2, 0, 0)
-v3c_sph = Vector_spherical(2, np.pi/2, 0)
+v3b_sph = Vector_spherical(2.0, 0, 0)
+v3c_sph = Vector_spherical(2.0, np.pi/2, 0)
 
 area_3_cart = Vector.__areaVertices__(v3a, v3b, v3c)
 area_3_sph = Vector_spherical.__areaVertices__(v3a_sph, v3b_sph, v3c_sph)
@@ -204,12 +192,12 @@ print(f"Triangle 3 angles (spherical):{angle_3_sph*180/np.pi}")
 # different area and angles AGAIN
 
 v4a = Vector(0, 0, 0)
-v4b = Vector(1, -1, 0)
-v4c = Vector(0, 0, 1)
+v4b = Vector(1.0, -1.0, 0)
+v4c = Vector(0, 0, 1.0)
 
-v4a_sph = Vector_spherical(1, np.pi/2, 0)
-v4b_sph = Vector_spherical(1, np.pi/2, np.pi)
-v4c_sph = Vector_spherical(1, np.pi/2, 3*np.pi/2)
+v4a_sph = Vector_spherical(1.0, np.pi/2, 0)
+v4b_sph = Vector_spherical(1.0, np.pi/2, np.pi)
+v4c_sph = Vector_spherical(1.0, np.pi/2, 3*np.pi/2)
 
 area_4_cart = Vector.__areaVertices__(v4a, v4b, v4c)
 area_4_sph = Vector_spherical.__areaVertices__(v4a_sph, v4b_sph, v4c_sph)
