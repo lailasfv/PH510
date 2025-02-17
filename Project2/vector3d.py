@@ -84,7 +84,8 @@ class Vector:
 
     def angle(self, other):
         """
-        Given two instance vectors, returns value (in radians) for angle between them.
+        Given two instance vectors, returns value (in radians) for angle 
+        between them.
         """
         return np.arccos((Vector.__dot__(self, other))/
                          (Vector.norm(self)*Vector.norm(other)))
@@ -100,8 +101,8 @@ class Vector:
 
     def angle_vertices(self, other, other2):
         """
-        Given three vertices of a triangle, calculates vectors and returns values (in radians)
-        for all internal angles
+        Given three vertices of a triangle, calculates vectors and 
+        returns values (in radians) for all internal angles
         """
         vba = other - self
         vab = self - other
