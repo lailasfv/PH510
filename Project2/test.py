@@ -100,12 +100,16 @@ class Vector:
         """
         Given three vertices of a triangle, calculates vectors and returns values (in radians) for all internal angles
         """
-        v_1 = other - self
-        v_2 = other2 - self
-        v_3 = other2 - other
-        angles = np.array([np.arccos((Vector.__dot__(v_1, v_2))/(Vector.norm(v_1)*Vector.norm(v_2))),
-            np.arccos((Vector.__dot__(v_1, v_3))/(Vector.norm(v_1)*Vector.norm(v_3))),
-            np.arccos((Vector.__dot__(v_2, v_3))/(Vector.norm(v_2)*Vector.norm(v_3)))])
+        vba = other - self
+        vab = self - other
+        vca = other2 - self
+        vac = self - other2
+        vcb = other2 - other
+        vbc = other - other2
+        angles = np.array([np.arccos((Vector.__dot__(vba, vca))/(Vector.norm(vba)*Vector.norm(vca))),
+            np.arccos((Vector.__dot__(vab, vcb))/(Vector.norm(vab)*Vector.norm(vcb))),
+            np.arccos((Vector.__dot__(vac, vbc))/(Vector.norm(vac)*Vector.norm(vbc)))])
+        # print(np.sum(angles))
         return angles
 
 
