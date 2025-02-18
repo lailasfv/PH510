@@ -41,7 +41,7 @@ class Vector:
         """
         Assumes floating point when printing
         """
-        return f"({self.x:6f},{self.y:6f},{self.z:6f})" 
+        return f"({self.x:6f},{self.y:6f},{self.z:6f})"
 
     def norm(self):
         """
