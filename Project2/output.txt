@@ -1,0 +1,17 @@
+Triangle 1 area (cartesian) :0.50
+Triangle 1 angles (cartesian):[90. 45. 45.]
+Triangle 2 area (cartesian) :0.50
+Triangle 2 angles (cartesian):[90. 45. 45.]
+Triangle 3 area (cartesian) :0.50
+Triangle 3 angles (cartesian):[45. 45. 90.]
+Triangle 4 area (cartesian) :0.71
+Triangle 4 angles (cartesian):[90. 35. 55.] 
+
+Triangle 1 area (spherical) :0.50
+Triangle 1 angles (spherical):[90. 45. 45.]
+Triangle 2 area (spherical) :1.00
+Triangle 2 angles (spherical):[90. 45. 45.]
+Triangle 3 area (spherical) :2.00
+Triangle 3 angles (spherical):[90. 45. 45.]
+Triangle 4 area (spherical) :1.00
+Triangle 4 angles (spherical):[45. 45. 90.]
