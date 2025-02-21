@@ -37,13 +37,11 @@ class Monte_Carlo:
     streams = parent_rng.spawn(nworkers)
     # HOW DO I THEN GET MY NUMBERS FROM THAT?????????
     if rank != 0:  # Workers calculate and send their own "chunk"
-        start=rank/nworkers # WRONG
-        end=(rank+1)/nworkers # WRONG
         i = 0
         # WE COULD JUST HAVE dim=len(starts)
         if i<dim:
-            start=(rank)*(self.ends[i]-self.starts[i])/nworkers+GO
-            end=(rank+1)*(self.ends[i]-self.starts[i])/nworkers+GO
+            start=(rank)*(self.ends[i]-self.starts[i])/nworkers+self.strats[i]
+            end=(rank+1)*(self.ends[i]-self.starts[i])/nworkers+self.strats[i]
         # NO BASICALLY WHAT WE NEED HERE IS FOR 3D WE HAVE
         # FOR IN LOOP THROUGH FIRST DIM:
             # FOR IN LOOP THROUGH SECOND DIM:
