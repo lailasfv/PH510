@@ -1,0 +1,52 @@
+
+import numpy as np
+from mpi4py import MPI
+
+# MPI.Init()
+comm = MPI.COMM_WORLD
+from numpy.random import SeedSequence, default_rng
+
+
+
+class Monte_Carlo:
+    def __init__(self,a,b,f):
+        self.a = a
+        self.b = b
+        self.f=func 
+    
+    '''
+    def __str__(self):
+        """
+        Assumes floating point when printing
+        """
+        return str(self.f(self.a))
+    '''
+    rank = comm.Get_rank()
+    size = comm.Get_size()
+    nworkers = size  # processor rank 0 is leader, the rest are workers
+    # TRYING TO GET RANDOM NUMBERS YOU CAN GET AGAIN I THINK
+    parent_rng = default_rng(12345)
+    streams = parent_rng.spawn(nworkers)
+    # HOW DO I THEN GET MY NUMBERS FROM THAT?????????
+    if rank != 0:  # Workers calculate and send their own "chunk"
+        start=rank/nworkers
+        end=(rank+1)/nworkers
+        # GET RANDOM POINTS
+        # DO THE INTEGRAND
+        request = comm.Isend(sum1, dest=0)
+        request.wait()  # Ensures rank 0 is ready to receive
+    else:  # Leader rank 0 calculates its own "chunk"
+        FINALSUM = 0
+        start = 0
+        end = (rank+1)/nworkers
+        # GET RANDOM POINTS
+        # DO THE INTEGRAND
+        for i in range(1, nworkers):  # Takes values from all workers
+            comm.Recv(sum1, source=i)
+            FINALSUM += sum1
+    # The leader rank is the last rank to process the data
+
+def func(x):
+    return x**2
+
+AH= Monte_Carlo(2, 3, func)
