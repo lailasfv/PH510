@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Feb 21 18:55:08 2025
+
+@author: skyed
+"""
+
 
 import numpy as np
 from mpi4py import MPI
@@ -9,10 +16,11 @@ from numpy.random import SeedSequence, default_rng
 
 
 class Monte_Carlo:
-    def __init__(self,a,b,f):
-        self.a = a
-        self.b = b
-        self.f=func 
+    def __init__(self,starts, ends,f,dim):
+        self.starts = starts
+        self.ends = ends
+        self.f=func
+        self.dim = dim
     
     '''
     def __str__(self):
@@ -29,17 +37,31 @@ class Monte_Carlo:
     streams = parent_rng.spawn(nworkers)
     # HOW DO I THEN GET MY NUMBERS FROM THAT?????????
     if rank != 0:  # Workers calculate and send their own "chunk"
-        start=rank/nworkers
-        end=(rank+1)/nworkers
+        start=rank/nworkers # WRONG
+        end=(rank+1)/nworkers # WRONG
+        i = 0
+        # WE COULD JUST HAVE dim=len(starts)
+        if i<dim:
+            start=(rank)*(self.ends[i]-self.starts[i])/nworkers+GO
+            end=(rank+1)*(self.ends[i]-self.starts[i])/nworkers+GO
+        # NO BASICALLY WHAT WE NEED HERE IS FOR 3D WE HAVE
+        # FOR IN LOOP THROUGH FIRST DIM:
+            # FOR IN LOOP THROUGH SECOND DIM:
+                # FOR IN LOOPS THROUGH THIRD DIM:
+        # BUT HOW TO GET LOOPS INSIDE EACH OTHERS WHEN DIM CHANGES?
         # GET RANDOM POINTS
+        # need to get random points but in the mean time:
+        points = np.linspace(start,end,100)
         # DO THE INTEGRAND
         request = comm.Isend(sum1, dest=0)
         request.wait()  # Ensures rank 0 is ready to receive
     else:  # Leader rank 0 calculates its own "chunk"
         FINALSUM = 0
-        start = 0
-        end = (rank+1)/nworkers
+        start = 0 # WRONG
+        end = (rank+1)/nworkers # WRONG
         # GET RANDOM POINTS
+        # need to get random points but in the mean time:
+        points = np.linspace(start,end,100)
         # DO THE INTEGRAND
         for i in range(1, nworkers):  # Takes values from all workers
             comm.Recv(sum1, source=i)
