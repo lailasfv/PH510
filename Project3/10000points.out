@@ -1,0 +1,28 @@
+===================================================================================
+SLURM Job ID:            11813275
+Submit time:             Tue Mar 04 19:54:47 GMT 2025 (Unix Epoch time: 1741118087)
+Start time:              Tue Mar 04 19:54:53 GMT 2025 (Unix Epoch time: 1741118093)
+No. nodes:               1
+No. tasks:               4
+Job name:                PH510Assignment3
+Account:                 teaching
+QoS:                     teaching
+Partition (queue):       teaching-gpu
+Submit directory:        /users/xgb19123/PH510/PH510/Project3
+Script name:             /users/xgb19123/PH510/PH510/Project3/mc.sh
+Master node:             weegpu4
+Nodes used:              weegpu4
+Task distribution:       block:block
+===================================================================================
+
+Test function x^2 between 2 and 3: ([[6.70545857e-02]
+ [1.83214834e-06]
+ [1.83214834e-06]])
+Circle with x 1 to 5 and y 2 to 6: ([[6.70602933e-02 6.74573630e-02]
+ [1.96500913e-06 2.61481244e-06]
+ [1.96500913e-06 2.61481244e-06]])
+===================================================================================
+SLURM job 11813275 ended:     Tue Mar 04 19:53:48 GMT 2025 (Unix Epoch time: 1741118028)
+This is an estimated end time using the 'date' command from node weegpu4.hpc.strath.ac.uk
+For accurate timings, use 'sacct -j 11813275 -X --format=Submit,Start,End,Elapsed'
+======================================================================================
