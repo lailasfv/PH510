@@ -1,0 +1,89 @@
+===================================================================================
+SLURM Job ID:            11809422
+Submit time:             Tue Mar 04 01:25:36 GMT 2025 (Unix Epoch time: 1741051536)
+Start time:              Tue Mar 04 01:25:36 GMT 2025 (Unix Epoch time: 1741051536)
+No. nodes:               1
+No. tasks:               4
+Job name:                PH510Assignment3
+Account:                 teaching
+QoS:                     teaching
+Partition (queue):       teaching-gpu
+Submit directory:        /users/xgb19123/PH510/PH510/Project3
+Script name:             /users/xgb19123/PH510/PH510/Project3/mc.sh
+Master node:             weegpu4
+Nodes used:              weegpu4
+Task distribution:       block:block
+===================================================================================
+
+Rank 0 sum_f equals: [40.71675591]
+Rank 0 f_square equals: [86.54458406]
+Rank 3 sum_f equals: [43.43493705]
+Rank 3 f_square equals: [57.44504502]
+Rank 2 sum_f equals: [31.05425352]
+Rank 2 f_square equals: [35.99042278]
+Rank 1 sum_f equals: [40.94667804]
+Rank 1 f_square equals: [53.4757164]
+Rank 2 sum_f equals: [32.85417446 36.30110954]
+Rank 2 f_square equals: [24.47339521 80.17179173]
+Rank 3 sum_f equals: [39.56018282 73.5052618 ]
+Rank 3 f_square equals: [  64.30054531 1248.78649471]
+Rank 0 sum_f equals: [51.29919522 51.41732804]
+Rank 0 f_square equals: [420.00238717 342.9723142 ]
+Rank 1 sum_f equals: [37.01853816 59.89829265]
+Rank 1 f_square equals: [ 56.36579739 536.37920504]
+Traceback (most recent call last):
+  File "./VERY_rough_draft_WIP2.py", line 87, in <module>
+    circle = Monte_Carlo ([1,2], [5,6], num_points, step)
+  File "./VERY_rough_draft_WIP2.py", line 23, in __init__
+    self.data = self.integral()
+  File "./VERY_rough_draft_WIP2.py", line 61, in integral
+    comm.Allreduce(sum_f, FINAL_SUM_F)  # These take value of sum_f for all ranks and sum them into FINAL_...
+  File "mpi4py/MPI/Comm.pyx", line 876, in mpi4py.MPI.Comm.Allreduce
+  File "mpi4py/MPI/msgbuffer.pxi", line 761, in mpi4py.MPI._p_msg_cco.for_allreduce
+ValueError: mismatch in send count 2 and receive count 1
+Traceback (most recent call last):
+  File "./VERY_rough_draft_WIP2.py", line 87, in <module>
+    circle = Monte_Carlo ([1,2], [5,6], num_points, step)
+  File "./VERY_rough_draft_WIP2.py", line 23, in __init__
+    self.data = self.integral()
+  File "./VERY_rough_draft_WIP2.py", line 61, in integral
+    comm.Allreduce(sum_f, FINAL_SUM_F)  # These take value of sum_f for all ranks and sum them into FINAL_...
+  File "mpi4py/MPI/Comm.pyx", line 876, in mpi4py.MPI.Comm.Allreduce
+  File "mpi4py/MPI/msgbuffer.pxi", line 761, in mpi4py.MPI._p_msg_cco.for_allreduce
+ValueError: mismatch in send count 2 and receive count 1
+Traceback (most recent call last):
+  File "./VERY_rough_draft_WIP2.py", line 87, in <module>
+    circle = Monte_Carlo ([1,2], [5,6], num_points, step)
+  File "./VERY_rough_draft_WIP2.py", line 23, in __init__
+    self.data = self.integral()
+  File "./VERY_rough_draft_WIP2.py", line 61, in integral
+    comm.Allreduce(sum_f, FINAL_SUM_F)  # These take value of sum_f for all ranks and sum them into FINAL_...
+  File "mpi4py/MPI/Comm.pyx", line 876, in mpi4py.MPI.Comm.Allreduce
+  File "mpi4py/MPI/msgbuffer.pxi", line 761, in mpi4py.MPI._p_msg_cco.for_allreduce
+ValueError: mismatch in send count 2 and receive count 1
+Traceback (most recent call last):
+  File "./VERY_rough_draft_WIP2.py", line 87, in <module>
+    circle = Monte_Carlo ([1,2], [5,6], num_points, step)
+  File "./VERY_rough_draft_WIP2.py", line 23, in __init__
+    self.data = self.integral()
+  File "./VERY_rough_draft_WIP2.py", line 61, in integral
+    comm.Allreduce(sum_f, FINAL_SUM_F)  # These take value of sum_f for all ranks and sum them into FINAL_...
+  File "mpi4py/MPI/Comm.pyx", line 876, in mpi4py.MPI.Comm.Allreduce
+  File "mpi4py/MPI/msgbuffer.pxi", line 761, in mpi4py.MPI._p_msg_cco.for_allreduce
+ValueError: mismatch in send count 2 and receive count 1
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[50971,1],0]
+  Exit code:    1
+--------------------------------------------------------------------------
+===================================================================================
+SLURM job 11809422 ended:     Tue Mar 04 01:24:39 GMT 2025 (Unix Epoch time: 1741051479)
+This is an estimated end time using the 'date' command from node weegpu4.hpc.strath.ac.uk
+For accurate timings, use 'sacct -j 11809422 -X --format=Submit,Start,End,Elapsed'
+======================================================================================
