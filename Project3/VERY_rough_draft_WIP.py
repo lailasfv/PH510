@@ -68,14 +68,23 @@ class Monte_Carlo:
 def func(x):
     return x**2
 
-def circle_unit(x):
-    return 2 * np.sqrt(1-x**2)
+def circle_unit(x, R):
+    return 2 * np.sqrt(R-x**2)
 
 num_points = int(100000)
 
 AH = Monte_Carlo([2], [3], num_points, func)
 
-circle = Monte_Carlo ([1], [5], num_points, circle_unit)
+
+# NOTE - the shapes need to be centred around the origin for this to work. 
+# We can change this later maybe
+
+R = 1
+dim = 1
+a = np.repeat([-R, dim])
+b = np.repeat([R, dim])
+circle = Monte_Carlo (a, b, num_points, circle_unit)
+
 if rank ==0:
     print(f"Test function x^2 between 2 and 3: {AH}")
     print(f"Circle with x 1 to 5: {circle}")
