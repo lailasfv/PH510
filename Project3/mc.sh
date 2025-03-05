@@ -46,7 +46,6 @@ module load openmpi/gcc-8.5.0/4.1.1
 #------------------------------------------------------
 
 mpirun -np 4 ./VERY_rough_draft_WIP.py
-mpirun -np 4 ./dart.py
 
 #======================================================
 # Epilogue script to record job endtime and runtime

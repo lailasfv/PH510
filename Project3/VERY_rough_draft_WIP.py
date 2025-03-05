@@ -58,11 +58,10 @@ class Monte_Carlo:
         while d<dim:
             prefactor1=prefactor1*(self.ends[d]-self.starts[d]) # we get our (b-a)(c-d...)
             d=d+1
-        #print("pref1",prefactor1)
-        #print("pref2", prefactor2)
+
         FINAL_I = prefactor1*prefactor2*FINAL_SUM_F  # our integral
-        FINAL_VAR = prefactor2*(FINAL_F_SQUARED*prefactor2-(FINAL_SUM_F*prefactor2)**2) # our variance
-        FINAL_ERROR = prefactor1*FINAL_VAR # our error
+        FINAL_VAR = prefactor2*(FINAL_F_SQUARED*prefactor2-(FINAL_SUM_F*prefactor2)**2)  # our variance
+        FINAL_ERROR = prefactor1*np.sqrt(FINAL_VAR)  # our error
 
         return np.array([FINAL_I, FINAL_VAR, FINAL_ERROR])
 
@@ -70,8 +69,19 @@ class Monte_Carlo:
 def step(x, R):  # FUNCTION FOR ANY ROUND SHAPE
     return 1 * (round(np.sum(np.square(x)),5) <= (R**2))
 
+def test(x, R):
+    R = 0
+    return x**2 + R
 
-num_points = int(200000)
+num_points = int(500000)
+
+a = np.array([3])
+b = np.array([6])
+
+test_x_square = Monte_Carlo(a, b, num_points, test)
+
+if rank == 0:
+    print(f"Evaluating integral of x^2 between {a} and {b}: {test_x_square}")
 
 radius = 1
 radius2 = 3
@@ -95,3 +105,6 @@ if rank == 0:
     print(f"Real value: {real}")
     print(f"5D Sphere with radius {radius2}: {sphere2}")
     print(f"Real value: {real2}")
+
+
+MPI.Finalize()

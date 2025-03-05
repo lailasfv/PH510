@@ -1,0 +1,27 @@
+===================================================================================
+SLURM Job ID:            11817082
+Submit time:             Wed Mar 05 22:41:34 GMT 2025 (Unix Epoch time: 1741214494)
+Start time:              Wed Mar 05 22:41:34 GMT 2025 (Unix Epoch time: 1741214494)
+No. nodes:               1
+No. tasks:               4
+Job name:                PH510Assignment3
+Account:                 teaching
+QoS:                     teaching
+Partition (queue):       teaching-gpu
+Submit directory:        /users/xgb19123/PH510/PH510/Project3
+Script name:             /users/xgb19123/PH510/PH510/Project3/mc.sh
+Master node:             weegpu4
+Nodes used:              weegpu4
+Task distribution:       block:block
+===================================================================================
+
+Evaluating integral of x^2 between [3] and [6]: (Integral: 63.00437263803295, Var: 3.059565245059764e-05, Err: 0.016594001086398025)
+5D Sphere with radius 1: (Integral: 5.264288, Var: 6.87228944595e-08, Err: 0.00838881659869424)
+Real value: 5.263789013914324
+5D Sphere with radius 3: (Integral: 1279.1908799999999, Var: 6.87215524875e-08, Err: 2.0384625303650816)
+Real value: 1279.1007303811807
+===================================================================================
+SLURM job 11817082 ended:     Wed Mar 05 22:40:49 GMT 2025 (Unix Epoch time: 1741214449)
+This is an estimated end time using the 'date' command from node weegpu4.hpc.strath.ac.uk
+For accurate timings, use 'sacct -j 11817082 -X --format=Submit,Start,End,Elapsed'
+======================================================================================
