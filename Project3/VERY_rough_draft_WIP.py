@@ -60,7 +60,7 @@ class Monte_Carlo:
             d=d+1
         #print("pref1",prefactor1)
         #print("pref2", prefactor2)
-        FINAL_I = prefactor1*prefactor2*FINAL_SUM_F / nworkers # our integral
+        FINAL_I = prefactor1*prefactor2*FINAL_SUM_F  # our integral
         FINAL_VAR = prefactor2*(FINAL_F_SQUARED*prefactor2-(FINAL_SUM_F*prefactor2)**2) # our variance
         FINAL_ERROR = prefactor1*FINAL_VAR # our error
 
@@ -87,6 +87,11 @@ b2 = np.repeat(radius2, dimensions)
 sphere = Monte_Carlo (a, b, num_points, step)
 sphere2 = Monte_Carlo (a2, b2, num_points, step)
 
+real = 8/15*np.pi**2*radius**dimensions
+real2 = 8/15*np.pi**2*radius2**dimensions
+
 if rank == 0:
     print(f"5D Sphere with radius {radius}: {sphere}")
+    print(f"Real value: {real}")
     print(f"5D Sphere with radius {radius2}: {sphere2}")
+    print(f"Real value: {real2}")
