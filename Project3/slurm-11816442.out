@@ -1,7 +1,7 @@
 ===================================================================================
-SLURM Job ID:            11815204
-Submit time:             Wed Mar 05 17:43:56 GMT 2025 (Unix Epoch time: 1741196636)
-Start time:              Wed Mar 05 17:44:20 GMT 2025 (Unix Epoch time: 1741196660)
+SLURM Job ID:            11816442
+Submit time:             Wed Mar 05 21:00:01 GMT 2025 (Unix Epoch time: 1741208401)
+Start time:              Wed Mar 05 21:00:09 GMT 2025 (Unix Epoch time: 1741208409)
 No. nodes:               1
 No. tasks:               4
 Job name:                PH510Assignment3
@@ -15,20 +15,9 @@ Nodes used:              weegpu4
 Task distribution:       block:block
 ===================================================================================
 
-Circle with R =  1
-Monte carlo value: (3.14211)
-Actual value: 3.141592653589793
-Sphere with R =  1
-Monte carlo value: (4.1819)
-Actual value: 4.1887902047863905
-Circle with R =  3
-Monte carlo value: (28.27899)
-Actual value: 28.274333882308138
-Sphere with R =  3
-Monte carlo value: (112.9113)
-Actual value: 113.09733552923254
+5D Sphere with x -1 to 1: (Integral: 1.3156400000000001, Var: 1.7176194121875004e-07, Err: 5.496382119000001e-06)
 ===================================================================================
-SLURM job 11815204 ended:     Wed Mar 05 17:43:08 GMT 2025 (Unix Epoch time: 1741196588)
+SLURM job 11816442 ended:     Wed Mar 05 20:58:59 GMT 2025 (Unix Epoch time: 1741208339)
 This is an estimated end time using the 'date' command from node weegpu4.hpc.strath.ac.uk
-For accurate timings, use 'sacct -j 11815204 -X --format=Submit,Start,End,Elapsed'
+For accurate timings, use 'sacct -j 11816442 -X --format=Submit,Start,End,Elapsed'
 ======================================================================================

@@ -11,7 +11,7 @@ from mpi4py import MPI
 # MPI.Init()
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
-size = comm.Get_size()
+nworkers = comm.Get_size()
 
 from numpy.random import SeedSequence, default_rng
 
@@ -29,38 +29,31 @@ class Monte_Carlo:
     
     def integral(self):
         dim = len(self.starts)
-        print("dim",dim)
-        nworkers = size  # processor rank 0 is leader, the rest are workers
+        R = self.starts[0] # Radius of shape if shape
         ss = SeedSequence(12345) # getting the random numbers
         child_seeds = ss.spawn(nworkers) # random numbers for each worker
         streams = [default_rng(s) for s in child_seeds]
         points = streams[rank].random((self.N,dim)) # getting the random numbers in arrays we like
+
+        sum_f = np.array(0, dtype=np.float64) # Sending messages in MPI comm requires array
+        expect_f_squared = np.array(0, dtype=np.float64)
+
         for p in points:
             count = 0
             while count<dim:
-                p[count]=p[count]*(self.ends[count]-self.starts[count])+self.starts[count]  # making sure they are in the interval we need them to be
-                
+                p[count]=p[count]*(self.ends[count]-self.starts[count])+self.starts[count]  # making sure they are in the interval we need them to be             
                 count=count+1
-        # AND LOOK INTO THE INFINITY CASE
-        #print("points", points)
-        sum_f = np.array(0, dtype=np.float64) # Sending messages in MPI comm requires array
-        expect_f_squared = np.array(0, dtype=np.float64)
-        for p in points:
-            sum_f = sum_f + (self.f(p)) # we get sum(f) for each worker
-            #print("p", p)
-            #print("f(p)",(self.f(p)))
-            #print("sum", sum_f)
-            #print()
-            expect_f_squared = expect_f_squared + (self.f(p))**2 # we get sum(f**2) for each worker
+            sum_f = sum_f + (self.f(p, R)) # we get sum(f) for each worker
+            expect_f_squared = expect_f_squared + (self.f(p, R))**2 # we get sum(f**2) for each worker
 
-        FINAL_SUM_F = np.empty(dim, dtype=np.float64)  # Needs to have the same dimensions as the message it's receiving
-        FINAL_F_SQUARED = np.empty(dim, dtype=np.float64) 
+        FINAL_SUM_F = np.array(0, dtype=np.float64)
+        FINAL_F_SQUARED = np.array(0, dtype=np.float64)
 
         comm.Allreduce(sum_f, FINAL_SUM_F)  # These take value of sum_f for all ranks and sum them into FINAL_...
         comm.Allreduce(expect_f_squared, FINAL_F_SQUARED)
         
         prefactor1=1 # this will be used to create the (b-a)(d-c)...
-        prefactor2=1/(num_points*(size)) # MAKE SURE THE CORRECT NUMBER OF POINTS HERE
+        prefactor2=1/(num_points*nworkers) 
         d=0
         while d<dim:
             prefactor1=prefactor1*(self.ends[d]-self.starts[d]) # we get our (b-a)(c-d...)
@@ -74,25 +67,17 @@ class Monte_Carlo:
         return np.array([FINAL_I, FINAL_VAR, FINAL_ERROR])
 
 
-def func(x):
-    return x**2
+def step(x, R):  # FUNCTION FOR ANY SHAPE
+    return 1 * (round(np.sum(np.square(x)),5) <= (R**2))
 
-
-
-def step(x):  # FUNCTION FOR CIRCLE
-    return 1 * (round(x[0]**2+x[1]**2,5) <= 1)
-
-def step(x):  # FUNCTION FOR SPHERE
-    return 1 * (round(x[0]**2+x[1]**2+x[2]**2,5) <= 1)
-
-def step(x):  # FUNCTION FOR SPHERE 5D
-    return 1 * (round(x[0]**2+x[1]**2+x[2]**2+x[3]**2+x[4]**2,5) <= 1)
 
 num_points = int(200000)
 
-a = np.repeat(-1, 5)
-b = np.repeat(1, 5)
+radius = 1
+
+a = np.repeat(-radius, 5)
+b = np.repeat(radius, 5)
 
 sphere2 = Monte_Carlo (a, b, num_points, step)
-if rank ==0:
+if rank == 0:
     print(f"5D Sphere with x -1 to 1: {sphere2}")
