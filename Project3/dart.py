@@ -45,7 +45,6 @@ class Monte_Dart:
         for p in points:
             count = 0
             while count<dim:
-                p[count]=p[count]*self.ends[count] # making sure they are in the interval we need them to be
                 p[count]=p[count]*self.ends[0] # making sure they are in the interval we need them to be
                 count=count+1
 
@@ -60,8 +59,6 @@ class Monte_Dart:
         # The ratio of points inside shape : points inside unit shape = volume ratio (e.g. sphere:cube)
         # 2R bc that's the length of the cube
 
-        measure = 2**dim * CONTAINED/(self.N*nworkers)
-
         measure = (2*self.ends[0])**dim * CONTAINED/(self.N*nworkers)
 
         return measure
@@ -69,16 +66,21 @@ class Monte_Dart:
 
 
 def circle_dart(xy, R):
-    if xy[0]**2 + xy[1]**2 <=R:
-    if xy[0]**2 + xy[1]**2 <= (R**2):
+    if np.sum(np.square(xy)) <= (R**2):
         thing = 1
     else:
         thing = 0
     return thing
 
 def sphere_dart(xyz, R):
-    if xyz[0]**2 + xyz[1]**2 + xyz[2]**2 <=R:
-    if xyz[0]**2 + xyz[1]**2 + xyz[2]**2 <= (R**2):
+    if np.sum(np.square(xyz)) <= (R**2):
+        thing = 1
+    else:
+        thing = 0
+    return thing
+
+def thing_dart(xyzt, R):
+    if np.sum(np.square(xyzt)) <= (R**2):
         thing = 1
     else:
         thing = 0
@@ -86,55 +88,40 @@ def sphere_dart(xyz, R):
 
 
 num_points = int(100000)
-R = 1
-dim = 2  # for circle, dim=2, dim=3 for sphere, etc
-a = np.repeat([-R, dim])  # starts
-b = np.repeat([R, dim])   # ends
 
-R2 = 3
-dim = 2  # for circle, dim=2, dim=3 for sphere, etc
-a = np.repeat(-R, dim)  # starts
-b = np.repeat(R, dim)   # ends
-a3 = np.repeat(-R2, dim)
-b3 = np.repeat(R2, dim)
+R = 3
+circle_dim = 2
+sph_dim = 3
+thing_dim = 4
+
+a = np.repeat(-R, circle_dim)  # starts
+b = np.repeat(R, circle_dim)   # ends
+
+a2 = np.repeat(-R, sph_dim)
+b2 = np.repeat(R, sph_dim)
+
+a3 = np.repeat(-R, thing_dim)
+b3 = np.repeat(R, thing_dim)
 
 test = Monte_Dart(a, b, num_points, circle_dart)
-test_compare = np.pi*R**2
-test3 = Monte_Dart(a3, b3, num_points, circle_dart)
-test3_compare = np.pi*R2**2
-
-dim2 = 3
-a2 = np.repeat([-R, dim2])  # starts
-b2 = np.repeat([R, dim2])   # ends
+real = np.pi*R**2
 
 test2 = Monte_Dart(a2, b2, num_points, sphere_dart)
-test2_compare = 4/3*np.pi*R**dim2
+real2 = 4/3*np.pi*R**3
 
-a2 = np.repeat(-R, dim2)
-b2 = np.repeat(R, dim2)
-a4 = np.repeat(-R2, dim2)
-b4 = np.repeat(R2, dim2)
+test3 = Monte_Dart(a3, b3, num_points, thing_dart)
+real3 = 1/2*np.pi**2*R**4
 
-test2 = Monte_Dart(a2, b2, num_points, sphere_dart)
-test2_compare = 4/3*np.pi*R**dim2
-
-test4 = Monte_Dart(a4, b4, num_points, sphere_dart)
-test4_compare = 4/3*np.pi*R2**dim2
->>>>>>> newbranch
 
 if rank == 0:
     print("Circle with R = ", R)
-    print("Monte carlo value:", test)
-    print("Actual value:", test_compare)
+    print("Monte-Carlo value:", test)
+    print("Real value:", real)
     print("Sphere with R = ", R)
-    print("Monte carlo value:", test2)
-    print("Actual value:", test2_compare)
-
-    print("Circle with R = ", R2)
-    print("Monte carlo value:", test3)
-    print("Actual value:", test3_compare)
-    print("Sphere with R = ", R2)
-    print("Monte carlo value:", test4)
-    print("Actual value:", test4_compare)
+    print("Monte-Carlo value:", test2)
+    print("Real value:", real2)
+    print("4D 'sphere' with R = ", R)
+    print("Monte-Carlo value:", test3)
+    print("Real value:", real3)
 
 MPI.Finalize()
