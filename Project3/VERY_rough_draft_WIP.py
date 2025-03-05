@@ -17,7 +17,7 @@ from numpy.random import SeedSequence, default_rng
 
 
 class Monte_Carlo:
-    def __init__(self,starts, ends, N, f):
+    def __init__(self,starts, ends, N, func):
         self.starts = starts
         self.ends = ends
         self.f = func
@@ -53,10 +53,10 @@ class Monte_Carlo:
         comm.Allreduce(expect_f_squared, FINAL_F_SQUARED)
         
         prefactor1=1 # this will be used to create the (b-a)(d-c)...
-        prefactor2=1/(num_points*(size+1)) # MAKE SURE THE CORRECT NUMBER OF POINTS HERE
+        prefactor2=1/(num_points*size) # MAKE SURE THE CORRECT NUMBER OF POINTS HERE
         d=0
         while d<dim:
-            prefector1=prefactor1*(self.ends[d]-self.starts[d]) # we get our (b-a)(c-d...)
+            prefactor1=prefactor1*(self.ends[d]-self.starts[d]) # we get our (b-a)(c-d...)
             d=d+1
         FINAL_I = prefactor1*prefactor2*FINAL_SUM_F / nworkers # our integral
         FINAL_VAR = prefactor2*(FINAL_F_SQUARED*prefactor2-(FINAL_SUM_F*prefactor2)**2) # our variance

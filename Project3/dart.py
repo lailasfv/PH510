@@ -18,12 +18,9 @@ from numpy.random import SeedSequence, default_rng
 # we will not keep this as a secondary class/file, I just want to check if it works 
 
 # NOTES FOR IMPROVING IMPLEMENTATION
-# 1: R is assumed to just be 1, I'm sure we can change this for it to work with the other constructor 
-# 1. (cont'd) the circle needs to be centred on the origin for this technique to work though?
-# 1. (cont'd) if it is a child class then start and end could just be -R and +R, and pass into class as np.repeat(R, dim)
+# 1. need to change self.data and the __str__ to not just look at one method so we can use same class for both methods
+# 2. The randomisation is still the same too, so we can still separate that into method
 
-# 2. also need to change self.data and the __str__ to not just look at one method so we can use same class for both methods
-# 3. The randomisation is still the same too, so we can still separate that into method
 
 class Monte_Dart:
     def __init__(self, starts, ends, N, func):
@@ -49,12 +46,13 @@ class Monte_Dart:
             count = 0
             while count<dim:
                 p[count]=p[count]*self.ends[count] # making sure they are in the interval we need them to be
+                p[count]=p[count]*self.ends[0] # making sure they are in the interval we need them to be
                 count=count+1
 
         sum_f = np.array(0, dtype=np.float64) # Sending messages in MPI comm requires array
 
         for p in points:
-            sum_f = sum_f + (self.f(p)) 
+            sum_f = sum_f + self.f(p, self.ends[0]) # The radius is equal to the "end" value which should be the same in all dims
 
         CONTAINED = np.array(0, dtype=np.float64)  
         comm.Allreduce(sum_f, CONTAINED)  # The total number of points in the shape
@@ -64,12 +62,15 @@ class Monte_Dart:
 
         measure = 2**dim * CONTAINED/(self.N*nworkers)
 
+        measure = (2*self.ends[0])**dim * CONTAINED/(self.N*nworkers)
+
         return measure
 
 
 
 def circle_dart(xy, R):
     if xy[0]**2 + xy[1]**2 <=R:
+    if xy[0]**2 + xy[1]**2 <= (R**2):
         thing = 1
     else:
         thing = 0
@@ -77,6 +78,7 @@ def circle_dart(xy, R):
 
 def sphere_dart(xyz, R):
     if xyz[0]**2 + xyz[1]**2 + xyz[2]**2 <=R:
+    if xyz[0]**2 + xyz[1]**2 + xyz[2]**2 <= (R**2):
         thing = 1
     else:
         thing = 0
@@ -89,8 +91,17 @@ dim = 2  # for circle, dim=2, dim=3 for sphere, etc
 a = np.repeat([-R, dim])  # starts
 b = np.repeat([R, dim])   # ends
 
+R2 = 3
+dim = 2  # for circle, dim=2, dim=3 for sphere, etc
+a = np.repeat(-R, dim)  # starts
+b = np.repeat(R, dim)   # ends
+a3 = np.repeat(-R2, dim)
+b3 = np.repeat(R2, dim)
+
 test = Monte_Dart(a, b, num_points, circle_dart)
 test_compare = np.pi*R**2
+test3 = Monte_Dart(a3, b3, num_points, circle_dart)
+test3_compare = np.pi*R2**2
 
 dim2 = 3
 a2 = np.repeat([-R, dim2])  # starts
@@ -99,12 +110,31 @@ b2 = np.repeat([R, dim2])   # ends
 test2 = Monte_Dart(a2, b2, num_points, sphere_dart)
 test2_compare = 4/3*np.pi*R**dim2
 
+a2 = np.repeat(-R, dim2)
+b2 = np.repeat(R, dim2)
+a4 = np.repeat(-R2, dim2)
+b4 = np.repeat(R2, dim2)
+
+test2 = Monte_Dart(a2, b2, num_points, sphere_dart)
+test2_compare = 4/3*np.pi*R**dim2
+
+test4 = Monte_Dart(a4, b4, num_points, sphere_dart)
+test4_compare = 4/3*np.pi*R2**dim2
+>>>>>>> newbranch
+
 if rank == 0:
-    print("Circle")
+    print("Circle with R = ", R)
     print("Monte carlo value:", test)
     print("Actual value:", test_compare)
-    print("Sphere")
+    print("Sphere with R = ", R)
     print("Monte carlo value:", test2)
     print("Actual value:", test2_compare)
+
+    print("Circle with R = ", R2)
+    print("Monte carlo value:", test3)
+    print("Actual value:", test3_compare)
+    print("Sphere with R = ", R2)
+    print("Monte carlo value:", test4)
+    print("Actual value:", test4_compare)
 
 MPI.Finalize()
