@@ -67,17 +67,26 @@ class Monte_Carlo:
         return np.array([FINAL_I, FINAL_VAR, FINAL_ERROR])
 
 
-def step(x, R):  # FUNCTION FOR ANY SHAPE
+def step(x, R):  # FUNCTION FOR ANY ROUND SHAPE
     return 1 * (round(np.sum(np.square(x)),5) <= (R**2))
 
 
 num_points = int(200000)
 
 radius = 1
+radius2 = 3
 
-a = np.repeat(-radius, 5)
-b = np.repeat(radius, 5)
+dimensions = 5
 
-sphere2 = Monte_Carlo (a, b, num_points, step)
+a = np.repeat(-radius, dimensions)
+b = np.repeat(radius, dimensions)
+
+a2 = np.repeat(-radius2, dimensions)
+b2 = np.repeat(radius2, dimensions)
+
+sphere = Monte_Carlo (a, b, num_points, step)
+sphere2 = Monte_Carlo (a2, b2, num_points, step)
+
 if rank == 0:
-    print(f"5D Sphere with x -1 to 1: {sphere2}")
+    print(f"5D Sphere with radius {radius}: {sphere}")
+    print(f"5D Sphere with radius {radius2}: {sphere2}")
