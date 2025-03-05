@@ -18,8 +18,12 @@ from numpy.random import SeedSequence, default_rng
 # we will not keep this as a secondary class/file, I just want to check if it works 
 
 # NOTES FOR IMPROVING IMPLEMENTATION
-# 1. need to change self.data and the __str__ to not just look at one method so we can use same class for both methods
-# 2. The randomisation is still the same too, so we can still separate that into method
+# 1: R is assumed to just be 1, I'm sure we can change this for it to work with the other constructor 
+# 1. (cont'd) the circle needs to be centred on the origin for this technique to work though?
+# 1. (cont'd) if it is a child class then start and end could just be -R and +R, and pass into class as np.repeat(R, dim)
+
+# 2. also need to change self.data and the __str__ to not just look at one method so we can use same class for both methods
+# 3. The randomisation is still the same too, so we can still separate that into method
 
 class Monte_Dart:
     def __init__(self, starts, ends, N, func):
