@@ -16,13 +16,12 @@ nworkers = comm.Get_size()
 
 
 class Monte_Carlo:
-    def __init__(self, starts, ends, N, func2, variables):
+    def __init__(self, starts, ends, N, func2, *args):
         self.starts = starts
         self.ends = ends
         self.f = func2
         self.N = N
-        self.variables = variables # R no longer calculated but explicitly passed,
-        #works for multivariables too (hopefully)
+        self.variables = args # if args are passed, assumed to be a variable array for function
         self.data = self.integral()
         
 
@@ -78,19 +77,18 @@ def step(x, R):  # FUNCTION FOR ANY ROUND SHAPE
     return 1 * (round(np.sum(np.square(x)), 5) <= (R**2))
 
 
-def test(x, R):
-    R = 0
-    return x**2 + R
+def test(x, a, b):
+    return a*x**2 + b
 
 
-num_points = int(500000)
+num_points = int(200000)
 
 a = np.array([3])
 b = np.array([6])
 
-vari = np.array([0])
+vari = np.array([1, 2])
 
-test_x_square = Monte_Carlo(a, b, num_points, test, vari)
+test_x_square = Monte_Carlo(a, b, num_points, test, *vari)
 
 if rank == 0:
     print(f"Evaluating integral of x^2 between {a} and {b}: {test_x_square}")
@@ -106,16 +104,16 @@ b = np.repeat(radius, dimensions)
 a2 = np.repeat(-radius2, dimensions)
 b2 = np.repeat(radius2, dimensions)
 
-sphere = Monte_Carlo(a, b, num_points, step, radius)
-sphere2 = Monte_Carlo(a2, b2, num_points, step, radius2)
+sphere = Monte_Carlo(a, b, num_points, step, *radius)
+sphere2 = Monte_Carlo(a2, b2, num_points, step, *radius2)
 
-real = 8/15*np.pi**2*radius**dimensions
-real2 = 8/15*np.pi**2*radius2**dimensions
+real = 10* 8/15*np.pi**2*radius[0]**dimensions
+real2 = 10* 8/15*np.pi**2*radius2[0]**dimensions
 
 if rank == 0:
-    print(f"5D Sphere with radius {radius}: {sphere}")
+    print(f"5D Sphere with radius {radius[0]}: {sphere}")
     print(f"Real value: {real}")
-    print(f"5D Sphere with radius {radius2}: {sphere2}")
+    print(f"5D Sphere with radius {radius2[0]}: {sphere2}")
     print(f"Real value: {real2}")
 
 
