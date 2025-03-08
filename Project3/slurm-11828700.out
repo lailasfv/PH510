@@ -1,0 +1,28 @@
+===================================================================================
+SLURM Job ID:            11828700
+Submit time:             Sat Mar 08 18:14:13 GMT 2025 (Unix Epoch time: 1741457653)
+Start time:              Sat Mar 08 18:14:27 GMT 2025 (Unix Epoch time: 1741457667)
+No. nodes:               1
+No. tasks:               1
+Job name:                PH510Assignment3
+Account:                 teaching
+QoS:                     teaching
+Partition (queue):       teaching-gpu
+Submit directory:        /users/xgb19123/PH510/PH510/Project3
+Script name:             /users/xgb19123/PH510/PH510/Project3/mc.sh
+Master node:             weegpu4
+Nodes used:              weegpu4
+Task distribution:       block:block
+===================================================================================
+
+Evaluating integral of 1x^2+2 between [3] and [6]: (Integral: 74.48273695654308, Var: 3.1596283590498957, Err: 5.332603044616116)
+5D Sphere with radius 1: (Integral: 3.2, Var: 0.0045, Err: 2.1466252583997982)
+Real value: 5.263789013914324
+5D Sphere with radius 3: (Integral: 777.6, Var: 0.0045, Err: 521.629937791151)
+Real value: 1279.1007303811807
+===================================================================================
+SLURM job 11828700 ended:     Sat Mar 08 18:12:40 GMT 2025 (Unix Epoch time: 1741457560)
+This is an estimated end time using the 'date' command from node weegpu4.hpc.strath.ac.uk
+For accurate timings, use 'sacct -j 11828700 -X --format=Submit,Start,End,Elapsed'
+======================================================================================
+slurmstepd: error: Pid 2039399 is still in the freezer job cgroup.  It might be left uncleaned after the job.

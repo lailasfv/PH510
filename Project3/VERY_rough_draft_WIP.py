@@ -77,11 +77,11 @@ def step(x, R):  # FUNCTION FOR ANY ROUND SHAPE
     return 1 * (round(np.sum(np.square(x)), 5) <= (R**2))
 
 
-def test(x, a, b):
-    return a*x**2 + b
+def test(x,):
+    return x**2 + 2
 
 
-num_points = int(200000)
+num_points = int(20)
 
 a = np.array([3])
 b = np.array([6])
@@ -91,7 +91,7 @@ vari = np.array([1, 2])
 test_x_square = Monte_Carlo(a, b, num_points, test, *vari)
 
 if rank == 0:
-    print(f"Evaluating integral of x^2 between {a} and {b}: {test_x_square}")
+    print(f"Evaluating integral of {vari[0]}x^2+{vari[1]} between {a} and {b}: {test_x_square}")
 
 radius = np.array([1])
 radius2 = np.array([3])
@@ -107,8 +107,8 @@ b2 = np.repeat(radius2, dimensions)
 sphere = Monte_Carlo(a, b, num_points, step, *radius)
 sphere2 = Monte_Carlo(a2, b2, num_points, step, *radius2)
 
-real = 10* 8/15*np.pi**2*radius[0]**dimensions
-real2 = 10* 8/15*np.pi**2*radius2[0]**dimensions
+real = 8/15*np.pi**2*radius[0]**dimensions
+real2 = 8/15*np.pi**2*radius2[0]**dimensions
 
 if rank == 0:
     print(f"5D Sphere with radius {radius[0]}: {sphere}")
