@@ -1,9 +1,9 @@
 ===================================================================================
-SLURM Job ID:            11828700
-Submit time:             Sat Mar 08 18:14:13 GMT 2025 (Unix Epoch time: 1741457653)
-Start time:              Sat Mar 08 18:14:27 GMT 2025 (Unix Epoch time: 1741457667)
+SLURM Job ID:            11828751
+Submit time:             Sat Mar 08 18:34:51 GMT 2025 (Unix Epoch time: 1741458891)
+Start time:              Sat Mar 08 18:34:52 GMT 2025 (Unix Epoch time: 1741458892)
 No. nodes:               1
-No. tasks:               1
+No. tasks:               4
 Job name:                PH510Assignment3
 Account:                 teaching
 QoS:                     teaching
@@ -15,14 +15,13 @@ Nodes used:              weegpu4
 Task distribution:       block:block
 ===================================================================================
 
-Evaluating integral of 1x^2+2 between [3] and [6]: (Integral: 74.48273695654308, Var: 3.1596283590498957, Err: 5.332603044616116)
-5D Sphere with radius 1: (Integral: 3.2, Var: 0.0045, Err: 2.1466252583997982)
+Evaluating integral of x^2 between [3] and [6]: (Integral: 69.01298060823954, Var: 7.648061542686549e-05, Err: 0.026235958889314286)
+5D Sphere with radius 1: (Integral: 5.262560000000001, Var: 1.7176194121875004e-07, Err: 0.013262135114980545)
 Real value: 5.263789013914324
-5D Sphere with radius 3: (Integral: 777.6, Var: 0.0045, Err: 521.629937791151)
+5D Sphere with radius 3: (Integral: 1278.77292, Var: 1.717587954667969e-07, Err: 3.222669321578518)
 Real value: 1279.1007303811807
 ===================================================================================
-SLURM job 11828700 ended:     Sat Mar 08 18:12:40 GMT 2025 (Unix Epoch time: 1741457560)
+SLURM job 11828751 ended:     Sat Mar 08 18:33:18 GMT 2025 (Unix Epoch time: 1741458798)
 This is an estimated end time using the 'date' command from node weegpu4.hpc.strath.ac.uk
-For accurate timings, use 'sacct -j 11828700 -X --format=Submit,Start,End,Elapsed'
+For accurate timings, use 'sacct -j 11828751 -X --format=Submit,Start,End,Elapsed'
 ======================================================================================
-slurmstepd: error: Pid 2039399 is still in the freezer job cgroup.  It might be left uncleaned after the job.

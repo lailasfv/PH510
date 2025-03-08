@@ -1,0 +1,5 @@
+Evaluating integral of x^2 between [3] and [6]: (Integral: [68.9971725], Var: [0.0003066], Err: [0.05252968])
+5D Sphere with radius 1: (Integral: 5.26112, Var: 6.868967595000001e-07, Err: 0.026521355201572942)
+Real value: 5.263789013914324
+5D Sphere with radius 3: (Integral: 1278.45216, Var: 6.868967595000001e-07, Err: 6.4446893139822246)
+Real value: 1279.1007303811807

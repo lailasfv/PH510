@@ -7,12 +7,12 @@ Created on Fri Feb 21 18:55:08 2025
 
 from numpy.random import SeedSequence, default_rng
 import numpy as np
-from mpi4py import MPI
+#from mpi4py import MPI
 
 # MPI.Init()
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
-nworkers = comm.Get_size()
+# comm = MPI.COMM_WORLD
+rank = 0#comm.Get_rank()
+nworkers = 1#comm.Get_size()
 
 
 class Monte_Carlo:
@@ -37,8 +37,8 @@ class Monte_Carlo:
         points = streams[rank].random((self.N, dim))
 
         # Sending messages in MPI comm requires array
-        sum_f = np.array(0, dtype=np.float64)
-        expect_f_squared = np.array(0, dtype=np.float64)
+        sum_f = 0#np.array(0, dtype=np.float64)
+        expect_f_squared = 0# np.array(0, dtype=np.float64)
 
         for p in points:
             count = 0
@@ -51,11 +51,11 @@ class Monte_Carlo:
             expect_f_squared = expect_f_squared + \
                 (self.f(p, *self.variables))**2  # we get sum(f**2) for each worker
 
-        FINAL_SUM_F = np.array(0, dtype=np.float64)
-        FINAL_F_SQUARED = np.array(0, dtype=np.float64)
+        FINAL_SUM_F = sum_f #np.array(0, dtype=np.float64)
+        FINAL_F_SQUARED = expect_f_squared #np.array(0, dtype=np.float64)
 
-        comm.Allreduce(sum_f, FINAL_SUM_F)  # These take value of sum_f for all ranks and sum them into FINAL_...
-        comm.Allreduce(expect_f_squared, FINAL_F_SQUARED)
+        #comm.Allreduce(sum_f, FINAL_SUM_F)  # These take value of sum_f for all ranks and sum them into FINAL_...
+        #comm.Allreduce(expect_f_squared, FINAL_F_SQUARED)
 
         prefactor1 = 1  # this will be used to create the (b-a)(d-c)...
         prefactor2 = 1/(num_points*nworkers)
@@ -117,4 +117,4 @@ if rank == 0:
     print(f"Real value: {real2}")
 
 
-MPI.Finalize()
+# MPI.Finalize()
