@@ -114,7 +114,7 @@ class Monte_Carlo:
         d = 0
         while d < dim:
             # we get our (b-a)(c-d...)
-            prefactor1 = prefactor1*(self.ends[d]-self.starts[d])
+            prefactor1 = prefactor1*(inf_ends-inf_starts)
             d = d+1
 
         FINAL_I = prefactor1*prefactor2*FINAL_SUM_F  # our integral
@@ -193,7 +193,7 @@ if rank == 0:
     print(f"Real value: {real2}")
     
 
-# TESTING 1D GAUSSIAN (it doesn't work)
+# TESTING 1D GAUSSIAN 
 
 mean = 4
 sigma = 0.4
