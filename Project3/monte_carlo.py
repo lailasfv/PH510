@@ -97,37 +97,34 @@ class Monte_Carlo:
                 p[count] = p[count] * (inf_ends-inf_starts)+inf_starts
                 count = count+1
             # NOTE: x and factor need to be changed to handle multiple input too
+            # I think x should be kept as is bc we need x-x0 in all dimensions
+            # but should factor take the norm of p?
             x = p/(1-p**2)  # value to be passed in to f(x)
             factor = (1+p**2)/((1-p**2)**2)  # integral factor
             sum_f = sum_f + (self.f(x, *self.variables))*factor  # we get sum(f) for each worker
             expect_f_squared = expect_f_squared + \
                 (self.f(x, *self.variables) * factor)**2  # we get sum(f**2) for each worker
 
-        FINAL_SUM_F = np.array(0, dtype=np.float64)
-        FINAL_F_SQUARED = np.array(0, dtype=np.float64)
+        FINAL_SUM_F = np.empty(dim, dtype=np.float64)
+        FINAL_F_SQUARED = np.empty(dim, dtype=np.float64)
 
         comm.Allreduce(sum_f, FINAL_SUM_F)  # These take value of sum_f for all ranks and sum them into FINAL_...
         comm.Allreduce(expect_f_squared, FINAL_F_SQUARED)
 
-        prefactor1 = 1  # this will be used to create the (b-a)(d-c)...
+        prefactor1 = 2  # this will be used to create the (b-a)(d-c)...
         prefactor2 = 1/(num_points*nworkers)
-        d = 0
-        while d < dim:
-            # we get our (b-a)(c-d...)
-            prefactor1 = prefactor1*(inf_ends-inf_starts)
-            d = d+1
 
-        FINAL_I = prefactor1*prefactor2*FINAL_SUM_F  # our integral
-        FINAL_VAR = prefactor2 * \
-            (FINAL_F_SQUARED*prefactor2-(FINAL_SUM_F*prefactor2)**2)  # our variance
-        FINAL_ERROR = prefactor1*np.sqrt(FINAL_VAR)  # our error
+        FINAL_I = np.mean(prefactor1*prefactor2*FINAL_SUM_F)  # our integral
+        FINAL_VAR = np.mean(prefactor2 * \
+            (FINAL_F_SQUARED*prefactor2-(FINAL_SUM_F*prefactor2)**2))  # our variance
+        FINAL_ERROR = np.mean(prefactor1*np.sqrt(FINAL_VAR))  # our error
         self.data = np.array([FINAL_I, FINAL_VAR, FINAL_ERROR])
 
         return self.data
         
 
 def step(x, R):  # FUNCTION FOR ANY ROUND SHAPE
-    return 1 * (round(np.sum(np.square(x)), 5) <= (R**2))
+    return round(np.sum(np.square(x)), 5) <= (R**2)
 
 def test(x, a, b):
     return a*x**2 + b
@@ -143,15 +140,8 @@ def test(x, a, b):
 def gaussian(x, x0, sig):
     return 1/(sig*np.sqrt(2*np.pi)) * np.exp((-(x-x0)**2)/(2*sig**2))
 
-def gaussian_multiD(x, x0, sig):
-    sigma = np.sqrt(np.sum(np.square(sig))) # Norm sigma value
-    # print("Sigma =", sigma)
-    xx0 = np.sqrt(np.sum(np.square(x-x0))) # Norm mean value
-    # print("Norm of x-x0:", xx0)
-    return 1/(sigma*np.sqrt(2*np.pi)) * np.exp(-xx0**2/(2*sigma**2))
 
-
-num_points = int(10000)
+num_points = int(100000)
 
 a = np.array([3])
 b = np.array([6])
@@ -193,7 +183,8 @@ if rank == 0:
     print(f"Real value: {real2}")
     
 
-# TESTING 1D GAUSSIAN 
+
+# TESTING 2D GAUSSIAN 
 
 mean = 4
 sigma = 0.4
@@ -203,6 +194,18 @@ gaussTest = Monte_Carlo([-5], [5], num_points, gaussian, *vari2)
 # same output for gaussian_multiD
 gaussOutput = Monte_Carlo.infinity(gaussTest)
 
-print(gaussOutput)
+mean2 = np.array([2, 5, 6, 9, 4, 2])
+sigma2 = np.array([0.2, 0.4, 0.1, 0.3, 0.2, 0.5])
+
+vari2b = np.array([mean2, sigma2])
+
+dims = 6
+gaussTest2 = Monte_Carlo([-1, -1, -1, -1, -1, -1], [1, 1, 1, 1, 1, 1], num_points, gaussian, *vari2b)
+# same output for gaussian_multiD
+gaussOutput2 = Monte_Carlo.infinity(gaussTest2)
+
+if rank == 0:
+    print(gaussOutput)
+    print(gaussOutput2)
 
 MPI.Finalize()
