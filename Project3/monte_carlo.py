@@ -25,7 +25,8 @@ class Monte_Carlo:
         self.data = 0   # data to be returned for any method
 
     def __str__(self):
-        return f"(Integral: {self.data[0]}, Var: {self.data[1]}, Err: {self.data[2]})"
+        return (f"(Integral: {self.data[0,0]:.4f}, Var: {self.data[1,0]:.4f},"
+                f" Err: {self.data[2,0]:.4f})")
     
     def random(seed):
         ss = SeedSequence(seed)  # getting the random numbers
