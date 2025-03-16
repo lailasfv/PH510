@@ -16,24 +16,28 @@ nworkers = comm.Get_size()
 
 
 class Monte_Carlo:
-    def __init__(self, starts, ends, N, func2, *args):
+    def __init__(self, starts, ends, N, func2, variables=[]):
         self.starts = starts
         self.ends = ends
         self.f = func2
         self.N = N
-        self.variables = args # if args are passed, assumed to be a variable array for function
+        self.variables = variables # variables defaults to an empty array if none are supplied
         self.data = 0   # data to be returned for any method
 
     def __str__(self):
         return f"(Integral: {self.data[0]}, Var: {self.data[1]}, Err: {self.data[2]})"
-
-    def integral(self):
-        dim = len(self.starts)
-        ss = SeedSequence(12345)  # getting the random numbers
+    
+    def random(seed):
+        ss = SeedSequence(seed)  # getting the random numbers
         child_seeds = ss.spawn(nworkers)  # random numbers for each worker
         streams = [default_rng(s) for s in child_seeds]
         # getting the random numbers in arrays we like
-        points = streams[rank].random((self.N, dim))
+        return streams
+
+    def integral(self, seed):
+        dim = len(self.starts)
+        streams = Monte_Carlo.random(seed)
+        points = streams[rank].random((self.N/nworkers, dim))
 
         # Sending messages in MPI comm requires array
         sum_f = np.array(0, dtype=np.float64)
@@ -57,7 +61,7 @@ class Monte_Carlo:
         comm.Allreduce(expect_f_squared, FINAL_F_SQUARED)
 
         prefactor1 = 1  # this will be used to create the (b-a)(d-c)...
-        prefactor2 = 1/(num_points*nworkers)
+        prefactor2 = 1/(num_points)
         d = 0
         while d < dim:
             # we get our (b-a)(c-d...)
@@ -72,7 +76,7 @@ class Monte_Carlo:
 
         return self.data
     
-    def infinity(self):
+    def infinity(self, seed):
         '''
         This is used for improper/infinite cases
 
@@ -80,11 +84,8 @@ class Monte_Carlo:
         dim = len(self.starts)
         inf_starts = -1  # gross way of doing this tbh
         inf_ends = 1
-        ss = SeedSequence(12345)  # getting the random numbers
-        child_seeds = ss.spawn(nworkers)  # random numbers for each worker
-        streams = [default_rng(s) for s in child_seeds]
-        # getting the random numbers in arrays we like
-        points = streams[rank].random((self.N, dim))
+        streams = Monte_Carlo.random(seed)
+        points = streams[rank].random((self.N/nworkers, dim))
 
         # Sending messages in MPI comm requires array
         sum_f = np.array(0, dtype=np.float64)
@@ -112,7 +113,7 @@ class Monte_Carlo:
         comm.Allreduce(expect_f_squared, FINAL_F_SQUARED)
 
         prefactor1 = 2  # this will be used to create the (b-a)(d-c)...
-        prefactor2 = 1/(num_points*nworkers)
+        prefactor2 = 1/(num_points)
 
         FINAL_I = np.mean(prefactor1*prefactor2*FINAL_SUM_F)  # our integral
         FINAL_VAR = np.mean(prefactor2 * \
@@ -150,7 +151,7 @@ vari = np.array([1, 2])
 
 
 # FIGURE OUT BETTER WAY TO CALL THIS pls
-test_x_square = Monte_Carlo(a, b, num_points, test, *vari)
+test_x_square = Monte_Carlo(a, b, num_points, test, variables=vari)
 integral = Monte_Carlo.integral(test_x_square)
 
 if rank == 0:
@@ -167,8 +168,8 @@ b = np.repeat(radius, dimensions)
 a2 = np.repeat(-radius2, dimensions)
 b2 = np.repeat(radius2, dimensions)
 
-sphere_in = Monte_Carlo(a, b, num_points, step, *radius)
-sphere2_in = Monte_Carlo(a2, b2, num_points, step, *radius2)
+sphere_in = Monte_Carlo(a, b, num_points, step, variables=radius)
+sphere2_in = Monte_Carlo(a2, b2, num_points, step, variables=radius2)
 
 sphere = Monte_Carlo.integral(sphere_in)
 sphere2 = Monte_Carlo.integral(sphere2_in)
@@ -190,7 +191,7 @@ mean = 4
 sigma = 0.4
 
 vari2 = np.array([mean, sigma])
-gaussTest = Monte_Carlo([-5], [5], num_points, gaussian, *vari2)
+gaussTest = Monte_Carlo([-5], [5], num_points, gaussian, variables=vari2)
 # same output for gaussian_multiD
 gaussOutput = Monte_Carlo.infinity(gaussTest)
 
@@ -200,7 +201,7 @@ sigma2 = np.array([0.2, 0.4, 0.1, 0.3, 0.2, 0.5])
 vari2b = np.array([mean2, sigma2])
 
 dims = 6
-gaussTest2 = Monte_Carlo([-1, -1, -1, -1, -1, -1], [1, 1, 1, 1, 1, 1], num_points, gaussian, *vari2b)
+gaussTest2 = Monte_Carlo([-1, -1, -1, -1, -1, -1], [1, 1, 1, 1, 1, 1], num_points, gaussian, variables=vari2b)
 # same output for gaussian_multiD
 gaussOutput2 = Monte_Carlo.infinity(gaussTest2)
 
