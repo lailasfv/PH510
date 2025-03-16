@@ -37,7 +37,7 @@ class Monte_Carlo:
     def integral(self, seed):
         dim = len(self.starts)
         streams = Monte_Carlo.random(seed)
-        points = streams[rank].random((self.N/nworkers, dim))
+        points = streams[rank].random((int(self.N/nworkers), dim))
 
         # Sending messages in MPI comm requires array
         sum_f = np.array(0, dtype=np.float64)
@@ -85,7 +85,7 @@ class Monte_Carlo:
         inf_starts = -1  # gross way of doing this tbh
         inf_ends = 1
         streams = Monte_Carlo.random(seed)
-        points = streams[rank].random((self.N/nworkers, dim))
+        points = streams[rank].random((int(self.N/nworkers), dim))
 
         # Sending messages in MPI comm requires array
         sum_f = np.array(0, dtype=np.float64)
@@ -122,6 +122,66 @@ class Monte_Carlo:
         self.data = np.array([FINAL_I, FINAL_VAR, FINAL_ERROR])
 
         return self.data
+    
+    def integral_importance_sampling(self, inverse_samp, seed):
+        dim = len(self.starts)
+        streams = Monte_Carlo.random(seed)
+        points = streams[rank].random((int(self.N/nworkers), dim))
+
+        # Sending messages in MPI comm requires array
+        sum_f = np.array(0, dtype=np.float64)
+        expect_f_squared = np.array(0, dtype=np.float64)
+
+
+        for p in points:
+            count = 0
+            while count < dim:
+                p[count] = inverse_samp(p[count])
+                count = count+1
+            sum_f = sum_f + (self.f(p, *self.variables))  # we get sum(f) for each worker
+            expect_f_squared = expect_f_squared + \
+                (self.f(p, *self.variables))**2  # we get sum(f**2) for each worker
+        
+        FINAL_SUM_F = np.empty(dim, dtype=np.float64)
+        FINAL_F_SQUARED = np.empty(dim, dtype=np.float64)
+
+        comm.Allreduce(sum_f, FINAL_SUM_F)  # These take value of sum_f for all ranks and sum them into FINAL_...
+        comm.Allreduce(expect_f_squared, FINAL_F_SQUARED)
+        
+        prefactor2 = 1/(num_points)
+        FINAL_I = FINAL_SUM_F*prefactor2 # our integral
+        FINAL_VAR = prefactor2 * \
+            (FINAL_F_SQUARED*prefactor2-(FINAL_SUM_F*prefactor2)**2)  # our variance
+        FINAL_ERROR = np.sqrt(FINAL_VAR)  # our error
+        self.data = np.array([FINAL_I, FINAL_VAR, FINAL_ERROR])
+
+        return self.data
+
+def funct2_try(x):
+    return 2**x
+
+def samp2(x):
+    A=1/(1-np.exp(-4))
+    return(A*np.exp(x))
+
+def func_imp_2(x):
+    return (funct2_try(x)/samp2(x))
+
+def inverse_samp2(x):
+    A=1/(1-np.exp(-4))
+    #A=1
+    return(np.log(x/A+np.exp(-4)))
+"""
+funct_test = Monte_Carlo([0],[2],num_points,func_w_imp_sampling)
+#funct_test = Monte_Carlo([0],[1],num_points,funct_without_imp_sampling)
+integral= Monte_Carlo.integral_importance_sampling(funct_test, inverse_samp)
+print(integral)
+"""
+num_points = int(100000)
+seed2 = 12345
+funct_test2 = Monte_Carlo([-4],[0],num_points,func_imp_2)
+integral2= Monte_Carlo.integral_importance_sampling(funct_test2, inverse_samp2,seed2)
+print(integral2)
         
 
 def step(x, R):  # FUNCTION FOR ANY ROUND SHAPE
