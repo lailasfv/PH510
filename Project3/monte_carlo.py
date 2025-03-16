@@ -97,14 +97,12 @@ class Monte_Carlo:
                 # making sure they are in the interval we need them to be
                 p[count] = p[count] * (inf_ends-inf_starts)+inf_starts
                 count = count+1
-            # NOTE: x and factor need to be changed to handle multiple input too
-            # I think x should be kept as is bc we need x-x0 in all dimensions
-            # but should factor take the norm of p?
+
             x = p/(1-p**2)  # value to be passed in to f(x)
             factor = (1+p**2)/((1-p**2)**2)  # integral factor
-            sum_f = sum_f + (self.f(x, *self.variables))*factor  # we get sum(f) for each worker
+            sum_f = sum_f + (self.f(x, *self.variables, factor))  # we get sum(f) for each worker
             expect_f_squared = expect_f_squared + \
-                (self.f(x, *self.variables) * factor)**2  # we get sum(f**2) for each worker
+                self.f(x, *self.variables, factor**2)  # we get sum(f**2) for each worker
 
         FINAL_SUM_F = np.empty(dim, dtype=np.float64)
         FINAL_F_SQUARED = np.empty(dim, dtype=np.float64)
@@ -112,13 +110,18 @@ class Monte_Carlo:
         comm.Allreduce(sum_f, FINAL_SUM_F)  # These take value of sum_f for all ranks and sum them into FINAL_...
         comm.Allreduce(expect_f_squared, FINAL_F_SQUARED)
 
-        prefactor1 = 2  # this will be used to create the (b-a)(d-c)...
+        prefactor1 = 1  # this will be used to create the (b-a)(d-c)...
         prefactor2 = 1/(num_points)
+        d = 0
+        while d < dim:
+            # we get our (b-a)(c-d...)
+            prefactor1 = prefactor1*(inf_ends-inf_starts)
+            d = d+1
 
-        FINAL_I = np.mean(prefactor1*prefactor2*FINAL_SUM_F)  # our integral
-        FINAL_VAR = np.mean(prefactor2 * \
-            (FINAL_F_SQUARED*prefactor2-(FINAL_SUM_F*prefactor2)**2))  # our variance
-        FINAL_ERROR = np.mean(prefactor1*np.sqrt(FINAL_VAR))  # our error
+        FINAL_I = prefactor1*prefactor2*FINAL_SUM_F  # our integral
+        FINAL_VAR = prefactor2 * \
+            (FINAL_F_SQUARED*prefactor2-(FINAL_SUM_F*prefactor2)**2)  # our variance
+        FINAL_ERROR = prefactor1*np.sqrt(FINAL_VAR)  # our error
         self.data = np.array([FINAL_I, FINAL_VAR, FINAL_ERROR])
 
         return self.data
@@ -190,29 +193,24 @@ def step(x, R):  # FUNCTION FOR ANY ROUND SHAPE
 def test(x, a, b):
     return a*x**2 + b
 
-# IDEA - when calling with infinite limits, use different method (Monte_Carlo.inf)
-# Method changes limits to t=-1 and t=1, and passes in t/(1-t^2) to given func 
-# and multiplies each sum_f and f^2 by (1+t^2)/(1-t^2)^2
-# so that we don't have to put this into each individual function if infinite
+def gaussian1D(x, x0, sig, factor):
+    return np.linalg.norm(factor/(sig*(2*np.pi)**0.5) * np.exp((-(x-x0)**2)/(2*sig**2)))
 
-# I think it might also be a good idea to have starts/ends be optional input
-# so then we don't have to arbitrarily put in start/end values for infinite
-
-def gaussian(x, x0, sig):
-    return 1/(sig*np.sqrt(2*np.pi)) * np.exp((-(x-x0)**2)/(2*sig**2))
+def gaussianMD(x, x0, sig, factor):
+    power = len(x)/2
+    return np.linalg.norm(factor/(sig*2*(2*np.pi)**power) * np.exp((-(x-x0)**2)/(2*sig**2)))
 
 
 num_points = int(100000)
+seed = 12345
 
 a = np.array([3])
 b = np.array([6])
 
 vari = np.array([1, 2])
 
-
-# FIGURE OUT BETTER WAY TO CALL THIS pls
 test_x_square = Monte_Carlo(a, b, num_points, test, variables=vari)
-integral = Monte_Carlo.integral(test_x_square)
+integral = Monte_Carlo.integral(test_x_square, seed)
 
 if rank == 0:
     print(f"Evaluating integral of x^2 between {a} and {b}: {test_x_square}")
@@ -231,8 +229,8 @@ b2 = np.repeat(radius2, dimensions)
 sphere_in = Monte_Carlo(a, b, num_points, step, variables=radius)
 sphere2_in = Monte_Carlo(a2, b2, num_points, step, variables=radius2)
 
-sphere = Monte_Carlo.integral(sphere_in)
-sphere2 = Monte_Carlo.integral(sphere2_in)
+sphere = Monte_Carlo.integral(sphere_in, seed)
+sphere2 = Monte_Carlo.integral(sphere2_in, seed)
 
 real = 8/15*np.pi**2*radius[0]**dimensions
 real2 = 8/15*np.pi**2*radius2[0]**dimensions
@@ -244,26 +242,22 @@ if rank == 0:
     print(f"Real value: {real2}")
     
 
-
-# TESTING 2D GAUSSIAN 
+# TESTING GAUSSIAN 
 
 mean = 4
 sigma = 0.4
 
 vari2 = np.array([mean, sigma])
-gaussTest = Monte_Carlo([-5], [5], num_points, gaussian, variables=vari2)
-# same output for gaussian_multiD
-gaussOutput = Monte_Carlo.infinity(gaussTest)
+gaussTest = Monte_Carlo([-5], [5], num_points, gaussian1D, variables=vari2)
+gaussOutput = Monte_Carlo.infinity(gaussTest, seed)
 
 mean2 = np.array([2, 5, 6, 9, 4, 2])
 sigma2 = np.array([0.2, 0.4, 0.1, 0.3, 0.2, 0.5])
 
 vari2b = np.array([mean2, sigma2])
 
-dims = 6
-gaussTest2 = Monte_Carlo([-1, -1, -1, -1, -1, -1], [1, 1, 1, 1, 1, 1], num_points, gaussian, variables=vari2b)
-# same output for gaussian_multiD
-gaussOutput2 = Monte_Carlo.infinity(gaussTest2)
+gaussTest2 = Monte_Carlo([-1, -1, -1, -1, -1, -1], [1, 1, 1, 1, 1, 1], num_points, gaussianMD, variables=vari2b)
+gaussOutput2 = Monte_Carlo.infinity(gaussTest2, seed)
 
 if rank == 0:
     print(gaussOutput)
