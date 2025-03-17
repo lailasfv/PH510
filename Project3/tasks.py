@@ -69,6 +69,174 @@ def gaussian_md(x, x0, sig, factor):
     np.exp((-(x-x0)**2)/(2*sig**2)))
     return val
 
+def func_to_integrate_1(x):
+    """
+    Function f(x)=2**x to be integrated
+
+    Parameters
+    ----------
+    x : Float
+        Variable.
+
+    Returns
+    -------
+    Float
+        f(x)=2**x.
+
+    """
+    return 2**x
+
+def sampling_func_1(x):
+    """
+    Sampling function f(x)=exp(x)/(1-exp(-4)) normalised for [-4,0] to
+    be used when integrating a function over the interval [-4,0]
+    using importance sampling
+
+    Parameters
+    ----------
+    x : Float
+        Variable.
+
+    Returns
+    -------
+    Float
+        f(x)=exp(x)/(1-exp(-4)).
+
+    """
+    a = 1/(1-np.exp(-4))
+    return a*np.exp(x)
+
+def inverse_sampling_1(x):
+    """
+    Inverse of the definite integral of the sampling function,
+    f(x')=exp(x')/(1-exp(-4)), with lower limit -4 and higher limit x
+
+    Parameters
+    ----------
+    x : Float
+        Variable.
+
+    Returns
+    -------
+    Float
+        f(x)=ln(x/(1-exp(-4))+exp(-4))
+
+    """
+    a = 1/(1-np.exp(-4))
+    return np.log(x/a+np.exp(-4))
+
+def func_to_integrate_2(x):
+    """
+    Function f(x)=exp(-x**3) to be integrated
+
+    Parameters
+    ----------
+    x : Float
+        Variable.
+
+    Returns
+    -------
+    Float
+        f(x)=exp(-x**3).
+
+    """
+    return np.exp(-x**3)
+
+def sampling_func_2(x):
+    """
+    Sampling function f(x)=exp(-x)/(1-exp(-2)) normalised for [0,2] to
+    be used when integrating a function over the interval [0,2]
+    using importance sampling
+
+    Parameters
+    ----------
+    x : Float
+        Variable.
+
+    Returns
+    -------
+    Float
+        f(x)=exp(-x)/(1-exp(-2)).
+
+    """
+    a = 1/(1-np.exp(-2))
+    return a*(np.exp(-x))
+
+def inverse_sampling_2(x):
+    """
+    Inverse of the definite integral of the sampling function,
+    f(x')=exp(-x')/(1-exp(-2)), with lower limit 0 and higher limit x
+
+    Parameters
+    ----------
+    x : Float
+        Variable.
+
+    Returns
+    -------
+    Float
+        f(x)=-ln(1-x/(1-exp(-2)))
+
+    """
+    a = 1/(1-np.exp(-2))
+    return -np.log(1-x/a)  # THIS SHOULD BE WRONG for lower limits
+
+def func_to_integrate_3(x):
+    """
+    Function f(x)=exp(-x**2) to be integrated
+
+    Parameters
+    ----------
+    x : Float
+        Variable.
+
+    Returns
+    -------
+    Float
+        f(x)=exp(-x**2).
+
+    """
+    return np.exp(-x**2)
+
+def sampling_func_3(x):
+    """
+    Sampling function f(x)=exp(-x)/(1-exp(-1)) normalised for [0,1] to
+    be used when integrating a function over the interval [0,1]
+    using importance sampling
+
+    Parameters
+    ----------
+    x : Float
+        Variable.
+
+    Returns
+    -------
+    Float
+        f(x)=exp(-x)/(1-exp(-1)).
+
+    """
+    a = 1/(1-np.exp(-1))
+    return a*np.exp(-x)
+
+def inverse_sampling_3(x):
+    """
+    Inverse of the definite integral of the sampling function,
+    f(x')=exp(-x')/(1-exp(-1)), with lower limit 0 and higher limit x
+
+    Parameters
+    ----------
+    x : Float
+        Variable.
+
+    Returns
+    -------
+    Float
+        f(x)=-ln(1-x/(1-exp(-1)))
+
+    """
+    a = 1/(1-np.exp(-1))
+    return -np.log(1-x/a)
+
 
 # NOTE: NEW WAY TO PASS IN METHODS - DELETE THESE COMMENTS LATER
 # integral = MonteCarlo(start, end, num_points, function, variables, seed, method)
@@ -156,91 +324,57 @@ if rank == 0:
     print("Real value should always be 1.0 (normalised function)")
     print("\n")
 
+
 # First Importance Sampling Test
-def func_to_integrate_1(x):
-    return 2**x
-
-def sampling_func_1(x):
-    a = 1/(1-np.exp(-4))
-    return a*np.exp(x)
-
-def inverse_sampling_1(x):
-    a=1/(1-np.exp(-4))
-    return np.log(x/a+np.exp(-4))
-
-def func_with_importance_sampling_1(x):
-    return func_to_integrate_1(x)/sampling_func_1(x)
-
-
-integral_1_with_importance = MonteCarlo([-4], [0], NUM_POINTS, func_with_importance_sampling_1,
-                                        seed=SEED, method=2, func2=inverse_sampling_1)
+integral_1_with_importance = MonteCarlo([-4], [0], NUM_POINTS, func_to_integrate_1,
+                                        seed=SEED, method=2, func2=sampling_func_1,
+                                        func3=inverse_sampling_1)
 
 integral_1_without_importance = MonteCarlo([-4], [0], NUM_POINTS, func_to_integrate_1,
                                            seed=SEED, method=0)
+real_value_importance_sampling_1 = 15/(16*np.log(2))
 
 if rank == 0:
-    print("IMPORTANCE TEST 1: 2^x from -4 to 0")
-    print("with importance sampling", integral_1_with_importance)
-    print("without importance sampling", integral_1_without_importance)
-    print("actual value", 15/(16*np.log(2)))
+    print("IMPORTANCE SAMPLING TEST 1: 2^x from -4 to 0")
+    print(f"With importance sampling: {integral_1_with_importance}")
+    print(f"Without importance sampling: {integral_1_without_importance}")
+    print(f"Real value: {real_value_importance_sampling_1}")
     print("")
 
 
 # Second Importance Sampling Test
-def func_to_integrate_2(x):
-    return np.exp(-x**3)
-
-def sampling_func_2(x):
-    a = 1/(1-np.exp(-2))
-    return a*(np.exp(-x))
-
-def inverse_sampling_2(x):
-    a = 1/(1-np.exp(-2))
-    return -np.log(1-x/a)  # THIS SHOULD BE WRONG for lower limits
-
-def func_with_importance_sampling_2(x):
-    return func_to_integrate_2(x)/sampling_func_2(x)
-
-integral_2_with_importance = MonteCarlo([0], [2], NUM_POINTS, func_with_importance_sampling_2,
-                                        seed=SEED, method=2, func2=inverse_sampling_2)
+integral_2_with_importance = MonteCarlo([0], [2], NUM_POINTS, func_to_integrate_2,
+                                        seed=SEED, method=2, func2=sampling_func_2,
+                                        func3=inverse_sampling_2)
 
 integral_2_without_importance = MonteCarlo([0], [2], NUM_POINTS, func_to_integrate_2,
                                            seed=SEED, method=0)
+real_value_importance_sampling_2 = 0.8929535142938763
 
-
-if rank==0:
-    print("IMPORTANCE TEST 2: exp(-x^3) from 0 to 2")
-    print("with importance sampling", integral_2_with_importance)
-    print("without importance sampling", integral_2_without_importance)
-    print("actual value 0.8929535142938763")
+if rank == 0:
+    print("IMPORTANCE SAMPLING TEST 2: exp(-x^3) from 0 to 2")
+    print(f"With importance sampling: {integral_2_with_importance}")
+    print(f"Without importance sampling: {integral_2_without_importance}")
+    print(f"Real value: {real_value_importance_sampling_2}")
     print("")
 
 
 # Third Imporptance Sampling Test
-def func_to_integrate_3(x):
-    return np.exp(-x**2)
-
-def sampling_func_3(x):
-    a=1/(1-np.exp(-1))
-    return a*np.exp(-x)
-
-def inverse_sampling_3(x):
-    a=1/(1-np.exp(-1))
-    return -np.log(1-x/a)
-
-def func_with_importance_sampling_3(x):
-    return func_to_integrate_3(x)/sampling_func_3(x)
-
-integral_3_with_importance = MonteCarlo([0], [1], NUM_POINTS, func_with_importance_sampling_3,
-                                        seed=SEED, method=2, func2=inverse_sampling_3)
+integral_3_with_importance = MonteCarlo([0], [1], NUM_POINTS, func_to_integrate_3,
+                                        seed=SEED, method=2, func2=sampling_func_3,
+                                        func3=inverse_sampling_3)
 
 integral_3_without_importance = MonteCarlo([0], [1], NUM_POINTS, func_to_integrate_3,
                                            seed=SEED, method=0)
-if rank==0:
-    print("IMPORTANCE TEST 3: exp(-x^2) from 0 to 1")
-    print("with importance sampling", integral_3_with_importance)
-    print("without importance sampling", integral_3_without_importance)
-    print("actual value 0.746824132812427")
+
+real_value_importance_sampling_3 = 0.746824132812427
+
+if rank == 0:
+    print("IMPORTANCE SAMPLING TEST 2: exp(-x^2) from 0 to 1")
+    print(f"With importance sampling: {integral_3_with_importance}")
+    print(f"Without importance sampling: {integral_3_without_importance}")
+    print(f"Real value: {real_value_importance_sampling_3}")
     print("")
+
 
 MPI.Finalize()
