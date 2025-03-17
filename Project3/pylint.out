@@ -1,0 +1,17 @@
+************* Module tasks
+tasks.py:160:0: C0116: Missing function or method docstring (missing-function-docstring)
+tasks.py:163:0: C0116: Missing function or method docstring (missing-function-docstring)
+tasks.py:167:0: C0116: Missing function or method docstring (missing-function-docstring)
+tasks.py:171:0: C0116: Missing function or method docstring (missing-function-docstring)
+tasks.py:190:0: C0116: Missing function or method docstring (missing-function-docstring)
+tasks.py:193:0: C0116: Missing function or method docstring (missing-function-docstring)
+tasks.py:197:0: C0116: Missing function or method docstring (missing-function-docstring)
+tasks.py:201:0: C0116: Missing function or method docstring (missing-function-docstring)
+tasks.py:220:0: C0116: Missing function or method docstring (missing-function-docstring)
+tasks.py:223:0: C0116: Missing function or method docstring (missing-function-docstring)
+tasks.py:227:0: C0116: Missing function or method docstring (missing-function-docstring)
+tasks.py:231:0: C0116: Missing function or method docstring (missing-function-docstring)
+
+------------------------------------------------------------------
+Your code has been rated at 8.98/10 (previous run: 8.47/10, +0.51)
+
