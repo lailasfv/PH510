@@ -57,7 +57,7 @@ class MonteCarlo:
         Parameters
         ----------
         num_counts : TYPE
-            DESCRIPTION.
+            DESCRIPTION. iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii fix
         seed : TYPE
             DESCRIPTION.
         method : TYPE
@@ -85,7 +85,7 @@ class MonteCarlo:
         Parameters
         ----------
         value : TYPE
-            DESCRIPTION.
+            DESCRIPTION. iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii fix
 
         Returns
         -------
