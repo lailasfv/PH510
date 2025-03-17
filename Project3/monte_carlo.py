@@ -105,8 +105,8 @@ class Monte_Carlo:
             expect_f_squared = expect_f_squared + \
                 self.f(x, *self.variables, factor**2)  # we get sum(f**2) for each worker
 
-        FINAL_SUM_F = np.empty(dim, dtype=np.float64)
-        FINAL_F_SQUARED = np.empty(dim, dtype=np.float64)
+        FINAL_SUM_F = np.array(0, dtype=np.float64)
+        FINAL_F_SQUARED = np.array(0, dtype=np.float64)
 
         comm.Allreduce(sum_f, FINAL_SUM_F)  # These take value of sum_f for all ranks and sum them into FINAL_...
         comm.Allreduce(expect_f_squared, FINAL_F_SQUARED)
@@ -146,8 +146,8 @@ class Monte_Carlo:
             expect_f_squared = expect_f_squared + \
                 (self.f(p, *self.variables))**2  # we get sum(f**2) for each worker
         
-        FINAL_SUM_F = np.empty(dim, dtype=np.float64)
-        FINAL_F_SQUARED = np.empty(dim, dtype=np.float64)
+        FINAL_SUM_F = np.array(0, dtype=np.float64)
+        FINAL_F_SQUARED = np.array(0, dtype=np.float64)
 
         comm.Allreduce(sum_f, FINAL_SUM_F)  # These take value of sum_f for all ranks and sum them into FINAL_...
         comm.Allreduce(expect_f_squared, FINAL_F_SQUARED)
@@ -160,5 +160,3 @@ class Monte_Carlo:
         self.data = np.array([FINAL_I, FINAL_VAR, FINAL_ERROR])
 
         return self.data
-
-MPI.Finalize()

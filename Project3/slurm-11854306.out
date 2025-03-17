@@ -1,0 +1,31 @@
+===================================================================================
+SLURM Job ID:            11854306
+Submit time:             Mon Mar 17 00:44:26 GMT 2025 (Unix Epoch time: 1742172266)
+Start time:              Mon Mar 17 00:44:40 GMT 2025 (Unix Epoch time: 1742172280)
+No. nodes:               1
+No. tasks:               1
+Job name:                PH510Assignment3
+Account:                 teaching
+QoS:                     teaching
+Partition (queue):       teaching-gpu
+Submit directory:        /users/xgb19123/PH510/PH510/Project3
+Script name:             /users/xgb19123/PH510/PH510/Project3/mc.sh
+Master node:             weegpu4
+Nodes used:              weegpu4
+Task distribution:       block:block
+===================================================================================
+
+[1.35266977e+00 1.69845766e-06 1.30324889e-03]
+5D Sphere with radius 1: [5.29728000e+00 1.38136508e-06 3.76100764e-02]
+Real value: 5.263789013914324
+5D Sphere with radius 3: [1.28723904e+03 1.38136508e-06 9.13924856e+00]
+Real value: 1279.1007303811807
+[9.78096801e-01 1.77809601e-04 2.66690533e-02]
+[9.78565322e-01 9.69648979e-06 1.99290798e-01]
+===================================================================================
+SLURM job 11854306 ended:     Mon Mar 17 00:41:38 GMT 2025 (Unix Epoch time: 1742172098)
+This is an estimated end time using the 'date' command from node weegpu4.hpc.strath.ac.uk
+For accurate timings, use 'sacct -j 11854306 -X --format=Submit,Start,End,Elapsed'
+======================================================================================
+slurmstepd: error: Pid 2720343 is still in the freezer job cgroup.  It might be left uncleaned after the job.
+slurmstepd: error: Pid 2720343 is still in the cpuset step cgroup.  It might be left uncleaned after the job.

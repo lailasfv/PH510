@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#!/bin/python3
 """
 Created on Sun Mar 16 23:22:34 2025
 
@@ -51,22 +51,23 @@ def gaussian1D(x, x0, sig, factor):
 
 def gaussianMD(x, x0, sig, factor):
     power = len(x)/2
-    return np.linalg.norm(factor/(sig*2*(2*np.pi)**power) * np.exp((-(x-x0)**2)/(2*sig**2)))
+    val = np.linalg.norm(factor/(sig*2*(2*np.pi)**power) * np.exp((-(x-x0)**2)/(2*sig**2)))
+    return val
 
 
 num_points = int(100000)
 seed = 12345
 
-a = np.array([3])
-b = np.array([6])
+#a = np.array([3])
+#b = np.array([6])
 
-vari = np.array([1, 2])
+# vari = np.array([1, 2])
 
-test_x_square = Monte_Carlo(a, b, num_points, test, variables=vari)
-integral = Monte_Carlo.integral(test_x_square, seed)
+#test_x_square = Monte_Carlo(a, b, num_points, test, variables=vari)
+#integral = Monte_Carlo.integral(test_x_square, seed)
 
-if rank == 0:
-    print(f"Evaluating integral of x^2 between {a} and {b}: {test_x_square}")
+#if rank == 0:
+#    print(f"Evaluating integral of x^2 between {a} and {b}: {test_x_square}")
 
 radius = np.array([1])
 radius2 = np.array([3])
