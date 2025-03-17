@@ -53,27 +53,8 @@ def gaussianMD(x, x0, sig, factor):
     return val
 
 
-num_points = int(100000)
+num_points = int(1000000)
 seed = 12345
-
-#a = np.array([3])
-#b = np.array([6])
-
-# vari = np.array([1, 2])
-
-<<<<<<< Updated upstream
-#test_x_square = Monte_Carlo(a, b, num_points, test, variables=vari)
-#integral = Monte_Carlo.integral(test_x_square, seed)
-
-#if rank == 0:
-#    print(f"Evaluating integral of x^2 between {a} and {b}: {test_x_square}")
-=======
-test_x_square = MonteCarlo(a, b, num_points, test, variables=vari)
-integral = MonteCarlo.integral(test_x_square, seed)
-
-if rank == 0:
-    print(f"Evaluating integral of ax^2 + b between {a} and {b}: {test_x_square}")
->>>>>>> Stashed changes
 
 radius = np.array([1])
 radius2 = np.array([3])

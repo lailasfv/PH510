@@ -4,7 +4,7 @@ Module for the creation of an object oriented class for Monte Carlo integration 
 
 MIT License
 
-Copyright (c) 2025 Adam John Rae, Laila Safavi, Tyler Chauvy
+Copyright (c) 2025 Tyler Chauvy, Adam John Rae, Laila Safavi
 
 See LICENSE.txt for details
 """
@@ -27,7 +27,7 @@ class MonteCarlo:
         self.starts = starts
         self.ends = ends
         self.f = func2
-        self.num_countsum_counts = num_counts
+        self.num_counts = num_counts
         self.variables = variables # variables defaults to an empty array if none are supplied
         self.data = 0   # data to be returned for any method
 
@@ -39,7 +39,9 @@ class MonteCarlo:
                 f" Err: {self.data[2,0]:.4f})")
     
     def random(self, seed):
-        """ Establishes the random numbers for each worker """
+        """
+        Establishes the random numbers for each worker
+        """
         ss = SeedSequence(seed)  # getting the random numbers
         child_seeds = ss.spawn(nworkers)  # random numbers for each worker
         streams = [default_rng(s) for s in child_seeds]
@@ -138,13 +140,8 @@ class MonteCarlo:
             expect_f_squared = expect_f_squared + \
                 self.f(x, *self.variables, factor**2)  # we get sum(f**2) for each worker
 
-<<<<<<< Updated upstream
-        FINAL_SUM_F = np.array(0, dtype=np.float64)
-        FINAL_F_SQUARED = np.array(0, dtype=np.float64)
-=======
-        final_sum_f = np.empty(dim, dtype=np.float64)
-        final_f_squared = np.empty(dim, dtype=np.float64)
->>>>>>> Stashed changes
+        final_sum_f = np.array(0, dtype=np.float64)
+        final_f_squared = np.array(0, dtype=np.float64)
 
         comm.Allreduce(sum_f, final_sum_f)  # These take value of sum_f for all ranks and sum them into FINAL_...
         comm.Allreduce(expect_f_squared, final_f_squared)
@@ -197,6 +194,9 @@ class MonteCarlo:
             sum_f = sum_f + (self.f(p, *self.variables))  # we get sum(f) for each worker
             expect_f_squared = expect_f_squared + \
                 (self.f(p, *self.variables))**2  # we get sum(f**2) for each worker
+
+        final_sum_f = np.array(0, dtype=np.float64)
+        final_f_squared = np.array(0, dtype=np.float64)
 
         comm.Allreduce(sum_f, final_sum_f)  # These take value of sum_f for all ranks and sum them into FINAL_...
         comm.Allreduce(expect_f_squared, final_f_squared)
