@@ -27,6 +27,11 @@ def gaussianMD(x, x0, sig, factor):
     return val
 
 
+# NOTE: NEW WAY TO PASS IN METHODS
+# integral = MonteCarlo(start, end, num_points, function, variables, seed, method)
+# Methods: 0 = definite integral, 1 = indefinite, 2 = importance sampling (requires func2)
+
+
 num_points = int(1000000)
 seed = 12345
 
@@ -41,11 +46,8 @@ b = np.repeat(radius, dimensions)
 a2 = np.repeat(-radius2, dimensions)
 b2 = np.repeat(radius2, dimensions)
 
-sphere_in = MonteCarlo(a, b, num_points, step, variables=radius)
-sphere2_in = MonteCarlo(a2, b2, num_points, step, variables=radius2)
-
-sphere = MonteCarlo.integral(sphere_in, seed)
-sphere2 = MonteCarlo.integral(sphere2_in, seed)
+sphere = MonteCarlo(a, b, num_points, step, seed=seed, method=0, variables=radius)
+sphere2 = MonteCarlo(a2, b2, num_points, step, seed=seed, method=0, variables=radius2)
 
 real = 8/15*np.pi**2*radius[0]**dimensions
 real2 = 8/15*np.pi**2*radius2[0]**dimensions
@@ -63,17 +65,16 @@ mean = 4
 sigma = 0.4
 
 vari2 = np.array([mean, sigma])
-gaussTest = MonteCarlo([-5], [5], num_points, gaussian1D, variables=vari2)
-gaussOutput = MonteCarlo.infinity(gaussTest, seed)
+gaussOutput = MonteCarlo([-1], [1], num_points, gaussian1D, seed=seed, method=1,
+                         variables=vari2)
 
 mean2 = np.array([2, 5, 6, 9, 4, 2])
 sigma2 = np.array([0.2, 0.4, 0.1, 0.3, 0.2, 0.5])
 
 vari2b = np.array([mean2, sigma2])
 
-gaussTest2 = MonteCarlo([-1, -1, -1, -1, -1, -1], [1, 1, 1, 1, 1, 1],
-                         num_points, gaussianMD, variables=vari2b)
-gaussOutput2 = MonteCarlo.infinity(gaussTest2, seed)
+gaussOutput2 = MonteCarlo([-1, -1, -1, -1, -1, -1], [1, 1, 1, 1, 1, 1], num_points, 
+                          gaussianMD, seed=seed, method=1, variables=vari2b)
 
 if rank == 0:
     print(gaussOutput)
@@ -96,17 +97,19 @@ def func_with_importance_sampling_1(x):
     return (func_to_integrate_1(x)/sampling_func_1(x))
 
 
-func_1_in_with_importance = MonteCarlo([-4], [0], num_points, func_with_importance_sampling_1)
-integral_1_with_importance = MonteCarlo.integral_importance_sampling(func_1_in_with_importance, inverse_sampling_1,seed)
-func_1_in_without_importance = MonteCarlo([-4], [0], num_points,
-                                          func_to_integrate_1)
-integral_1_without_importance = MonteCarlo.integral(func_1_in_without_importance, seed)
+integral_1_with_importance = MonteCarlo([-4], [0], num_points, func_with_importance_sampling_1, 
+                                        seed=seed, method=2, func2=inverse_sampling_1)
+
+integral_1_without_importance = MonteCarlo([-4], [0], num_points, func_to_integrate_1, 
+                                           seed=seed, method=0)
+
 if rank == 0:
     print("IMPORTANCE TEST 1: 2^x from -4 to 0")
     print("with importance sampling", integral_1_with_importance)
     print("without importance sampling", integral_1_without_importance)
     print("actual value", 15/(16*np.log(2)))
     print("")
+
 
 # Second Importance Sampling Test
 def func_to_integrate_2(x):
@@ -123,20 +126,20 @@ def inverse_sampling_2(x):
 def func_with_importance_sampling_2(x):
     return (func_to_integrate_2(x)/sampling_func_2(x))
 
+integral_2_with_importance = MonteCarlo([0], [2], num_points, func_with_importance_sampling_2, 
+                                        seed=seed, method=2, func2=inverse_sampling_2)
 
-func_2_in_with_importance = MonteCarlo([0], [2], num_points,
-                                       func_with_importance_sampling_2)
-integral_2_with_importance = MonteCarlo.integral_importance_sampling(func_2_in_with_importance, inverse_sampling_2,seed)
+integral_2_without_importance = MonteCarlo([0], [2], num_points, func_to_integrate_2, 
+                                           seed=seed, method=0)
 
-func_2_in_without_importance = MonteCarlo([0], [2], num_points,
-                                          func_to_integrate_2)
-integral_2_without_importance = MonteCarlo.integral(func_2_in_without_importance, seed)
+
 if rank==0:
     print("IMPORTANCE TEST 2: exp(-x^3) from 0 to 2")
     print("with importance sampling", integral_2_with_importance)
     print("without importance sampling", integral_2_without_importance)
     print("actual value 0.8929535142938763")
     print("")
+
 
 # Third Imporptance Sampling Test
 def func_to_integrate_3(x):
@@ -153,12 +156,11 @@ def inverse_sampling_3(x):
 def func_with_importance_sampling_3(x):
     return (func_to_integrate_3(x)/sampling_func_3(x))
 
-func_3_in_with_importance = MonteCarlo([0], [1], num_points,
-                                       func_with_importance_sampling_3)
-integral_3_with_importance = MonteCarlo.integral_importance_sampling(func_3_in_with_importance, inverse_sampling_3,seed)
-func_3_in_without_importance = MonteCarlo([0], [1], num_points,
-                                          func_to_integrate_3)
-integral_3_without_importance = MonteCarlo.integral(func_3_in_without_importance, seed)
+integral_3_with_importance = MonteCarlo([0], [1], num_points, func_with_importance_sampling_3, 
+                                        seed=seed, method=2, func2=inverse_sampling_3)
+
+integral_3_without_importance = MonteCarlo([0], [1], num_points, func_to_integrate_3, 
+                                           seed=seed, method=0)
 if rank==0:
     print("IMPORTANCE TEST 3: exp(-x^2) from 0 to 1")
     print("with importance sampling", integral_3_with_importance)

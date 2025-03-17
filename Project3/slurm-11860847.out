@@ -1,0 +1,43 @@
+===================================================================================
+SLURM Job ID:            11860847
+Submit time:             Mon Mar 17 17:58:53 GMT 2025 (Unix Epoch time: 1742234333)
+Start time:              Mon Mar 17 18:00:12 GMT 2025 (Unix Epoch time: 1742234412)
+No. nodes:               1
+No. tasks:               4
+Job name:                PH510Assignment3
+Account:                 teaching
+QoS:                     teaching
+Partition (queue):       teaching-gpu
+Submit directory:        /users/xgb19123/PH510/PH510/Project3
+Script name:             /users/xgb19123/PH510/PH510/Project3/mc.sh
+Master node:             weegpu4
+Nodes used:              weegpu4
+Task distribution:       block:block
+===================================================================================
+
+5D Sphere with radius 1: (Integral: 5.2660, Var: 0.0000, Err: 0.0119)
+Real value: 5.263789013914324
+5D Sphere with radius 3: (Integral: 1279.6186, Var: 0.0000, Err: 2.8832)
+Real value: 1279.1007303811807
+(Integral: 1.0034, Var: 0.0000, Err: 0.0085)
+(Integral: 0.9512, Var: 0.0000, Err: 0.0616)
+IMPORTANCE TEST 1: 2^x from -4 to 0
+with importance sampling (Integral: 1.3519, Var: 0.0000, Err: 0.0004)
+without importance sampling (Integral: 1.3533, Var: 0.0000, Err: 0.0010)
+actual value 1.3525266008334031
+
+IMPORTANCE TEST 2: exp(-x^3) from 0 to 2
+with importance sampling (Integral: 0.8929, Var: 0.0000, Err: 0.0004)
+without importance sampling (Integral: 0.8923, Var: 0.0000, Err: 0.0008)
+actual value 0.8929535142938763
+
+IMPORTANCE TEST 3: exp(-x^2) from 0 to 1
+with importance sampling (Integral: 0.7469, Var: 0.0000, Err: 0.0001)
+without importance sampling (Integral: 0.7467, Var: 0.0000, Err: 0.0002)
+actual value 0.746824132812427
+
+===================================================================================
+SLURM job 11860847 ended:     Mon Mar 17 17:57:42 GMT 2025 (Unix Epoch time: 1742234262)
+This is an estimated end time using the 'date' command from node weegpu4.hpc.strath.ac.uk
+For accurate timings, use 'sacct -j 11860847 -X --format=Submit,Start,End,Elapsed'
+======================================================================================

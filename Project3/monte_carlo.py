@@ -23,22 +23,27 @@ class MonteCarlo:
     """
     Class for calculating integrals through the Monte Carlo method
     """
-    def __init__(self, starts, ends, num_counts, func2, variables=[]):
+    def __init__(self, starts, ends, num_counts, func, seed, method, func2=None, variables=[]):
         self.starts = starts
         self.ends = ends
-        self.f = func2
+        self.f = func
         self.num_counts = num_counts
         self.variables = variables # variables defaults to an empty array if none are supplied
-        self.data = 0   # data to be returned for any method
+        if method == 0:
+            self.data = self.integral(seed)
+        elif method == 1:
+            self.data = self.infinity(seed)
+        elif method == 2:
+            self.data = self.integral_importance_sampling(func2, seed)
 
     def __str__(self):
         """
         Assumes floating point when printing
         """
-        return (f"(Integral: {self.data[0,0]:.4f}, Var: {self.data[1,0]:.4f},"
-                f" Err: {self.data[2,0]:.4f})")
+        return (f"(Integral: {self.data[0]:.4f}, Var: {self.data[1]:.4f},"
+                f" Err: {self.data[2]:.4f})")
     
-    def random(self, seed):
+    def random(seed):
         """
         Establishes the random numbers for each worker
         """
@@ -63,7 +68,7 @@ class MonteCarlo:
 
         """
         dim = len(self.starts)
-        streams = MonteCarlo.random(self, seed)
+        streams = MonteCarlo.random(seed)
         points = streams[rank].random((int(self.num_counts/nworkers), dim))
 
         # Sending messages in MPI comm requires array
@@ -120,7 +125,7 @@ class MonteCarlo:
         dim = len(self.starts)
         inf_starts = -1  # gross way of doing this tbh
         inf_ends = 1
-        streams = MonteCarlo.random(self, seed)
+        streams = MonteCarlo.random(seed)
         points = streams[rank].random((int(self.num_counts/nworkers), dim))
 
         # Sending messages in MPI comm requires array
@@ -178,7 +183,7 @@ class MonteCarlo:
 
         """
         dim = len(self.starts)
-        streams = MonteCarlo.random(self, seed)
+        streams = MonteCarlo.random(seed)
         points = streams[rank].random((int(self.num_counts/nworkers), dim))
 
         # Sending messages in MPI comm requires array
