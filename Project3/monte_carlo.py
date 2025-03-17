@@ -23,18 +23,14 @@ class MonteCarlo:
     """
     Class for calculating integrals through the Monte Carlo method
     """
-    def __init__(self, starts, ends, num_counts, func, seed, method, func2=None, variables=[]):
+    def __init__(self, starts, ends, func, variables=None):
         self.starts = starts
         self.ends = ends
         self.f = func
-        self.num_counts = num_counts
-        self.variables = variables # variables defaults to an empty array if none are supplied
-        if method == 0:
-            self.data = self.integral(seed)
-        elif method == 1:
-            self.data = self.infinity(seed)
-        elif method == 2:
-            self.data = self.integral_importance_sampling(func2, seed)
+        if variables is None:
+            variables = [] # variables defaults to an empty array if none are supplied
+        else:
+            self.variables = variables
 
     def __str__(self):
         """
@@ -42,8 +38,8 @@ class MonteCarlo:
         """
         return (f"(Integral: {self.data[0]:.4f}, Var: {self.data[1]:.4f},"
                 f" Err: {self.data[2]:.4f})")
-    
-    def random(seed):
+
+    def random(self, seed):
         """
         Establishes the random numbers for each worker
         """
@@ -52,6 +48,23 @@ class MonteCarlo:
         streams = [default_rng(s) for s in child_seeds]
         # getting the random numbers in arrays we like
         return streams
+    
+    def method(self, num_counts, seed, method, func2=None):
+        self.num_counts = num_counts
+        if method == 0:
+            self.data = self.integral(seed)
+        elif method == 1:
+            self.data = self.infinity(seed)
+        elif method == 2:
+            self.data = self.integral_importance_sampling(func2, seed)
+            
+    def reduce_sum(self, value):
+        value_message = np.array(value, dtype=np.float64)
+     
+        summation = np.array(0, dtype=np.float64)
+
+        comm.Allreduce(value_message, summation)
+        return summation
 
     def integral(self, seed):
         """
@@ -68,12 +81,12 @@ class MonteCarlo:
 
         """
         dim = len(self.starts)
-        streams = MonteCarlo.random(seed)
+        streams = MonteCarlo.random(self, seed)
         points = streams[rank].random((int(self.num_counts/nworkers), dim))
 
         # Sending messages in MPI comm requires array
-        sum_f = np.array(0, dtype=np.float64)
-        expect_f_squared = np.array(0, dtype=np.float64)
+        sum_f = 0
+        expect_f_squared = 0
 
         for p in points:
             count = 0
@@ -86,11 +99,8 @@ class MonteCarlo:
             expect_f_squared = expect_f_squared + \
                 (self.f(p, *self.variables))**2  # we get sum(f**2) for each worker
 
-        final_sum_f = np.array(0, dtype=np.float64)
-        final_f_squared = np.array(0, dtype=np.float64)
-
-        comm.Allreduce(sum_f, final_sum_f)  # These take value of sum_f for all ranks and sum them into FINAL_...
-        comm.Allreduce(expect_f_squared, final_f_squared)
+        final_sum_f = MonteCarlo.reduce_sum(self, sum_f)
+        final_f_squared = MonteCarlo.reduce_sum(self, expect_f_squared)
 
         prefactor1 = 1  # this will be used to create the (b-a)(d-c)...
         prefactor2 = 1/(self.num_counts)
@@ -107,7 +117,7 @@ class MonteCarlo:
         self.data = np.array([final_i, final_var, final_error])
 
         return self.data
-    
+
     def infinity(self, seed):
         """
         Monte Carlo integral calculator for infinite/improper cases
@@ -125,12 +135,12 @@ class MonteCarlo:
         dim = len(self.starts)
         inf_starts = -1  # gross way of doing this tbh
         inf_ends = 1
-        streams = MonteCarlo.random(seed)
+        streams = MonteCarlo.random(self, seed)
         points = streams[rank].random((int(self.num_counts/nworkers), dim))
 
         # Sending messages in MPI comm requires array
-        sum_f = np.array(0, dtype=np.float64)
-        expect_f_squared =  np.array(0, dtype=np.float64)
+        sum_f = 0
+        expect_f_squared = 0
 
         for p in points:
             count = 0
@@ -145,11 +155,8 @@ class MonteCarlo:
             expect_f_squared = expect_f_squared + \
                 self.f(x, *self.variables, factor**2)  # we get sum(f**2) for each worker
 
-        final_sum_f = np.array(0, dtype=np.float64)
-        final_f_squared = np.array(0, dtype=np.float64)
-
-        comm.Allreduce(sum_f, final_sum_f)  # These take value of sum_f for all ranks and sum them into FINAL_...
-        comm.Allreduce(expect_f_squared, final_f_squared)
+        final_sum_f = MonteCarlo.reduce_sum(self, sum_f)
+        final_f_squared = MonteCarlo.reduce_sum(self, expect_f_squared)
 
         prefactor1 = 1  # this will be used to create the (b-a)(d-c)...
         prefactor2 = 1/(self.num_counts)
@@ -166,7 +173,7 @@ class MonteCarlo:
         self.data = np.array([final_i, final_var, final_error])
 
         return self.data
-    
+
     def integral_importance_sampling(self, inverse_samp, seed):
         """
         Monte Carlo integral calculator that implements an importance sampling method
@@ -183,13 +190,12 @@ class MonteCarlo:
 
         """
         dim = len(self.starts)
-        streams = MonteCarlo.random(seed)
+        streams = MonteCarlo.random(self, seed)
         points = streams[rank].random((int(self.num_counts/nworkers), dim))
 
         # Sending messages in MPI comm requires array
-        sum_f = np.array(0, dtype=np.float64)
-        expect_f_squared = np.array(0, dtype=np.float64)
-
+        sum_f = 0
+        expect_f_squared = 0
 
         for p in points:
             count = 0
@@ -200,12 +206,9 @@ class MonteCarlo:
             expect_f_squared = expect_f_squared + \
                 (self.f(p, *self.variables))**2  # we get sum(f**2) for each worker
 
-        final_sum_f = np.array(0, dtype=np.float64)
-        final_f_squared = np.array(0, dtype=np.float64)
+        final_sum_f = MonteCarlo.reduce_sum(self, sum_f)
+        final_f_squared = MonteCarlo.reduce_sum(self, expect_f_squared)
 
-        comm.Allreduce(sum_f, final_sum_f)  # These take value of sum_f for all ranks and sum them into FINAL_...
-        comm.Allreduce(expect_f_squared, final_f_squared)
-        
         prefactor2 = 1/(self.num_counts)
         final_i = final_sum_f*prefactor2 # our integral
         final_var = prefactor2 * \
