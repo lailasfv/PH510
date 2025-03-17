@@ -27,10 +27,12 @@ class MonteCarlo:
         self.starts = starts
         self.ends = ends
         self.f = func
+        self.num_counts = 0
+        self.data = 0
         if variables is None:
             variables = [] # variables defaults to an empty array if none are supplied
         else:
-            self.variables = variables
+            self.variables = variables       
 
     def __str__(self):
         """
@@ -48,8 +50,27 @@ class MonteCarlo:
         streams = [default_rng(s) for s in child_seeds]
         # getting the random numbers in arrays we like
         return streams
-    
+
     def method(self, num_counts, seed, method, func2=None):
+        """
+        
+
+        Parameters
+        ----------
+        num_counts : TYPE
+            DESCRIPTION.
+        seed : TYPE
+            DESCRIPTION.
+        method : TYPE
+            DESCRIPTION.
+        func2 : TYPE, optional
+            DESCRIPTION. The default is None.
+
+        Returns
+        -------
+        None.
+
+        """
         self.num_counts = num_counts
         if method == 0:
             self.data = self.integral(seed)
@@ -57,10 +78,24 @@ class MonteCarlo:
             self.data = self.infinity(seed)
         elif method == 2:
             self.data = self.integral_importance_sampling(func2, seed)
-            
+
     def reduce_sum(self, value):
+        """
+        
+
+        Parameters
+        ----------
+        value : TYPE
+            DESCRIPTION.
+
+        Returns
+        -------
+        summation : TYPE
+            DESCRIPTION.
+
+        """
         value_message = np.array(value, dtype=np.float64)
-     
+
         summation = np.array(0, dtype=np.float64)
 
         comm.Allreduce(value_message, summation)
