@@ -10,32 +10,6 @@ from monte_carlo import MonteCarlo
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 nworkers = comm.Get_size()
-
-def funct2_try(x):
-    return 2**x
-
-def samp2(x):
-    A=1/(1-np.exp(-4))
-    return(A*np.exp(x))
-
-def func_imp_2(x):
-    return (funct2_try(x)/samp2(x))
-
-def inverse_samp2(x):
-    A=1/(1-np.exp(-4))
-    #A=1
-    return(np.log(x/A+np.exp(-4)))
-"""
-funct_test = MonteCarlo([0],[2],num_points,func_w_imp_sampling)
-#funct_test = MonteCarlo([0],[1],num_points,funct_without_imp_sampling)
-integral= MonteCarlo.integral_importance_sampling(funct_test, inverse_samp)
-print(integral)
-"""
-num_points = int(100000)
-seed2 = 12345
-funct_test2 = MonteCarlo([-4],[0],num_points,func_imp_2)
-integral2= MonteCarlo.integral_importance_sampling(funct_test2, inverse_samp2,seed2)
-print(integral2)
         
 
 def step(x, R):  # FUNCTION FOR ANY ROUND SHAPE
@@ -105,4 +79,92 @@ if rank == 0:
     print(gaussOutput)
     print(gaussOutput2)
     
+
+# First Importance Sampling Test
+def func_to_integrate_1(x):
+    return 2**x
+
+def sampling_func_1(x):
+    A = 1/(1-np.exp(-4))
+    return(A*np.exp(x))
+
+def inverse_sampling_1(x):
+    A=1/(1-np.exp(-4))
+    return(np.log(x/A+np.exp(-4)))
+
+def func_with_importance_sampling_1(x):
+    return (func_to_integrate_1(x)/sampling_func_1(x))
+
+
+func_1_in_with_importance = MonteCarlo([-4], [0], num_points, func_with_importance_sampling_1)
+integral_1_with_importance = MonteCarlo.integral_importance_sampling(func_1_in_with_importance, inverse_sampling_1,seed)
+func_1_in_without_importance = MonteCarlo([-4], [0], num_points,
+                                          func_to_integrate_1)
+integral_1_without_importance = MonteCarlo.integral(func_1_in_without_importance, seed)
+if rank == 0:
+    print("IMPORTANCE TEST 1: 2^x from -4 to 0")
+    print("with importance sampling", integral_1_with_importance)
+    print("without importance sampling", integral_1_without_importance)
+    print("actual value", 15/(16*np.log(2)))
+    print("")
+
+# Second Importance Sampling Test
+def func_to_integrate_2(x):
+    return np.exp(-x**3)
+
+def sampling_func_2(x):
+    A = 1/(1-np.exp(-2))
+    return A*(np.exp(-x))
+
+def inverse_sampling_2(x):
+    A = 1/(1-np.exp(-2))
+    return (-np.log(1-x/A))  # THIS SHOULD BE WRONG for lower limits
+
+def func_with_importance_sampling_2(x):
+    return (func_to_integrate_2(x)/sampling_func_2(x))
+
+
+func_2_in_with_importance = MonteCarlo([0], [2], num_points,
+                                       func_with_importance_sampling_2)
+integral_2_with_importance = MonteCarlo.integral_importance_sampling(func_2_in_with_importance, inverse_sampling_2,seed)
+
+func_2_in_without_importance = MonteCarlo([0], [2], num_points,
+                                          func_to_integrate_2)
+integral_2_without_importance = MonteCarlo.integral(func_2_in_without_importance, seed)
+if rank==0:
+    print("IMPORTANCE TEST 2: exp(-x^3) from 0 to 2")
+    print("with importance sampling", integral_2_with_importance)
+    print("without importance sampling", integral_2_without_importance)
+    print("actual value 0.8929535142938763")
+    print("")
+
+# Third Imporptance Sampling Test
+def func_to_integrate_3(x):
+    return np.exp(-x**2)
+
+def sampling_func_3(x):
+    A=1/(1-np.exp(-1))
+    return A*np.exp(-x)
+
+def inverse_sampling_3(x):
+    A=1/(1-np.exp(-1))
+    return -np.log(1-x/A)
+
+def func_with_importance_sampling_3(x):
+    return (func_to_integrate_3(x)/sampling_func_3(x))
+
+func_3_in_with_importance = MonteCarlo([0], [1], num_points,
+                                       func_with_importance_sampling_3)
+integral_3_with_importance = MonteCarlo.integral_importance_sampling(func_3_in_with_importance, inverse_sampling_3,seed)
+func_3_in_without_importance = MonteCarlo([0], [1], num_points,
+                                          func_to_integrate_3)
+integral_3_without_importance = MonteCarlo.integral(func_3_in_without_importance, seed)
+if rank==0:
+    print("IMPORTANCE TEST 3: exp(-x^2) from 0 to 1")
+    print("with importance sampling", integral_3_with_importance)
+    #print(f"5D Sphere with radius {radius[0]}: {sphere}")
+    print("without importance sampling", integral_3_without_importance)
+    print("actual value 0.746824132812427")
+    print("")
+
 MPI.Finalize()
