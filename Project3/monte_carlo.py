@@ -31,7 +31,7 @@ class MonteCarlo:
         if variables is None:
             variables = [] # variables defaults to an empty array if none are supplied
         else:
-            self.variables = variables       
+            self.variables = variables
 
     def __str__(self):
         """
