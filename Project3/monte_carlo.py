@@ -27,7 +27,6 @@ class MonteCarlo:
         self.starts = starts
         self.ends = ends
         self.f = func
-        self.num_counts = 0
         self.data = 0
         if variables is None:
             variables = [] # variables defaults to an empty array if none are supplied
@@ -71,13 +70,12 @@ class MonteCarlo:
         None.
 
         """
-        self.num_counts = num_counts
         if method == 0:
-            self.data = self.integral(seed)
+            self.data = self.integral(seed, num_counts)
         elif method == 1:
-            self.data = self.infinity(seed)
+            self.data = self.infinity(seed, num_counts)
         elif method == 2:
-            self.data = self.integral_importance_sampling(func2, seed)
+            self.data = self.integral_importance_sampling(func2, seed, num_counts)
 
     def reduce_sum(self, value):
         """
@@ -101,7 +99,7 @@ class MonteCarlo:
         comm.Allreduce(value_message, summation)
         return summation
 
-    def integral(self, seed):
+    def integral(self, seed, num_counts):
         """
         Monte Carlo integral calculator for definite integrals
 
@@ -117,7 +115,7 @@ class MonteCarlo:
         """
         dim = len(self.starts)
         streams = MonteCarlo.random(self, seed)
-        points = streams[rank].random((int(self.num_counts/nworkers), dim))
+        points = streams[rank].random((int(num_counts/nworkers), dim))
 
         # Sending messages in MPI comm requires array
         sum_f = 0
@@ -138,7 +136,7 @@ class MonteCarlo:
         final_f_squared = MonteCarlo.reduce_sum(self, expect_f_squared)
 
         prefactor1 = 1  # this will be used to create the (b-a)(d-c)...
-        prefactor2 = 1/(self.num_counts)
+        prefactor2 = 1/(num_counts)
         d = 0
         while d < dim:
             # we get our (b-a)(c-d...)
@@ -153,7 +151,7 @@ class MonteCarlo:
 
         return self.data
 
-    def infinity(self, seed):
+    def infinity(self, seed, num_counts):
         """
         Monte Carlo integral calculator for infinite/improper cases
 
@@ -171,7 +169,7 @@ class MonteCarlo:
         inf_starts = -1  # gross way of doing this tbh
         inf_ends = 1
         streams = MonteCarlo.random(self, seed)
-        points = streams[rank].random((int(self.num_counts/nworkers), dim))
+        points = streams[rank].random((int(num_counts/nworkers), dim))
 
         # Sending messages in MPI comm requires array
         sum_f = 0
@@ -194,7 +192,7 @@ class MonteCarlo:
         final_f_squared = MonteCarlo.reduce_sum(self, expect_f_squared)
 
         prefactor1 = 1  # this will be used to create the (b-a)(d-c)...
-        prefactor2 = 1/(self.num_counts)
+        prefactor2 = 1/(num_counts)
         d = 0
         while d < dim:
             # we get our (b-a)(c-d...)
@@ -209,7 +207,7 @@ class MonteCarlo:
 
         return self.data
 
-    def integral_importance_sampling(self, inverse_samp, seed):
+    def integral_importance_sampling(self, inverse_samp, seed, num_counts):
         """
         Monte Carlo integral calculator that implements an importance sampling method
 
@@ -226,7 +224,7 @@ class MonteCarlo:
         """
         dim = len(self.starts)
         streams = MonteCarlo.random(self, seed)
-        points = streams[rank].random((int(self.num_counts/nworkers), dim))
+        points = streams[rank].random((int(num_counts/nworkers), dim))
 
         # Sending messages in MPI comm requires array
         sum_f = 0
@@ -244,7 +242,7 @@ class MonteCarlo:
         final_sum_f = MonteCarlo.reduce_sum(self, sum_f)
         final_f_squared = MonteCarlo.reduce_sum(self, expect_f_squared)
 
-        prefactor2 = 1/(self.num_counts)
+        prefactor2 = 1/(num_counts)
         final_i = final_sum_f*prefactor2 # our integral
         final_var = prefactor2 * \
             (final_f_squared*prefactor2-(final_sum_f*prefactor2)**2)  # our variance
