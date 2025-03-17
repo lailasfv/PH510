@@ -76,6 +76,7 @@ class MonteCarlo:
             self.data = self.infinity(seed, num_counts)
         elif method == 2:
             self.data = self.integral_importance_sampling(func2, seed, num_counts)
+        return self.data
 
     def reduce_sum(self, value):
         """
@@ -147,9 +148,8 @@ class MonteCarlo:
         final_var = prefactor2 * \
             (final_f_squared*prefactor2-(final_sum_f*prefactor2)**2)  # our variance
         final_error = prefactor1*np.sqrt(final_var)  # our error
-        self.data = np.array([final_i, final_var, final_error])
 
-        return self.data
+        return np.array([final_i, final_var, final_error])
 
     def infinity(self, seed, num_counts):
         """
@@ -203,11 +203,10 @@ class MonteCarlo:
         final_var = prefactor2 * \
             (final_f_squared*prefactor2-(final_sum_f*prefactor2)**2)  # our variance
         final_error = prefactor1*np.sqrt(final_var)  # our error
-        self.data = np.array([final_i, final_var, final_error])
 
-        return self.data
+        return np.array([final_i, final_var, final_error])
 
-    def integral_importance_sampling(self, inverse_samp, seed, num_counts):
+    def integral_importance_sampling(self, seed, num_counts, inverse_samp):
         """
         Monte Carlo integral calculator that implements an importance sampling method
 
@@ -247,6 +246,5 @@ class MonteCarlo:
         final_var = prefactor2 * \
             (final_f_squared*prefactor2-(final_sum_f*prefactor2)**2)  # our variance
         final_error = np.sqrt(final_var)  # our error
-        self.data = np.array([final_i, final_var, final_error])
 
-        return self.data
+        return np.array([final_i, final_var, final_error])
