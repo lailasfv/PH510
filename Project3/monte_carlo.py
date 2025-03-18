@@ -57,18 +57,23 @@ class MonteCarlo:
 
         Parameters
         ----------
-        num_counts : TYPE
-            DESCRIPTION. iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii fix
-        seed : TYPE
-            DESCRIPTION.
-        method : TYPE
-            DESCRIPTION.
-        func2 : TYPE, optional
-            DESCRIPTION. The default is None.
+        num_counts : Integer
+            Total number of points to be evaluated in integral
+        seed : Integer
+            Seed for random number generation
+        method : Integer
+            Decides method to integrate with.
+            0 = Definite integral
+            1 = Indefinite integral
+            2 = Definite integral with importance sampling
+        func2 : Function
+            Sampling function used to do importance sampling. The default is None.
+        func3 : Function
+            Inverse function used to do importance sampling. The default is None.
 
         Returns
         -------
-        None.
+        Print statement of integral, variance and error 
 
         """
         if method == 0:
@@ -86,13 +91,13 @@ class MonteCarlo:
 
         Parameters
         ----------
-        value : TYPE
-            DESCRIPTION. iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii fix
+        value : float64
+            Value from current rank
 
         Returns
         -------
-        summation : TYPE
-            DESCRIPTION.
+        summation : float64
+            Summation of total value across all ranks
 
         """
         value_message = np.array(value, dtype=np.float64)
@@ -109,6 +114,12 @@ class MonteCarlo:
         Parameters
         ----------
         seed : Integer
+            Integer used to initialise random number generator and get a
+            sequence of random numbers
+
+        num_counts : Integer
+            Total number of points to evaluate the function to perform
+            integration
 
         Returns
         -------
@@ -160,6 +171,12 @@ class MonteCarlo:
         Parameters
         ----------
         seed : Integer
+            Integer use to initialise random number generator and get a
+            sequence of random numbers
+
+        num_counts : Integer
+            Total number of points to evaluate the function to perform
+            integration
 
         Returns
         -------
@@ -215,13 +232,19 @@ class MonteCarlo:
 
         Parameters
         ----------
-        samp: Function
-              Sampling function used to do importance sampling - ASSUMED TO BE
-              NORMALISED over the range [starts,ends]
-        inverse_samp : Function
-                       Inverse of the sampling function
         seed : Integer
-        RE ORDER THIS PART AND ADD THE MISSING PARAMETERS
+            Integer use to initialise random number generator and get a
+            sequence of random numbers
+
+        num_counts : Integer
+            Total number of points to evaluate the function to perform
+            integration
+        samp: Function
+            Sampling function used to do importance sampling - the function is
+            ASSUMED TO HAVE BEEN NORMALISED over the range [starts,ends]
+        inverse_samp : Function
+            Inverse function of the definite integral of the sampling function
+            over the range [starts,x]
 
         Returns
         -------
