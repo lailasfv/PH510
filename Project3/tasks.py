@@ -243,7 +243,7 @@ def inverse_sampling_3(x):
 # INITIALISATION FOR ALL INTEGRALS
 
 NUM_POINTS = int(1000000)  # This is split across cores
-SEED = 12345  # Random seed passed in to class methods
+SEED = 27347  # Random seed passed in to class methods
 
 time1 = time.time()
 
@@ -292,17 +292,17 @@ time5 = time.time()
 if rank == 0:
     print("TASK 1 - Shapes")
     print(f"2D Circle with radius {radius[0]}: {circle}")
-    print(f"2D Time taken: {time2-time1}s")
     print(f"2D Real value: {real:.4}")
+    print(f"2D Time taken: {time2-time1}s")
     print(f"3D Sphere with radius {radius[0]}: {sphere}")
-    print(f"3D Time taken: {time3-time2}s")
     print(f"3D Real value: {real2:.4}")
+    print(f"3D Time taken: {time3-time2}s")
     print(f"4D Hypersphere with radius {radius[0]}: {hypersphere}")
-    print(f"4D Time taken: {time4-time3}s")
     print(f"4D Real value: {real3:.4}")
+    print(f"4D Time taken: {time4-time3}s")
     print(f"5D Hypersphere with radius {radius[0]}: {hypersphere2}")
-    print(f"5D Time taken: {time5-time4}s")
     print(f"5D Real value: {real4:.4}")
+    print(f"5D Time taken: {time5-time4}s")
     print("\n")
 
 # ------------------------------------------
@@ -348,57 +348,65 @@ if rank == 0:
 # ------------------------------------------
 # IMPORTANCE SAMPLING
 # First Importance Sampling Test
-
+time1a = time.time()
 importanceInput1 = MonteCarlo([-4], [0], func_to_integrate_1)
 importanceOutput1 = MonteCarlo.method(importanceInput1, NUM_POINTS, seed=SEED, method=2,
                                       func2=sampling_func_1, func3=inverse_sampling_1)
-
+time1b = time.time()
 unimportanceInput1 = MonteCarlo([-4], [0], func_to_integrate_1)
 unimportanceOutput1 = MonteCarlo.method(unimportanceInput1, NUM_POINTS, seed=SEED, method=0)
-
+time1c = time.time()
 real_value_importance_sampling_1 = 15/(16*np.log(2))
 
 if rank == 0:
     print("IMPORTANCE SAMPLING TEST 1: 2^x from -4 to 0")
-    print(f"With importance sampling: {importanceOutput1}")
-    print(f"Without importance sampling: {unimportanceOutput1}")
     print(f"Real value: {real_value_importance_sampling_1:.4}")
+    print(f"With importance sampling: {importanceOutput1}")
+    print(f"Time taken: {time1b-time1a}")
+    print(f"Without importance sampling: {unimportanceOutput1}")
+    print(f"Time taken: {time1c-time1b}")
     print("\n")
 
 
 # Second Importance Sampling Test
+time2a = time.time()
 importanceInput1 = MonteCarlo([0], [2], func_to_integrate_2)
 importanceOutput1 = MonteCarlo.method(importanceInput1, NUM_POINTS, seed=SEED, method=2,
                                       func2=sampling_func_2, func3=inverse_sampling_2)
-
+time2b = time.time()
 unimportanceInput2 = MonteCarlo([0], [2], func_to_integrate_2)
 unimportanceOutput2 = MonteCarlo.method(unimportanceInput2, NUM_POINTS, seed=SEED, method=0)
-
+time2c = time.time()
 # real_value_importance_sampling_2 = 0.8929535142938763
 
 if rank == 0:
     print("IMPORTANCE SAMPLING TEST 2: exp(-x^3) from 0 to 2")
-    print(f"With importance sampling: {importanceOutput1}")
-    print(f"Without importance sampling: {unimportanceOutput2}")
     print("Real value: 0.8929")
+    print(f"With importance sampling: {importanceOutput1}")
+    print(f"Time taken: {time2b-time2a}")
+    print(f"Without importance sampling: {unimportanceOutput2}")
+    print(f"Time taken: {time2c-time2b}")
     print("\n")
 
 
 # Third Importance Sampling Test
+time3a = time.time()
 importanceInput3 = MonteCarlo([0], [1], func_to_integrate_3)
 importanceOutput3 = MonteCarlo.method(importanceInput3, NUM_POINTS, seed=SEED, method=2,
                                       func2=sampling_func_3, func3=inverse_sampling_3)
-
+time3b = time.time()
 unimportanceInput3 = MonteCarlo([0], [1], func_to_integrate_3)
 unimportanceOutput3 = MonteCarlo.method(unimportanceInput3, NUM_POINTS, seed=SEED, method=0)
-
+time3c = time.time()
 # real_value_importance_sampling3 = 0.746824132812427
 
 if rank == 0:
     print("IMPORTANCE SAMPLING TEST 3: exp(-x^2) from 0 to 1")
-    print(f"With importance sampling: {importanceOutput3}")
-    print(f"Without importance sampling: {unimportanceOutput3}")
     print("Real value: 0.7468")
+    print(f"With importance sampling: {importanceOutput3}")
+    print(f"Time taken: {time3b-time3a}")
+    print(f"Without importance sampling: {unimportanceOutput3}")
+    print(f"Time taken: {time3c-time3b}")
     print("\n")
 
 MPI.Finalize()
