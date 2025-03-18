@@ -50,7 +50,7 @@ class MonteCarlo:
         # getting the random numbers in arrays we like
         return streams
 
-    def method(self, num_counts, seed, method, func2=None):
+    def method(self, num_counts, seed, method, func2=None, func3=None):
         """
         
 
@@ -75,7 +75,7 @@ class MonteCarlo:
         elif method == 1:
             self.data = self.infinity(seed, num_counts)
         elif method == 2:
-            self.data = self.integral_importance_sampling(func2, seed, num_counts)
+            self.data = self.integral_importance_sampling(seed, num_counts, func2, func3)
         return self.data
 
     def reduce_sum(self, value):
@@ -206,14 +206,19 @@ class MonteCarlo:
 
         return np.array([final_i, final_var, final_error])
 
-    def integral_importance_sampling(self, seed, num_counts, inverse_samp):
+    def integral_importance_sampling(self, seed, num_counts, samp, inverse_samp):
         """
         Monte Carlo integral calculator that implements an importance sampling method
 
         Parameters
         ----------
+        samp: Function
+              Sampling function used to do importance sampling - ASSUMED TO BE
+              NORMALISED over the range [starts,ends]
         inverse_samp : Function
+                       Inverse of the sampling function
         seed : Integer
+        RE ORDER THIS PART AND ADD THE MISSING PARAMETERS
 
         Returns
         -------
@@ -234,9 +239,9 @@ class MonteCarlo:
             while count < dim:
                 p[count] = inverse_samp(p[count])
                 count = count+1
-            sum_f = sum_f + (self.f(p, *self.variables))  # we get sum(f) for each worker
+            sum_f = sum_f + (self.f(p, *self.variables)/samp(p))  # we get sum(f) for each worker
             expect_f_squared = expect_f_squared + \
-                (self.f(p, *self.variables))**2  # we get sum(f**2) for each worker
+                (self.f(p, *self.variables)/samp(p))**2  # we get sum(f**2) for each worker
 
         final_sum_f = MonteCarlo.reduce_sum(self, sum_f)
         final_f_squared = MonteCarlo.reduce_sum(self, expect_f_squared)
