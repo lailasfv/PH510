@@ -326,6 +326,16 @@ if rank == 0:
     print(f"6D Gaussian with mean {MEAN3} and SD {SIGMA3}: {gaussOutput3}")
     print("Real value should always be 1.0 (normalised function)")
     print("\n")
+
+input_importance_3 = MonteCarlo([0], [1], func_to_integrate_3, variables=None)
+output_importance_3 = MonteCarlo.method(input_importance_3, NUM_POINTS, seed=SEED, method=2, func2=sampling_func_3, func3=inverse_sampling_3)
+real_value_importance_sampling_3 = 0.746824132812427
+
+if rank == 0:
+    print(f"With importance sampling: {output_importance_3}")
+    print(f"Real value: {real_value_importance_sampling_3}")
+    print("")
+
 '''
 # ------------------------------------------
 # IMPORTANCE SAMPLING
