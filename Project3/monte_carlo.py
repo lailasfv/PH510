@@ -9,6 +9,7 @@ Copyright (c) 2025 Tyler Chauvy, Adam John Rae, Laila Safavi
 See LICENSE.txt for details
 """
 
+import math
 from numpy.random import SeedSequence, default_rng
 import numpy as np
 from mpi4py import MPI
@@ -130,9 +131,9 @@ class MonteCarlo:
                 p[count] = p[count] * \
                     (self.ends[count]-self.starts[count])+self.starts[count]
                 count = count+1
-            sum_f = sum_f + (self.f(p, *self.variables))  # we get sum(f) for each worker
-            expect_f_squared = expect_f_squared + \
-                (self.f(p, *self.variables))**2  # we get sum(f**2) for each worker
+            # we get sum(f) and sum(f**2) for each worker
+            sum_f = math.fsum([sum_f, self.f(p, *self.variables)])
+            expect_f_squared = math.fsum([expect_f_squared, (self.f(p, *self.variables))**2])
 
         final_sum_f = MonteCarlo.reduce_sum(self, sum_f)
         final_f_squared = MonteCarlo.reduce_sum(self, expect_f_squared)
@@ -185,9 +186,10 @@ class MonteCarlo:
 
             x = p/(1-p**2)  # value to be passed in to f(x)
             factor = (1+p**2)/((1-p**2)**2)  # integral factor
-            sum_f = sum_f + (self.f(x, *self.variables, factor))  # we get sum(f) for each worker
-            expect_f_squared = expect_f_squared + \
-                self.f(x, *self.variables, factor**2)  # we get sum(f**2) for each worker
+            # we get sum(f) and sum(f**2) for each worker
+            sum_f = math.fsum([sum_f, self.f(x, *self.variables, factor)])
+            expect_f_squared = math.fsum([expect_f_squared, \
+                self.f(x, *self.variables, factor**2)])
 
         final_sum_f = MonteCarlo.reduce_sum(self, sum_f)
         final_f_squared = MonteCarlo.reduce_sum(self, expect_f_squared)
@@ -240,9 +242,10 @@ class MonteCarlo:
             while count < dim:
                 p[count] = inverse_samp(p[count])
                 count = count+1
-            sum_f = sum_f + (self.f(p, *self.variables)/samp(p))  # we get sum(f) for each worker
-            expect_f_squared = expect_f_squared + \
-                (self.f(p)/samp(p, *self.variables))**2  # we get sum(f**2) for each worker
+            # we get sum(f) and sum(f**2) for each worker
+            sum_f = math.fsum([sum_f, (self.f(p, *self.variables)/samp(p))])
+            expect_f_squared = math.fsum([expect_f_squared, \
+                (self.f(p)/samp(p, *self.variables))**2])
 
         final_sum_f = MonteCarlo.reduce_sum(self, sum_f)
         final_f_squared = MonteCarlo.reduce_sum(self, expect_f_squared)
