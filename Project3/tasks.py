@@ -2,6 +2,8 @@
 """
 Module for performing integration of functions using MonteCarlo class
 """
+
+import time
 import numpy as np
 from mpi4py import MPI
 from monte_carlo import MonteCarlo
@@ -240,8 +242,10 @@ def inverse_sampling_3(x):
 #-------------------------------------------
 # INITIALISATION FOR ALL INTEGRALS
 
-NUM_POINTS = int(1000000)  # This is split across nodes
+NUM_POINTS = int(1000000)  # This is split across cores
 SEED = 12345  # Random seed passed in to class methods
+
+time1 = time.time()
 
 # ------------------------------------------
 # SHAPES
@@ -256,12 +260,16 @@ circle_setup = MonteCarlo(a1, b1, step, variables=radius)
 circle = MonteCarlo.method(circle_setup,
                            NUM_POINTS, seed=SEED, method=0)
 
+time2 = time.time()
+
 a2 = np.repeat(-radius, 3)  # Sphere Start
 b2 = np.repeat(radius, 3)  # Sphere End
 real2 = 4/3*np.pi*radius[0]**3  # Real 3D Sphere Volume
 sphere_setup = MonteCarlo(a2, b2, step, variables=radius)
 sphere = MonteCarlo.method(sphere_setup,
                            NUM_POINTS, seed=SEED, method=0)
+
+time3 = time.time()
 
 a3 = np.repeat(-radius, 4)  # 4D Hypersphere Start
 b3 = np.repeat(radius, 4)  # 4D Hypersphere End
@@ -270,6 +278,8 @@ hypersphere_setup = MonteCarlo(a3, b3, step, variables=radius)
 hypersphere = MonteCarlo.method(hypersphere_setup,
                                 NUM_POINTS, seed=SEED, method=0)
 
+time4 = time.time()
+
 a4 = np.repeat(-radius, 5)  # 5D Hypersphere Start
 b4 = np.repeat(radius, 5)  # 5D Hypersphere End
 real4 = 8/15*np.pi**2*radius[0]**5  # Real 5D Hypersphere Volume
@@ -277,17 +287,22 @@ hypersphere_setup2 = MonteCarlo(a4, b4, step, variables=radius)
 hypersphere2 = MonteCarlo.method(hypersphere_setup2,
                                  NUM_POINTS, seed=SEED, method=0)
 
+time5 = time.time()
 
 if rank == 0:
     print("TASK 1 - Shapes")
     print(f"2D Circle with radius {radius[0]}: {circle}")
-    print(f"Real value: {real:.4}")
+    print(f"2D Time taken: {time2-time1}s")
+    print(f"2D Real value: {real:.4}")
     print(f"3D Sphere with radius {radius[0]}: {sphere}")
-    print(f"Real value: {real2:.4}")
+    print(f"3D Time taken: {time3-time2}s")
+    print(f"3D Real value: {real2:.4}")
     print(f"4D Hypersphere with radius {radius[0]}: {hypersphere}")
-    print(f"Real value: {real3:.4}")
+    print(f"4D Time taken: {time4-time3}s")
+    print(f"4D Real value: {real3:.4}")
     print(f"5D Hypersphere with radius {radius[0]}: {hypersphere2}")
-    print(f"Real value: {real4:.4}")
+    print(f"5D Time taken: {time5-time4}s")
+    print(f"5D Real value: {real4:.4}")
     print("\n")
 
 # ------------------------------------------
@@ -298,32 +313,35 @@ MEAN = 4
 SIGMA = 0.4
 MEAN2 = 3
 SIGMA2 = 0.2
-
-vari = np.array([MEAN, SIGMA])
-vari2 = np.array([MEAN2, SIGMA2])
-
-gaussInput = MonteCarlo([-1], [1], gaussian_1d, variables=vari)
-gaussOutput = MonteCarlo.method(gaussInput, NUM_POINTS, seed=SEED, method=1)
-
-gaussInput2 = MonteCarlo([-1], [1], gaussian_1d, variables=vari2)
-gaussOutput2 = MonteCarlo.method(gaussInput2, NUM_POINTS, seed=SEED, method=1)
-
-# 6D evaluated with different x0 and sigma
-
 MEAN3 = np.array([2, 5, 6, 9, 4, 2])
 SIGMA3 = np.array([0.2, 0.4, 0.1, 0.3, 0.2, 0.5])
 
+vari = np.array([MEAN, SIGMA])
+vari2 = np.array([MEAN2, SIGMA2])
 vari3 = np.array([MEAN3, SIGMA3])
 
+time6 = time.time()
+gaussInput = MonteCarlo([-1], [1], gaussian_1d, variables=vari)
+gaussOutput = MonteCarlo.method(gaussInput, NUM_POINTS, seed=SEED, method=1)
+time7 = time.time()
+gaussInput2 = MonteCarlo([-1], [1], gaussian_1d, variables=vari2)
+gaussOutput2 = MonteCarlo.method(gaussInput2, NUM_POINTS, seed=SEED, method=1)
+time8 = time.time()
+
+# 6D evaluated with different x0 and sigma
 gaussInput3 = MonteCarlo([-1, -1, -1, -1, -1, -1], [1, 1, 1, 1, 1, 1],
                           gaussian_md, variables=vari3)
 gaussOutput3 = MonteCarlo.method(gaussInput3, NUM_POINTS, seed=SEED, method=1)
+time9 = time.time()
 
 if rank == 0:
     print("TASK 2 - Gaussian")
     print(f"1D Gaussian with mean {MEAN} and SD {SIGMA}: {gaussOutput}")
+    print(f"Time taken: {time7-time6}")
     print(f"1D Gaussian with mean {MEAN2} and SD {SIGMA2}: {gaussOutput2}")
+    print(f"Time taken: {time8-time7}")
     print(f"6D Gaussian with mean {MEAN3} and SD {SIGMA3}: {gaussOutput3}")
+    print(f"Time taken: {time9-time8}")
     print("Real value should always be 1.0 (normalised function)")
     print("\n")
 
