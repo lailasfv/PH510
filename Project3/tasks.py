@@ -237,16 +237,10 @@ def inverse_sampling_3(x):
     a = 1/(1-np.exp(-1))
     return -np.log(1-x/a)
 
-
-# NOTE: NEW WAY TO PASS IN METHODS - DELETE THESE COMMENTS LATER
-# integral = MonteCarlo(start, end, num_points, function, variables, seed, method)
-# Methods: 0 = definite integral, 1 = indefinite, 2 = importance sampling (requires func2)
-
-
 #-------------------------------------------
 # INITIALISATION FOR ALL INTEGRALS
 
-NUM_POINTS = int(100000)  # This is split across nodes
+NUM_POINTS = int(1000000)  # This is split across nodes
 SEED = 12345  # Random seed passed in to class methods
 
 # ------------------------------------------
@@ -257,39 +251,43 @@ radius = np.array([1])
 
 a1 = np.repeat(-radius, 2)  # Circle Start
 b1 = np.repeat(radius, 2)  # Circle End
-real = np.pi*radius**2  # Real Circle Area
-circle = MonteCarlo(a1, b1, NUM_POINTS, step, seed=SEED,
-                    method=0, variables=radius)
+real = np.pi*radius[0]**2  # Real Circle Area
+circle_setup = MonteCarlo(a1, b1, step, variables=radius)
+circle = MonteCarlo.method(circle_setup,
+                           NUM_POINTS, seed=SEED, method=0)
 
 a2 = np.repeat(-radius, 3)  # Sphere Start
 b2 = np.repeat(radius, 3)  # Sphere End
-real2 = 4/3*np.pi*radius**3  # Real 3D Sphere Volume
-sphere = MonteCarlo(a2, b2, NUM_POINTS, step, seed=SEED,
-                    method=0, variables=radius)
+real2 = 4/3*np.pi*radius[0]**3  # Real 3D Sphere Volume
+sphere_setup = MonteCarlo(a2, b2, step, variables=radius)
+sphere = MonteCarlo.method(sphere_setup,
+                           NUM_POINTS, seed=SEED, method=0)
 
 a3 = np.repeat(-radius, 4)  # 4D Hypersphere Start
 b3 = np.repeat(radius, 4)  # 4D Hypersphere End
-real3 = 1/2*np.pi**2*radius**4  # Real 4D Hypersphere Volume
-hypersphere = MonteCarlo(a3, b3, NUM_POINTS, step, seed=SEED,
-                         method=0, variables=radius)
+real3 = 1/2*np.pi**2*radius[0]**4  # Real 4D Hypersphere Volume
+hypersphere_setup = MonteCarlo(a3, b3, step, variables=radius)
+hypersphere = MonteCarlo.method(hypersphere_setup,
+                                NUM_POINTS, seed=SEED, method=0)
 
 a4 = np.repeat(-radius, 5)  # 5D Hypersphere Start
 b4 = np.repeat(radius, 5)  # 5D Hypersphere End
-real4 = 8/15*np.pi**2*radius**5  # Real 5D Hypersphere Volume
-hypersphere2 = MonteCarlo(a4, b4, NUM_POINTS, step, seed=SEED,
-                          method=0, variables=radius)
+real4 = 8/15*np.pi**2*radius[0]**5  # Real 5D Hypersphere Volume
+hypersphere_setup2 = MonteCarlo(a4, b4, step, variables=radius)
+hypersphere2 = MonteCarlo.method(hypersphere_setup2,
+                                 NUM_POINTS, seed=SEED, method=0)
 
 
 if rank == 0:
     print("TASK 1 - Shapes")
     print(f"2D Circle with radius {radius[0]}: {circle}")
-    print(f"Real value: {real}")
+    print(f"Real value: {real:.4}")
     print(f"3D Sphere with radius {radius[0]}: {sphere}")
-    print(f"Real value: {real2}")
+    print(f"Real value: {real2:.4}")
     print(f"4D Hypersphere with radius {radius[0]}: {hypersphere}")
-    print(f"Real value: {real3}")
+    print(f"Real value: {real3:.4}")
     print(f"5D Hypersphere with radius {radius[0]}: {hypersphere2}")
-    print(f"Real value: {real4}")
+    print(f"Real value: {real4:.4}")
     print("\n")
 
 # ------------------------------------------
@@ -303,18 +301,23 @@ SIGMA2 = 0.2
 
 vari = np.array([MEAN, SIGMA])
 vari2 = np.array([MEAN2, SIGMA2])
-gaussOutput = MonteCarlo([-1], [1], NUM_POINTS, gaussian_1d, seed=SEED, method=1,
-                         variables=vari)
-gaussOutput2 = MonteCarlo([-1], [1], NUM_POINTS, gaussian_1d, seed=SEED, method=1,
-                          variables=vari2)
+
+gaussInput = MonteCarlo([-1], [1], gaussian_1d, variables=vari)
+gaussOutput = MonteCarlo.method(gaussInput, NUM_POINTS, seed=SEED, method=1)
+
+gaussInput2 = MonteCarlo([-1], [1], gaussian_1d, variables=vari2)
+gaussOutput2 = MonteCarlo.method(gaussInput2, NUM_POINTS, seed=SEED, method=1)
+
+# 6D evaluated with different x0 and sigma
 
 MEAN3 = np.array([2, 5, 6, 9, 4, 2])
 SIGMA3 = np.array([0.2, 0.4, 0.1, 0.3, 0.2, 0.5])
 
 vari3 = np.array([MEAN3, SIGMA3])
 
-gaussOutput3 = MonteCarlo([-1, -1, -1, -1, -1, -1], [1, 1, 1, 1, 1, 1], NUM_POINTS,
-                          gaussian_md, seed=SEED, method=1, variables=vari3)
+gaussInput3 = MonteCarlo([-1, -1, -1, -1, -1, -1], [1, 1, 1, 1, 1, 1],
+                          gaussian_md, variables=vari3)
+gaussOutput3 = MonteCarlo.method(gaussInput3, NUM_POINTS, seed=SEED, method=1)
 
 if rank == 0:
     print("TASK 2 - Gaussian")
@@ -324,57 +327,60 @@ if rank == 0:
     print("Real value should always be 1.0 (normalised function)")
     print("\n")
 
-
+# ------------------------------------------
+# IMPORTANCE SAMPLING
 # First Importance Sampling Test
-integral_1_with_importance = MonteCarlo([-4], [0], NUM_POINTS, func_to_integrate_1,
-                                        seed=SEED, method=2, func2=sampling_func_1,
-                                        func3=inverse_sampling_1)
 
-integral_1_without_importance = MonteCarlo([-4], [0], NUM_POINTS, func_to_integrate_1,
-                                           seed=SEED, method=0)
+importanceInput1 = MonteCarlo([-4], [0], func_to_integrate_1)
+importanceOutput1 = MonteCarlo.method(importanceInput1, NUM_POINTS, seed=SEED, method=2,
+                                      func2=sampling_func_1, func3=inverse_sampling_1)
+
+unimportanceInput1 = MonteCarlo([-4], [0], func_to_integrate_1)
+unimportanceOutput1 = MonteCarlo.method(unimportanceInput1, NUM_POINTS, seed=SEED, method=0)
+
 real_value_importance_sampling_1 = 15/(16*np.log(2))
 
 if rank == 0:
     print("IMPORTANCE SAMPLING TEST 1: 2^x from -4 to 0")
-    print(f"With importance sampling: {integral_1_with_importance}")
-    print(f"Without importance sampling: {integral_1_without_importance}")
-    print(f"Real value: {real_value_importance_sampling_1}")
-    print("")
+    print(f"With importance sampling: {importanceOutput1}")
+    print(f"Without importance sampling: {unimportanceOutput1}")
+    print(f"Real value: {real_value_importance_sampling_1:.4}")
+    print("\n")
 
 
 # Second Importance Sampling Test
-integral_2_with_importance = MonteCarlo([0], [2], NUM_POINTS, func_to_integrate_2,
-                                        seed=SEED, method=2, func2=sampling_func_2,
-                                        func3=inverse_sampling_2)
+importanceInput1 = MonteCarlo([0], [2], func_to_integrate_2)
+importanceOutput1 = MonteCarlo.method(importanceInput1, NUM_POINTS, seed=SEED, method=2,
+                                      func2=sampling_func_2, func3=inverse_sampling_2)
 
-integral_2_without_importance = MonteCarlo([0], [2], NUM_POINTS, func_to_integrate_2,
-                                           seed=SEED, method=0)
-real_value_importance_sampling_2 = 0.8929535142938763
+unimportanceInput2 = MonteCarlo([0], [2], func_to_integrate_2)
+unimportanceOutput2 = MonteCarlo.method(unimportanceInput2, NUM_POINTS, seed=SEED, method=0)
+
+# real_value_importance_sampling_2 = 0.8929535142938763
 
 if rank == 0:
     print("IMPORTANCE SAMPLING TEST 2: exp(-x^3) from 0 to 2")
-    print(f"With importance sampling: {integral_2_with_importance}")
-    print(f"Without importance sampling: {integral_2_without_importance}")
-    print(f"Real value: {real_value_importance_sampling_2}")
-    print("")
+    print(f"With importance sampling: {importanceOutput1}")
+    print(f"Without importance sampling: {unimportanceOutput2}")
+    print("Real value: 0.8929")
+    print("\n")
 
 
-# Third Imporptance Sampling Test
-integral_3_with_importance = MonteCarlo([0], [1], NUM_POINTS, func_to_integrate_3,
-                                        seed=SEED, method=2, func2=sampling_func_3,
-                                        func3=inverse_sampling_3)
+# Third Importance Sampling Test
+importanceInput3 = MonteCarlo([0], [1], func_to_integrate_3)
+importanceOutput3 = MonteCarlo.method(importanceInput3, NUM_POINTS, seed=SEED, method=2,
+                                      func2=sampling_func_3, func3=inverse_sampling_3)
 
-integral_3_without_importance = MonteCarlo([0], [1], NUM_POINTS, func_to_integrate_3,
-                                           seed=SEED, method=0)
+unimportanceInput3 = MonteCarlo([0], [1], func_to_integrate_3)
+unimportanceOutput3 = MonteCarlo.method(unimportanceInput3, NUM_POINTS, seed=SEED, method=0)
 
-real_value_importance_sampling_3 = 0.746824132812427
+# real_value_importance_sampling3 = 0.746824132812427
 
 if rank == 0:
-    print("IMPORTANCE SAMPLING TEST 2: exp(-x^2) from 0 to 1")
-    print(f"With importance sampling: {integral_3_with_importance}")
-    print(f"Without importance sampling: {integral_3_without_importance}")
-    print(f"Real value: {real_value_importance_sampling_3}")
-    print("")
-
+    print("IMPORTANCE SAMPLING TEST 3: exp(-x^2) from 0 to 1")
+    print(f"With importance sampling: {importanceOutput3}")
+    print(f"Without importance sampling: {unimportanceOutput3}")
+    print("Real value: 0.7468")
+    print("\n")
 
 MPI.Finalize()

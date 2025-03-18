@@ -1,0 +1,58 @@
+===================================================================================
+SLURM Job ID:            11861666
+Submit time:             Tue Mar 18 01:27:16 GMT 2025 (Unix Epoch time: 1742261236)
+Start time:              Tue Mar 18 01:28:12 GMT 2025 (Unix Epoch time: 1742261292)
+No. nodes:               1
+No. tasks:               4
+Job name:                PH510Assignment3
+Account:                 teaching
+QoS:                     teaching
+Partition (queue):       teaching-gpu
+Submit directory:        /users/xgb19123/PH510/PH510/Project3
+Script name:             /users/xgb19123/PH510/PH510/Project3/mc.sh
+Master node:             weegpu4
+Nodes used:              weegpu4
+Task distribution:       block:block
+===================================================================================
+
+TASK 1 - Shapes
+2D Circle with radius 1: (Integral: 3.143, Var: 1.684e-07, Err: 0.001641)
+Real value: 3.142
+3D Sphere with radius 1: (Integral: 4.194, Var: 2.494e-07, Err: 0.003995)
+Real value: 4.189
+4D Hypersphere with radius 1: (Integral: 4.944, Var: 2.135e-07, Err: 0.007393)
+Real value: 4.935
+5D Hypersphere with radius 1: (Integral: 5.266, Var: 1.375e-07, Err: 0.01187)
+Real value: 5.264
+
+
+TASK 2 - Gaussian
+1D Gaussian with mean 4 and SD 0.4: (Integral: 1.003, Var: 1.825e-05, Err: 0.008544)
+1D Gaussian with mean 3 and SD 0.2: (Integral: 0.9854, Var: 1.041e-05, Err: 0.006454)
+6D Gaussian with mean [2 5 6 9 4 2] and SD [0.2 0.4 0.1 0.3 0.2 0.5]: (Integral: 0.9512, Var: 9.254e-07, Err: 0.06157)
+Real value should always be 1.0 (normalised function)
+
+
+IMPORTANCE SAMPLING TEST 1: 2^x from -4 to 0
+With importance sampling: (Integral: 1.352, Var: 1.694e-07, Err: 0.0004116)
+Without importance sampling: (Integral: 1.353, Var: 6.533e-08, Err: 0.001022)
+Real value: 1.353
+
+
+IMPORTANCE SAMPLING TEST 2: exp(-x^3) from 0 to 2
+With importance sampling: (Integral: 0.8929, Var: 1.547e-07, Err: 0.0003933)
+Without importance sampling: (Integral: 0.8923, Var: 1.549e-07, Err: 0.0007872)
+Real value: 0.8929
+
+
+IMPORTANCE SAMPLING TEST 3: exp(-x^2) from 0 to 1
+With importance sampling: (Integral: 0.7469, Var: 3.023e-09, Err: 5.498e-05)
+Without importance sampling: (Integral: 0.7467, Var: 4.039e-08, Err: 0.000201)
+Real value: 0.7468
+
+
+===================================================================================
+SLURM job 11861666 ended:     Tue Mar 18 01:26:14 GMT 2025 (Unix Epoch time: 1742261174)
+This is an estimated end time using the 'date' command from node weegpu4.hpc.strath.ac.uk
+For accurate timings, use 'sacct -j 11861666 -X --format=Submit,Start,End,Elapsed'
+======================================================================================

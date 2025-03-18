@@ -29,7 +29,7 @@ class MonteCarlo:
         self.f = func
         self.data = 0
         if variables is None:
-            variables = [] # variables defaults to an empty array if none are supplied
+            self.variables = [] # variables defaults to an empty array if none are supplied
         else:
             self.variables = variables
 
@@ -38,7 +38,7 @@ class MonteCarlo:
         Assumes floating point when printing
         """
         return (f"(Integral: {self.data[0]:.4f}, Var: {self.data[1]:.4f},"
-                f" Err: {self.data[2]:.4f})")
+                f" Err: {self.data[2]:.4f})")  # CHANGE THIS
 
     def random(self, seed):
         """
@@ -76,7 +76,8 @@ class MonteCarlo:
             self.data = self.infinity(seed, num_counts)
         elif method == 2:
             self.data = self.integral_importance_sampling(seed, num_counts, func2, func3)
-        return self.data
+        return (f"(Integral: {self.data[0]:.4g}, Var: {self.data[1]:.4g},"
+                f" Err: {self.data[2]:.4g})")
 
     def reduce_sum(self, value):
         """
@@ -241,7 +242,7 @@ class MonteCarlo:
                 count = count+1
             sum_f = sum_f + (self.f(p, *self.variables)/samp(p))  # we get sum(f) for each worker
             expect_f_squared = expect_f_squared + \
-                (self.f(p, *self.variables)/samp(p))**2  # we get sum(f**2) for each worker
+                (self.f(p)/samp(p, *self.variables))**2  # we get sum(f**2) for each worker
 
         final_sum_f = MonteCarlo.reduce_sum(self, sum_f)
         final_f_squared = MonteCarlo.reduce_sum(self, expect_f_squared)
