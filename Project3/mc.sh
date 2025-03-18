@@ -11,13 +11,13 @@
 #SBATCH --export=ALL
 #
 # Run in the standard partition (queue)
-#SBATCH --partition=teaching-gpu
+#SBATCH --partition=teaching
 #
 # Specify project account
 #SBATCH --account=teaching
 #
 # No. of tasks required (ntasks=1 for a single-core job)
-#SBATCH --ntasks=4
+#SBATCH --ntasks=16
 #SBATCH --distribution=block:block
 #
 # Specify (hard) runtime (HH:MM:SS)
@@ -45,7 +45,7 @@ module load openmpi/gcc-8.5.0/4.1.1
 /opt/software/scripts/job_prologue.sh  
 #------------------------------------------------------
 
-mpirun -np 4 ./tasks.py
+mpirun -np 16 ./tasks.py
 
 #======================================================
 # Epilogue script to record job endtime and runtime
