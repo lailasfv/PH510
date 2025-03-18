@@ -1,0 +1,71 @@
+===================================================================================
+SLURM Job ID:            11867098
+Submit time:             Tue Mar 18 20:15:22 GMT 2025 (Unix Epoch time: 1742328922)
+Start time:              Tue Mar 18 20:16:13 GMT 2025 (Unix Epoch time: 1742328973)
+No. nodes:               1
+No. tasks:               1
+Job name:                PH510Assignment3
+Account:                 teaching
+QoS:                     teaching
+Partition (queue):       teaching
+Submit directory:        /users/xgb19123/PH510/PH510/Project3
+Script name:             /users/xgb19123/PH510/PH510/Project3/mc.sh
+Master node:             wee12
+Nodes used:              wee12
+Task distribution:       block:block
+===================================================================================
+
+TASK 1 - Shapes
+2D Circle with radius 1: (Integral: 3.143, Var: 1.684e-07, Err: 0.001641)
+2D Real value: 3.142
+2D Time taken: 78.75046563148499s
+3D Sphere with radius 1: (Integral: 4.194, Var: 2.494e-07, Err: 0.003995)
+3D Real value: 4.189
+3D Time taken: 80.76088452339172s
+4D Hypersphere with radius 1: (Integral: 4.946, Var: 2.136e-07, Err: 0.007394)
+4D Real value: 4.935
+4D Time taken: 82.31026911735535s
+5D Hypersphere with radius 1: (Integral: 5.251, Var: 1.372e-07, Err: 0.01185)
+5D Real value: 5.264
+5D Time taken: 84.20432472229004s
+
+
+TASK 2 - Gaussian
+1D Gaussian with mean 4 and SD 0.4: (Integral: 1.001, Var: 1.82e-05, Err: 0.008532)
+Time taken: 93.16737103462219
+1D Gaussian with mean 3 and SD 0.2: (Integral: 0.9931, Var: 1.049e-05, Err: 0.006477)
+Time taken: 92.9353244304657
+6D Gaussian with mean [2 5 6 9 4 2] and SD [0.2 0.4 0.1 0.3 0.2 0.5]: (Integral: 0.9567, Var: 9.21e-07, Err: 0.06142)
+Time taken: 111.20949459075928
+Real value should always be 1.0 (normalised function)
+
+
+IMPORTANCE SAMPLING TEST 1: 2^x from -4 to 0
+Real value: 1.353
+With importance sampling: (Integral: 1.352, Var: 1.698e-07, Err: 0.000412)
+Time taken: 45.86330318450928
+Without importance sampling: (Integral: 1.352, Var: 6.522e-08, Err: 0.001022)
+Time taken: 15.410107374191284
+
+
+IMPORTANCE SAMPLING TEST 2: exp(-x^3) from 0 to 2
+Real value: 0.8929
+With importance sampling: (Integral: 0.8932, Var: 1.543e-07, Err: 0.0003929)
+Time taken: 49.448566198349
+Without importance sampling: (Integral: 0.8928, Var: 1.55e-07, Err: 0.0007875)
+Time taken: 19.455604791641235
+
+
+IMPORTANCE SAMPLING TEST 3: exp(-x^2) from 0 to 1
+Real value: 0.7468
+With importance sampling: (Integral: 0.7469, Var: 3.025e-09, Err: 5.5e-05)
+Time taken: 45.16453456878662
+Without importance sampling: (Integral: 0.7468, Var: 4.037e-08, Err: 0.0002009)
+Time taken: 14.877960205078125
+
+
+===================================================================================
+SLURM job 11867098 ended:     Tue Mar 18 20:26:11 GMT 2025 (Unix Epoch time: 1742329571)
+This is an estimated end time using the 'date' command from node wee12.hpc.strath.ac.uk
+For accurate timings, use 'sacct -j 11867098 -X --format=Submit,Start,End,Elapsed'
+======================================================================================
