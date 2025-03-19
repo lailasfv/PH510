@@ -1,71 +1,71 @@
 ===================================================================================
-SLURM Job ID:            11867259
-Submit time:             Tue Mar 18 20:49:26 GMT 2025 (Unix Epoch time: 1742330966)
-Start time:              Tue Mar 18 20:50:03 GMT 2025 (Unix Epoch time: 1742331003)
+SLURM Job ID:            11870051
+Submit time:             Wed Mar 19 15:18:39 GMT 2025 (Unix Epoch time: 1742397519)
+Start time:              Wed Mar 19 15:18:43 GMT 2025 (Unix Epoch time: 1742397523)
 No. nodes:               1
 No. tasks:               16
 Job name:                PH510Assignment3
 Account:                 teaching
 QoS:                     teaching
 Partition (queue):       teaching
-Submit directory:        /users/xgb19123/PH510/PH510/Project3
-Script name:             /users/xgb19123/PH510/PH510/Project3/mc.sh
-Master node:             wee21
-Nodes used:              wee21
+Submit directory:        /users/vib22141/PH510Collab/Project3
+Script name:             /users/vib22141/PH510Collab/Project3/mc.sh
+Master node:             wee20
+Nodes used:              wee20
 Task distribution:       block:block
 ===================================================================================
 
 TASK 1 - Shapes
-2D Circle with radius 1: (Integral: 3.141, Var: 1.687e-07, Err: 0.001643)
+2D Circle with radius 1: (Integral: 3.14082, Var: 1.68658e-07, Err: 0.00164272)
 2D Real value: 3.142
-2D Time taken: 5.457145929336548s
-3D Sphere with radius 1: (Integral: 4.188, Var: 2.494e-07, Err: 0.003996)
+2D Time taken: 5.398867845535278s
+3D Sphere with radius 1: (Integral: 4.1883, Var: 2.49446e-07, Err: 0.00399557)
 3D Real value: 4.189
-3D Time taken: 5.644871711730957s
-4D Hypersphere with radius 1: (Integral: 4.936, Var: 2.133e-07, Err: 0.00739)
+3D Time taken: 5.531109809875488s
+4D Hypersphere with radius 1: (Integral: 4.936, Var: 2.13328e-07, Err: 0.00738999)
 4D Real value: 4.935
-4D Time taken: 5.68011474609375s
-5D Hypersphere with radius 1: (Integral: 5.267, Var: 1.375e-07, Err: 0.01187)
+4D Time taken: 5.632107973098755s
+5D Hypersphere with radius 1: (Integral: 5.26688, Var: 1.375e-07, Err: 0.0118659)
 5D Real value: 5.264
-5D Time taken: 5.763548135757446s
+5D Time taken: 5.734038591384888s
 
 
 TASK 2 - Gaussian
-1D Gaussian with mean 4 and SD 0.4: (Integral: 0.9931, Var: 1.805e-05, Err: 0.008496)
-Time taken: 6.423219919204712
-1D Gaussian with mean 3 and SD 0.2: (Integral: 1.009, Var: 1.064e-05, Err: 0.006522)
-Time taken: 6.440008878707886
-6D Gaussian with mean [2 5 6 9 4 2] and SD [0.2 0.4 0.1 0.3 0.2 0.5]: (Integral: 0.9476, Var: 9.035e-07, Err: 0.06083)
-Time taken: 7.608693599700928
+1D Gaussian with mean 4 and SD 0.4: (Integral: 0.99305, Var: 1.80459e-05, Err: 0.0084961)
+Time taken: 6.308350324630737
+1D Gaussian with mean 3 and SD 0.2: (Integral: 1.00864, Var: 1.06356e-05, Err: 0.00652247)
+Time taken: 6.318421125411987
+6D Gaussian with mean [2 5 6 9 4 2] and SD [0.2 0.4 0.1 0.3 0.2 0.5]: (Integral: 0.947592, Var: 9.03474e-07, Err: 0.0608328)
+Time taken: 7.57809591293335
 Real value should always be 1.0 (normalised function)
 
 
 IMPORTANCE SAMPLING TEST 1: 2^x from -4 to 0
 Real value: 1.353
-With importance sampling: (Integral: 1.352, Var: 1.696e-07, Err: 0.0004118)
-Time taken: 3.1816511154174805
-Without importance sampling: (Integral: 1.354, Var: 6.527e-08, Err: 0.001022)
-Time taken: 1.071890115737915
+With importance sampling: (Integral: 1.35202, Var: 1.69594e-07, Err: 0.000411819)
+Time taken: 3.10530948638916
+Without importance sampling: (Integral: 1.35368, Var: 6.52728e-08, Err: 0.00102194)
+Time taken: 1.0572471618652344
 
 
 IMPORTANCE SAMPLING TEST 2: exp(-x^3) from 0 to 2
 Real value: 0.8929
-With importance sampling: (Integral: 0.8926, Var: 1.546e-07, Err: 0.0003932)
-Time taken: 3.4416842460632324
-Without importance sampling: (Integral: 0.8918, Var: 1.551e-07, Err: 0.0007876)
-Time taken: 1.342818260192871
+With importance sampling: (Integral: 0.892627, Var: 1.54592e-07, Err: 0.000393182)
+Time taken: 3.3462908267974854
+Without importance sampling: (Integral: 0.89175, Var: 1.55061e-07, Err: 0.000787556)
+Time taken: 1.3221690654754639
 
 
 IMPORTANCE SAMPLING TEST 3: exp(-x^2) from 0 to 1
 Real value: 0.7468
-With importance sampling: (Integral: 0.7469, Var: 3.024e-09, Err: 5.499e-05)
-Time taken: 3.113992691040039
-Without importance sampling: (Integral: 0.7465, Var: 4.04e-08, Err: 0.000201)
-Time taken: 1.0299084186553955
+With importance sampling: (Integral: 0.74688, Var: 3.02414e-09, Err: 5.49922e-05)
+Time taken: 3.0364742279052734
+Without importance sampling: (Integral: 0.746543, Var: 4.03975e-08, Err: 0.000200991)
+Time taken: 0.9996440410614014
 
 
 ===================================================================================
-SLURM job 11867259 ended:     Tue Mar 18 20:47:25 GMT 2025 (Unix Epoch time: 1742330845)
-This is an estimated end time using the 'date' command from node wee21.hpc.strath.ac.uk
-For accurate timings, use 'sacct -j 11867259 -X --format=Submit,Start,End,Elapsed'
+SLURM job 11870051 ended:     Wed Mar 19 15:16:03 GMT 2025 (Unix Epoch time: 1742397363)
+This is an estimated end time using the 'date' command from node wee20.hpc.strath.ac.uk
+For accurate timings, use 'sacct -j 11870051 -X --format=Submit,Start,End,Elapsed'
 ======================================================================================

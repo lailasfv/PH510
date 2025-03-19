@@ -1,0 +1,9 @@
+************* Module monte_carlo
+monte_carlo.py:34:38: C0303: Trailing whitespace (trailing-whitespace)
+monte_carlo.py:102:4: R0914: Too many local variables (18/15) (too-many-locals)
+monte_carlo.py:154:4: R0914: Too many local variables (22/15) (too-many-locals)
+monte_carlo.py:210:4: R0914: Too many local variables (17/15) (too-many-locals)
+
+------------------------------------------------------------------
+Your code has been rated at 9.64/10 (previous run: 9.65/10, -0.01)
+

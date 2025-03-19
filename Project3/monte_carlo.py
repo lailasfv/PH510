@@ -38,8 +38,8 @@ class MonteCarlo:
         """
         Assumes floating point when printing
         """
-        return (f"(Integral: {self.data[0]:.4f}, Var: {self.data[1]:.4f},"
-                f" Err: {self.data[2]:.4f})")  # CHANGE THIS
+        return (f"(Integrand: {self.f}, Limits: {self.starts:.4g} - {self.ends:.4g}")
+
 
     def random(self, seed):
         """
@@ -53,7 +53,7 @@ class MonteCarlo:
 
     def method(self, num_counts, seed, method, func2=None, func3=None):
         """
-        
+        Function for picking the integration method and beginning that process
 
         Parameters
         ----------
@@ -82,12 +82,12 @@ class MonteCarlo:
             self.data = self.infinity(seed, num_counts)
         elif method == 2:
             self.data = self.integral_importance_sampling(seed, num_counts, func2, func3)
-        return (f"(Integral: {self.data[0]:.4g}, Var: {self.data[1]:.4g},"
-                f" Err: {self.data[2]:.4g})")
+        return (f"(Integral: {self.data[0]:.6g}, Var: {self.data[1]:.6g},"
+                f" Err: {self.data[2]:.6g})")
 
     def reduce_sum(self, value):
         """
-        
+        Process for using MPI Allreduce to sum values across all workers
 
         Parameters
         ----------
