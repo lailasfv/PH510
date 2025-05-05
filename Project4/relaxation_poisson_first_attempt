@@ -8,10 +8,12 @@ Created on Sun May  4 16:41:49 2025
 import numpy as np
 
 class relaxation_Poisson:
-    def __init__(self,N,h,conditions):
+    def __init__(self,N,h,conditions,max_change_criteria, iteration_limit):
         #print("AHAHAHA",N)
         self.N=int(N)
         self.h=h
+        self.max_change_criteria=max_change_criteria
+        self.iteration_limit=iteration_limit
         """
         array_sub=np.linspace(0,(self.h*(self.N-1)),int(self.N)) # CHECK THIS 
         TWO_D_array=np.zeros([self.N,self.N,2])
@@ -57,7 +59,8 @@ class relaxation_Poisson:
         
         t = 0
         runtime_check= 10000
-        while t<runtime_check:
+        
+        while t<self.iteration_limit:
             check = self.grid
             k2=1
             while k2<N-1:
@@ -66,20 +69,19 @@ class relaxation_Poisson:
                     self.grid[k2,m2]=1/4*(self.grid[k2+1,m2]+self.grid[k2-1,m2]+self.grid[k2,m2+1]+self.grid[k2,m2-1])
                     m2=m2+1
                 k2=k2+1
-            checking_value = 0
-            i1=0
-            while i1<N:
-                j1=0
-                while j1<N:
-                    if (round(check[i1,j1],8)!=round(self.grid[i1,j1],8)):
-                        checking_value=9999
-                    j1=j1+1
-                i1=i1+1
-            if checking_value==0:
+            
+            checking_array = abs((check-self.grid)/check)
+            max_change = 0
+            
+            for line in checking_array:
+                if max(line)>max_change:
+                    max_change=max(line)*100
+            
+            if max_change<self.max_change_criteria:
                 print("we found the result")
-                t=runtime_check
+                t=self.iteration_limit
                 print(self.grid)
-            elif t==(runtime_check-1):
+            elif t==(self.iteration_limit-1):
                 print("we ran out of time!")
             t=t+1
 
@@ -94,4 +96,7 @@ N1 = 3
 
 """
 PLS = np.array([[0,0,2], [0,0.5,2],[0,1,2],[0.5,0,2],[0.5,1,2],[1,0,2],[1,0.5,2],[1,1,2]])
-TEST=relaxation_Poisson(N1,h1,PLS)
+TEST=relaxation_Poisson(N1,h1,PLS,10,1000)
+
+one = np.array([[1,2,3],[4,5,6],[7,8,9]])
+two = np.array([[10, 9, 6],[7,2,4],[3,5,1]])
