@@ -1,10 +1,10 @@
 ************* Module monte_carlo
 monte_carlo.py:54:4: R0913: Too many arguments (6/5) (too-many-arguments)
 monte_carlo.py:54:4: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)
-monte_carlo.py:105:4: R0914: Too many local variables (18/15) (too-many-locals)
-monte_carlo.py:156:4: R0914: Too many local variables (22/15) (too-many-locals)
-monte_carlo.py:212:4: R0914: Too many local variables (18/15) (too-many-locals)
+monte_carlo.py:110:4: R0914: Too many local variables (18/15) (too-many-locals)
+monte_carlo.py:167:4: R0914: Too many local variables (22/15) (too-many-locals)
+monte_carlo.py:229:4: R0914: Too many local variables (18/15) (too-many-locals)
 
------------------------------------
-Your code has been rated at 9.55/10
+------------------------------------------------------------------
+Your code has been rated at 9.55/10 (previous run: 9.55/10, +0.00)
 

@@ -17,30 +17,23 @@ from monte_carlo import MonteCarlo
 #      which will be why he asked us to make a separate method
 #      for that, but it is still coded into all the integration
 
-
-def random_walk(i, j, x, y, xn, yn):
+def random_walk(i, j, grid):
     """
-    Random walker starting at (i,j) in a grid from (0, 0) to (x, y)
-    This function should return whether or not the walker reaches the
-    desired boundary point xn, yn.
+    Random walker starting at (i,j) in a grid
+    This function should add 1 to its ending position
     """
     pos = np.array([i,j])  # Starting position
-    pos2 = np.array([xn, yn]) # The position we hope to get to
     directions = np.array([[-1, 0], [1, 0], [0, -1], [0, 1]])  # Possible walks
+    x = len(grid)  # x boundary
+    y = len(grid[0])  # y boundary
 
     while pos[0]>0 and pos[0]<x and pos[1]>0 and pos[1]<y:  # While not at boundary
         move = directions(np.random.randint(0, len(directions))
         pos += move
 
-    return pos == pos2  # Returns 0 if not true and 1 if true
+    grid[pos[0], pos[1]] += 1  # Adds one instance of walker reaching position
 
+    return grid
 
-# I don't know if I like this approach yet
-# We'd basically have to have an array of all of the boundary positions (x, y)
-# And iterate N times through all of them? Which seems...bleh
-
-# NOTE FOR TOMORROW: I can send in a whole array for xn yn
-# no more need to pass in x, y as it'll just be the max of [xn, yn]
-# and then when evaluating whether pos == pos2, it can add 1 to the boundary point
-# that it DID reach
-# I just need to check how this is handled logically in the code
+# We then have N grids summed in montecarlo which are each adding instances of reaching
+# boundary positions, and divide by N for probability of each
