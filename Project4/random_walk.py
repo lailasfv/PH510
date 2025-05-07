@@ -1,7 +1,13 @@
 #!/bin/python3
 
 import numpy as np
+from mpi4py import MPI
 from monte_carlo import MonteCarlo
+
+# MPI.Init()
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+nworkers = comm.Get_size()
 
 # just implementing random walk stuff at first
 # i will make proper implementation when this makes sense
@@ -48,10 +54,6 @@ def random_walk(p, i, j, grid):
 NUM_WALKERS = int(10000)  # This is split across cores
 SEED = 27347  # Random seed passed in to class methods
 
-# Always between 0-1 for MC purposes
-a1 = np.array([0,0])
-b1 = np.array([1,1])
-
 #-------------------------------------------
 # The grid is to be 10x10cm and the smallest value we need is 0.1cm, so 100x100 grid for 0.1 spacing?
 grid = np.zeros([100,100])
@@ -60,8 +62,18 @@ grid = np.zeros([100,100])
 i_val = np.array([50, 25, 1, 1])   # starting position in i
 j_val = np.array([50, 25, 25, 1])  # starting position in j
 
-vari = np.array([i_val, j_val, grid])  # THIS WON'T WORK - the arrays are different sizes
-                                       # so how do I pass these in?
+vari = np.array([i_val, j_val, grid], dtype=object)
 
-setup = MonteCarlo(a1, b1, random_walk, variables = vari)
-solve = MonteCarlo.method(setup, NUM_POINTS, seed=SEED, method=0)
+boundarray = np.ones([100, 100])
+boundarray[1:-1, 1:-1] = 0
+
+for i in range(0, len(i_val)-1):
+    vari = np.array([i_val[i], j_val[i], grid], dtype=object)
+
+    setup = MonteCarlo([0], [1], random_walk, variables = vari)
+    solve = MonteCarlo.method(setup, NUM_POINTS, seed=SEED, method=0)
+
+    if rank == 0:
+        print(f"For i = {i_val[i]} and j = {j_val[i]}, probability grid is:")
+        print(solve[0]*boundarray)  # we need to change how montecarlo returns values
+        print("\n")
