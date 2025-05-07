@@ -73,7 +73,7 @@ class MonteCarlo:
 
         Returns
         -------
-        Print statement of integral, variance and error 
+        Array of integral, variance and error 
 
         """
         if method == 0:
@@ -82,8 +82,7 @@ class MonteCarlo:
             self.data = self.infinity(seed, num_counts)
         elif method == 2:
             self.data = self.integral_importance_sampling(seed, num_counts, func2, func3)
-        return (f"(Integral: {self.data[0]:.6g}, Var: {self.data[1]:.6g},"
-                f" Err: {self.data[2]:.6g})")
+        return (np.array([self.data[0], self.data[1], self.data[2]]))
 
     def reduce_sum(self, value):
         """
@@ -100,9 +99,10 @@ class MonteCarlo:
             Summation of total value across all ranks
 
         """
+        start = np.zeros_like(value)
         value_message = np.array(value, dtype=np.float64)
 
-        summation = np.array(0, dtype=np.float64)
+        summation = np.array(start, dtype=np.float64)
 
         comm.Allreduce(value_message, summation)
         return summation
@@ -136,15 +136,17 @@ class MonteCarlo:
         expect_f_squared = 0
 
         for p in points:
+            """
             count = 0
             while count < dim:
                 # making sure they are in the interval we need them to be
                 p[count] = p[count] * \
                     (self.ends[count]-self.starts[count])+self.starts[count]
                 count = count+1
+            """
             # we get sum(f) and sum(f**2) for each worker
-            sum_f = math.fsum([sum_f, self.f(p, *self.variables)])
-            expect_f_squared = math.fsum([expect_f_squared, (self.f(p, *self.variables))**2])
+            sum_f = sum_f + self.f(*self.variables)
+            expect_f_squared = expect_f_squared + (self.f(*self.variables))**2
 
         final_sum_f = MonteCarlo.reduce_sum(self, sum_f)
         final_f_squared = MonteCarlo.reduce_sum(self, expect_f_squared)
