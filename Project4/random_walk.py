@@ -55,6 +55,8 @@ SEED = 27347  # Random seed passed in to class methods
 #-------------------------------------------
 # The grid is to be 10x10cm and the smallest value we need is 0.1cm, so 100x100 grid for 0.1 spacing?
 grid = np.zeros([100,100])
+potgrid = np.ones([100, 100])  # placeholder for potential grid
+h = 10/len(grid)
 
 # Walker starting points
 i_val = np.array([50, 25, 1, 1])   # starting position in i
@@ -64,6 +66,9 @@ vari = np.array([i_val, j_val, grid], dtype=object)
 
 boundarray = np.ones([100, 100])
 boundarray[1:-1, 1:-1] = 0
+
+unboundarray = np.zeroes([100, 100])
+unboundarray[1:-1, 1:-1] = 1
 
 for i in range(0, len(i_val)):
     vari = np.array([i_val[i], j_val[i], grid], dtype=object)
@@ -76,3 +81,5 @@ for i in range(0, len(i_val)):
         print(solve[0]*boundarray)
         print(f"Sanity check: sum of boundary probability is {np.sum(solve[0]*boundarray)}")
         print("\n")
+        print("Potential")
+        print(np.sum(boundarray*solve[0]*potgrid) + h**2*np.sum(unboundarray*solve[0]))
