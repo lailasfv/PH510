@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat May 10 20:29:54 2025
-
-@author: skyed
-"""
 
 #!/bin/python3
 
