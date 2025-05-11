@@ -63,19 +63,16 @@ SEED = 27347  # Random seed passed in to class methods
 #-------------------------------------------
 # The following arrays are used for all of tasks 3-5
 
-# The number of grid points n may be increased by factors of 10
-# but please don't change anything else here
-
-n = 100  # Number of points in the grid - can't be smaller than 100
+n = 101  # Number of points in the grid - odd number 101 or greater
 h = 10e-1/n  # Step size, since grid is 10cm x 10cm
 
 grid = np.zeros([n+2, n+2]) # Grid for evaluating Green's at i, j
 
 # Walker starting points
-i_val = np.array([int(n/2), int(n/4), 
-                  int(n/100), int(n/100)])  # starting position in i
-j_val = np.array([int(n/2), int(n/4), 
-                  int(n/4), int(n/100)])    # starting position in j
+i_val = np.array([int((n-1)/2 + 1), int((n-1)/4 + 1),
+                  int((n-1)/100 + 1), int((n-1)/100 + 1)])
+j_val = np.array([int((n-1)/2 + 1), int((n-1)/4 + 1),
+                  int((n-1)/4 + 1), int((n-1)/100 + 1)])
 
 vari = np.array([i_val, j_val, grid], dtype=object)
 
@@ -90,13 +87,13 @@ boundary_4a = boundaries(n, 1, 1, 1, 1)
 
 boundary_4b = boundaries(n, 1, 1, -1, -1)
 
-boundary_4c = boundaries(n, 2, 2, 0, -4)
+boundary_4c = boundaries(n, 2, 0, 2, -4)
 
 
 # CHARGE GRIDS
 # We use full size grid to make things easier
 grid_4a = np.zeros_like(grid)
-grid_4a[1:-1, 1:-1] = 10/n**2  # charge not at boundaries
+grid_4a[1:-1, 1:-1] = 10/(n**2)  # charge not at boundaries
 
 grid_4b = np.zeros_like(grid)
 charge_gradient = np.linspace(1, 0, len(grid)-2) # creates the correct gradient scale over the grid
@@ -106,6 +103,7 @@ for i in range(1, len(grid_4b)-1):
 # plt.figure(figsize=(6,6))
 # plt.pcolormesh(grid_4b, cmap='gist_gray')
 # plt.colorbar(label="Intensity")
+
 
 grid_4c = np.zeros_like(grid)
 centre = (len(grid)-1)/2 # works best for odd n
@@ -131,22 +129,36 @@ for i in range(0, len(i_val)):
     solve = MonteCarlo.method(setup, NUM_WALKERS, seed=SEED, method=0)
 
     if rank == 0:
-        print(f"For i = {i_val[i]} and j = {j_val[i]}, boundary probability grid is:")
+        print(f"For i = {(i_val[i]-1)/(n-1)}m and j = {(j_val[i]-1)/(n-1)}m:")
         print(solve[0]*boundarray)
         print("Potential")
-        # For boundaries ONLY (first part of task 4c)
+        # For boundaries ONLY (first part of task 4)
         print(f"Task 4.1a: All boundaries 1V : \
-                potential = {np.sum(solve[0]*boundary_4a):4g}")
+                potential = {np.sum(solve[0]*boundary_4a):4f}")
         print(f"Task 4.1b: T:1V, B:1V, L:-1V, R:-1V : \
-                potential = {np.sum(solve[0]*boundary_4b):4g}")
-        print(f"Task 4.1c: T:2V, B:2V, L:0V, R:-4V : \
-                potential = {np.sum(solve[0]*boundary_4c):4g}")
+                potential = {np.sum(solve[0]*boundary_4b):4f}")
+        print(f"Task 4.1c: T:2V, B:0V, L:2V, R:-4V : \
+                potential = {np.sum(solve[0]*boundary_4c):4f}\n")
+
         # For boundaries AND grid charge
-        # NEED TO ADD AND TEST ALL 9 COMBINATIONS
         print(f"Task 4.1a boundaries and uniform grid : \
-                {np.sum(solve[0]*boundary_4a) + h**2*np.sum(solve[0]*grid_4a):4g}")
+                {np.sum(solve[0]*boundary_4a) + np.sum(h**2*solve[0]*grid_4a):4f}")
         print(f"Task 4.1b boundaries and uniform grid : \
-                {np.sum(solve[0]*boundary_4b) + h**2*np.sum(solve[0]*grid_4a):4g}")
+                {np.sum(solve[0]*boundary_4b) + np.sum(h**2*solve[0]*grid_4a):4f}")
         print(f"Task 4.1c boundaries and uniform grid : \
-                {np.sum(solve[0]*boundary_4c) + h**2*np.sum(solve[0]*grid_4a):4g}")
+                {np.sum(solve[0]*boundary_4c) + np.sum(h**2*solve[0]*grid_4a):4f}\n")
+
+        print(f"Task 4.1a boundaries and uniform gradient : \
+                {np.sum(solve[0]*boundary_4a) + np.sum(h**2*solve[0]*grid_4b):4f}")
+        print(f"Task 4.1b boundaries and uniform gradient : \
+                {np.sum(solve[0]*boundary_4b) + np.sum(h**2*solve[0]*grid_4b):4f}")
+        print(f"Task 4.1c boundaries and uniform gradient : \
+                {np.sum(solve[0]*boundary_4c) + np.sum(h**2*solve[0]*grid_4b):4f}\n")
+
+        print(f"Task 4.1a boundaries and point charge at centre : \
+                {np.sum(solve[0]*boundary_4a) + np.sum(h**2*solve[0]*grid_4c):4f}")
+        print(f"Task 4.1b boundaries and point charge at centre : \
+                {np.sum(solve[0]*boundary_4b) + np.sum(h**2*solve[0]*grid_4c):4f}")
+        print(f"Task 4.1c boundaries and point charge at centre : \
+                {np.sum(solve[0]*boundary_4c) + np.sum(h**2*solve[0]*grid_4c):4f}\n")
         print("\n")
