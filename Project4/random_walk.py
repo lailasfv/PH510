@@ -57,7 +57,7 @@ def boundaries(n, top, bottom, left, right):
 #-------------------------------------------
 # GENERAL INITIALISATION
 
-NUM_WALKERS = int(1000)  # This is split across cores
+NUM_WALKERS = int(100000)  # This is split across cores
 SEED = 27347  # Random seed passed in to class methods
 
 #-------------------------------------------
