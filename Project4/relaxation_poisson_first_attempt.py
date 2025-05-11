@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat May 10 20:29:54 2025
+
+@author: skyed
+"""
+
 #!/bin/python3
 
 import numpy as np
@@ -156,7 +163,7 @@ f2 = np.array([])
 
 print("Task 4a)")
 conds2_a = boundary_conditions(N2, h2, 1, 1, 1, 1)
-task4_relaxation_a = relaxation_Poisson(N2,h2,f2,conds2_a,10**(-4),10000)
+task4_relaxation_a = relaxation_Poisson(N2,h2,f2,conds2_a,10**(-3),20000)
 
 print("Task 4b)")
 conds2_b = boundary_conditions(N2,h2, 1, 1, -1, -1)
@@ -164,7 +171,7 @@ task4_relaxation_b = relaxation_Poisson(N2,h2,f2,conds2_b,10**(-3),20000)
 
 print("Task 4c)")
 conds2_c = boundary_conditions(N2,h2, 2, 0, 2, -4)
-task4_relaxation_c = relaxation_Poisson(N2,h2,f2,conds2_c,10**(-4),10000)
+task4_relaxation_c = relaxation_Poisson(N2,h2,f2,conds2_c,10**(-3),20000)
 
 index3_1=1
 
@@ -185,3 +192,41 @@ print("condition b")
 task4_relaxation_b_a = relaxation_Poisson(N2, h2, f3_array_a, conds2_b, 10**(-3),20000)
 print("condition c")
 task4_relaxation_c_a = relaxation_Poisson(N2, h2, f3_array_a, conds2_c, 10**(-3),20000)
+
+print("GRADIENT")
+charge_gradient = np.linspace(1, 0, N2-2) # creates the correct gradient scale over the grid
+f4 = []
+index4_1=1
+while index4_1<(N2-1):
+    index4_2=1 
+    while index4_2<(N2-1):
+        f4.append([index4_1*h2,index4_2*h2,charge_gradient[index4_1-1]])
+        index4_2=index4_2+1 
+    index4_1=index4_1+1
+f4_array_b = np.array(f4)
+print("condition a")
+task4_relaxation_a_b = relaxation_Poisson(N2, h2, f4_array_b, conds2_a, 10**(-3),20000)
+print("condition b")
+task4_relaxation_b_b = relaxation_Poisson(N2, h2, f4_array_b, conds2_b, 10**(-3),20000)
+print("condition c")
+task4_relaxation_c_b = relaxation_Poisson(N2, h2, f4_array_b, conds2_c, 10**(-3),20000)
+
+print("DECAY")
+centre = (N2-1)/2 # works best for odd N
+f5=[]
+index5_1 =1 
+while index5_1<N2-1:
+    index5_2 = 1 
+    while index5_2<N2-1:
+        r = np.sqrt(((index5_1 - centre)*h2)**2 + ((index5_2 - centre)*h2)**2)
+        f5.append([index5_1*h2,index5_2*h2,np.exp(-2000*r)])
+        index5_2=index5_2+1 
+    index5_1=index5_1+1 
+f5_array_c = np.array(f5)
+
+print("condition a")
+task4_relaxation_a_c = relaxation_Poisson(N2, h2, f5_array_c, conds2_a, 10**(-3),20000)
+print("condition b")
+task4_relaxation_b_c = relaxation_Poisson(N2, h2, f5_array_c, conds2_b, 10**(-3),20000)
+print("condition c")
+task4_relaxation_c_c = relaxation_Poisson(N2, h2, f5_array_c, conds2_c, 10**(-3),20000)
