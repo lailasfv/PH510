@@ -13,10 +13,10 @@ class relaxation_Poisson:
         self.max_change_criteria=max_change_criteria
         self.iteration_limit=iteration_limit
         self.w=w
-        """
+        
         array_sub=np.linspace(0,(self.h*(self.N-1)),int(self.N)) # CHECK THIS 
         TWO_D_array=np.zeros([self.N,self.N,2])
-        print(array_)
+        #print(array_)
         i = 0
         j = 0
         while i<N:
@@ -36,7 +36,7 @@ class relaxation_Poisson:
         # so you can call TWO_D_array[i,j] and know the position of it in cm
         # IDK if that is actually useful now that I think about it, i might
         # get rid of this
-        """
+        #print(TWO_D_array[1,1])
         self.grid = np.zeros([self.N,self.N])
         #print(self.N, "N")
         #print(self.grid, "AH")
@@ -101,12 +101,24 @@ class relaxation_Poisson:
                     max_change=max(line)*100
             
             if max_change<self.max_change_criteria:
-                print("We found the result:")
-                print(np.round(self.grid,5))
+                #print("We found the result:")
+                #print(np.round(self.grid,5))
+                #print(self.grid[1,1])
+                #print(self.grid[1,25])
                 print("in", t+1, "iterations")
+                
+                print("point (5,5)cm", self.grid[50,50])
+                print("point (2.5,2.5)cm", self.grid[25,25])
+                print("point (0.1,2.5)cm",self.grid[1,25])
+                print("point (0.1,0.1cm)",self.grid[1,1])
                 t=self.iteration_limit
             elif t==(self.iteration_limit-1):
                 print("we ran out of time!")
+                print("point (5,5)cm", self.grid[50,50])
+                print("point (2.5,2.5)cm", self.grid[25,25])
+                print("point (0.1,2.5)cm",self.grid[1,25])
+                print("point (0.1,0.1cm)",self.grid[1,1])
+                
             t=t+1
             
             
@@ -115,11 +127,13 @@ class relaxation_Poisson:
 
 h1= 0.5
 N1 = 4
+w_test = 2/(1+np.sin(np.pi/N1))
 """
 (0,0)   (0,0.5)   (0,1.0)
 (0.5,0)   (0.5,0.5)   (0.5,1.0)
 (1,0)   (1,0.5)   (1,1.0)
 
+"""
 """
 PLS = np.array([[0,0,2], [0,0.5,2],[0,1,2],[0,1.5,2],
                 [0.5,0,2],[0.5,1.5,2],
@@ -127,16 +141,16 @@ PLS = np.array([[0,0,2], [0,0.5,2],[0,1,2],[0,1.5,2],
                 [1.5,0,2],[1.5,0.5,2],[1.5,1,2],[1.5,1.5,2]])
 f_trying_smth = np.array([[0.5,0.5,1.1]])
 #f_trying_smth = np.array([])
-w_test = 2/(1+np.sin(np.pi/N1))
-TEST=relaxation_Poisson(N1,h1,f_trying_smth,PLS,10**(-10),1000,w_test)
 
+TEST=relaxation_Poisson(N1,h1,f_trying_smth,PLS,10**(-5),1000,w_test)
+"""
 # TASK 5 (/4)
 # we want side length of 10cm, so 
 # if we have h=1cm, then N=11
 # if we have N=101 then h=0.1cm
 length2=10 / 100 # m
 N2=101
-N2 = 6
+#N2 = 5
 h2=length2/(N2-1) #m
 # f=0 everywhere initially???
 
@@ -153,15 +167,17 @@ def boundary_conditions(N,h,top,bottom,left,right):
     return(np.array(conditions))
 f2 = np.array([])
 
+print("Task 4a)")
 conds2_a = boundary_conditions(N2, h2, 1, 1, 1, 1)
-task4_relaxation_a = relaxation_Poisson(N2,h2,f2,conds2_a,10**(-10),2000,w_test)
+#task4_relaxation_a = relaxation_Poisson(N2,h2,f2,conds2_a,10**(-4),10000,w_test)
 
-
+print("Task 4b)")
 conds2_b = boundary_conditions(N2,h2, 1, 1, -1, -1)
-task4_relaxation_b = relaxation_Poisson(N2,h2,f2,conds2_b,10**(-10),2000,w_test)
+#task4_relaxation_b = relaxation_Poisson(N2,h2,f2,conds2_b,10**(-3),20000,w_test)
 
+print("Task 4c)")
 conds2_c = boundary_conditions(N2,h2, 2, 0, 2, -4)
-task4_relaxation_c = relaxation_Poisson(N2,h2,f2,conds2_c,10**(-10),2000,w_test)
+#task4_relaxation_c = relaxation_Poisson(N2,h2,f2,conds2_c,10**(-4),10000,w_test)
 
 index3_1=1
 
@@ -175,7 +191,11 @@ while index3_1<N2-1:
     index3_1=index3_1+1
 f3_array_a = np.array(f3)
 
-task4_relaxation_a_a = relaxation_Poisson(N2, h2, f3_array_a, conds2_a, 10**(-10),2000,w_test)
-task4_relaxation_b_a = relaxation_Poisson(N2, h2, f3_array_a, conds2_b, 10**(-10),2000,w_test)
-task4_relaxation_c_a = relaxation_Poisson(N2, h2, f3_array_a, conds2_c, 10**(-10),2000,w_test)
+print("UNIFORM GRID")
+print("condition a")
+task4_relaxation_a_a = relaxation_Poisson(N2, h2, f3_array_a, conds2_a, 10**(-3),20000,w_test)
+print("condition b")
+task4_relaxation_b_a = relaxation_Poisson(N2, h2, f3_array_a, conds2_b, 10**(-3),20000,w_test)
+print("condition c")
+task4_relaxation_c_a = relaxation_Poisson(N2, h2, f3_array_a, conds2_c, 10**(-3),20000,w_test)
 
