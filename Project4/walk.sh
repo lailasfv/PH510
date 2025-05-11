@@ -17,7 +17,7 @@
 #SBATCH --account=teaching
 #
 # No. of tasks required (ntasks=1 for a single-core job)
-#SBATCH --ntasks=1
+#SBATCH --ntasks=4
 #SBATCH --distribution=block:block
 #
 # Specify (hard) runtime (HH:MM:SS)
@@ -45,7 +45,7 @@ module load openmpi/gcc-8.5.0/4.1.1
 /opt/software/scripts/job_prologue.sh  
 #------------------------------------------------------
 
-python3 ./random_walk.py
+mpirun -np 4 ./random_walk.py
 
 #======================================================
 # Epilogue script to record job endtime and runtime

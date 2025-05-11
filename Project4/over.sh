@@ -17,7 +17,7 @@
 #SBATCH --account=teaching
 #
 # No. of tasks required (ntasks=1 for a single-core job)
-#SBATCH --ntasks=4
+#SBATCH --ntasks=1
 #SBATCH --distribution=block:block
 #
 # Specify (hard) runtime (HH:MM:SS)
@@ -36,7 +36,6 @@ module purge
 #Load any modules appropriate for your program's requirements
 
 module load fftw/gcc-8.5.0/3.3.10
-module load openmpi/gcc-8.5.0/4.1.1
 
 #======================================================
 # Prologue script to record job details
@@ -45,7 +44,7 @@ module load openmpi/gcc-8.5.0/4.1.1
 /opt/software/scripts/job_prologue.sh  
 #------------------------------------------------------
 
-mpirun -np 4 ./poisson_overrelaxation.py
+python3 ./poisson_overrelaxation.py
 
 #======================================================
 # Epilogue script to record job endtime and runtime

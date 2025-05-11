@@ -36,7 +36,6 @@ module purge
 #Load any modules appropriate for your program's requirements
 
 module load fftw/gcc-8.5.0/3.3.10
-module load openmpi/gcc-8.5.0/4.1.1
 
 #======================================================
 # Prologue script to record job details
