@@ -66,7 +66,7 @@ SEED = 27347  # Random seed passed in to class methods
 # but please don't change anything else here
 
 n = 100  # Number of points in the grid - can't be smaller than 100
-h = 10e-2/n  # Step size, since grid is 10cm x 10cm
+h = 10e-1/n  # Step size, since grid is 10cm x 10cm
 
 grid = np.zeros([n+2, n+2]) # Grid for evaluating Green's at i, j
 
@@ -95,10 +95,12 @@ boundary_4c = boundaries(n, 2, 2, 0, -4)
 # CHARGE GRIDS
 # We use full size grid to make things easier
 grid_4a = np.zeros_like(grid)
-grid_4a[1:-1, 1:-1] = 10*h**2  # charge not at boundaries
+grid_4a[1:-1, 1:-1] = 10/n**2  # charge not at boundaries
 
 grid_4b = np.zeros_like(grid)
+charge_gradient = np.linspace(1, 0, len(grid)-2) # creates the correct gradient scale over the grid
 #for i in range(1, len(grid_4b)-1):
+#    grid_4b[i, 1:-1] = charge_gradient[i] * h**2
 
 grid_4c = np.zeros_like(grid)
 #for i in range(1, len(grid_4c)-1):
