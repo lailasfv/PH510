@@ -1,0 +1,138 @@
+===================================================================================
+SLURM Job ID:            12012996
+Submit time:             Sun May 11 21:49:59 BST 2025 (Unix Epoch time: 1746996599)
+Start time:              Sun May 11 21:50:20 BST 2025 (Unix Epoch time: 1746996620)
+No. nodes:               1
+No. tasks:               4
+Job name:                PH510Assignment4
+Account:                 teaching
+QoS:                     teaching
+Partition (queue):       teaching
+Submit directory:        /users/xgb19123/PH510hub/Project4
+Script name:             /users/xgb19123/PH510hub/Project4/walk.sh
+Master node:             wee12
+Nodes used:              wee12
+Task distribution:       block:block
+===================================================================================
+
+For i = 5.0cm and j = 5.0cm:
+[[0.    0.    0.    ... 0.    0.    0.   ]
+ [0.001 0.    0.    ... 0.    0.    0.   ]
+ [0.    0.    0.    ... 0.    0.    0.   ]
+ ...
+ [0.    0.    0.    ... 0.    0.    0.   ]
+ [0.    0.    0.    ... 0.    0.    0.001]
+ [0.    0.    0.    ... 0.001 0.    0.   ]]
+Potential
+Task 4.1a: All boundaries 1V :                 potential = 1.000000
+Task 4.1b: T:1V, B:1V, L:-1V, R:-1V :                 potential = -0.008000
+Task 4.1c: T:2V, B:0V, L:2V, R:-4V :                 potential = 0.082000
+
+Task 4.1a boundaries and uniform grid :                 1.000292
+Task 4.1b boundaries and uniform grid :                 -0.007708
+Task 4.1c boundaries and uniform grid :                 0.082292
+
+Task 4.1a boundaries and uniform gradient :                 1.000015
+Task 4.1b boundaries and uniform gradient :                 -0.007985
+Task 4.1c boundaries and uniform gradient :                 0.082015
+
+Task 4.1a boundaries and point charge at centre :                 1.000225
+Task 4.1b boundaries and point charge at centre :                 -0.007775
+Task 4.1c boundaries and point charge at centre :                 0.082225
+
+
+
+For i = 2.5cm and j = 2.5cm:
+[[0.    0.    0.002 ... 0.    0.    0.   ]
+ [0.    0.    0.    ... 0.    0.    0.   ]
+ [0.    0.    0.    ... 0.    0.    0.   ]
+ ...
+ [0.    0.    0.    ... 0.    0.    0.   ]
+ [0.    0.    0.    ... 0.    0.    0.   ]
+ [0.    0.    0.    ... 0.    0.    0.   ]]
+Potential
+Task 4.1a: All boundaries 1V :                 potential = 1.000000
+Task 4.1b: T:1V, B:1V, L:-1V, R:-1V :                 potential = 0.058000
+Task 4.1c: T:2V, B:0V, L:2V, R:-4V :                 potential = 1.570000
+
+Task 4.1a boundaries and uniform grid :                 1.000177
+Task 4.1b boundaries and uniform grid :                 0.058177
+Task 4.1c boundaries and uniform grid :                 1.570177
+
+Task 4.1a boundaries and uniform gradient :                 1.000011
+Task 4.1b boundaries and uniform gradient :                 0.058011
+Task 4.1c boundaries and uniform gradient :                 1.570011
+
+Task 4.1a boundaries and point charge at centre :                 1.000028
+Task 4.1b boundaries and point charge at centre :                 0.058028
+Task 4.1c boundaries and point charge at centre :                 1.570028
+
+
+
+For i = 0.1cm and j = 2.5cm:
+[[0. 0. 0. ... 0. 0. 0.]
+ [0. 0. 0. ... 0. 0. 0.]
+ [0. 0. 0. ... 0. 0. 0.]
+ ...
+ [0. 0. 0. ... 0. 0. 0.]
+ [0. 0. 0. ... 0. 0. 0.]
+ [0. 0. 0. ... 0. 0. 0.]]
+Potential
+Task 4.1a: All boundaries 1V :                 potential = 1.000000
+Task 4.1b: T:1V, B:1V, L:-1V, R:-1V :                 potential = 0.952000
+Task 4.1c: T:2V, B:0V, L:2V, R:-4V :                 potential = 1.966000
+
+Task 4.1a boundaries and uniform grid :                 1.000010
+Task 4.1b boundaries and uniform grid :                 0.952010
+Task 4.1c boundaries and uniform grid :                 1.966010
+
+Task 4.1a boundaries and uniform gradient :                 1.000001
+Task 4.1b boundaries and uniform gradient :                 0.952001
+Task 4.1c boundaries and uniform gradient :                 1.966001
+
+Task 4.1a boundaries and point charge at centre :                 1.000001
+Task 4.1b boundaries and point charge at centre :                 0.952001
+Task 4.1c boundaries and point charge at centre :                 1.966001
+
+
+
+For i = 0.1cm and j = 0.1cm:
+/users/xgb19123/PH510hub/Project4/monte_carlo.py:165: RuntimeWarning: invalid value encountered in sqrt
+  final_error = prefactor1*np.sqrt(final_var)  # our error
+/users/xgb19123/PH510hub/Project4/monte_carlo.py:165: RuntimeWarning: invalid value encountered in sqrt
+  final_error = prefactor1*np.sqrt(final_var)  # our error
+/users/xgb19123/PH510hub/Project4/monte_carlo.py:165: RuntimeWarning: invalid value encountered in sqrt
+  final_error = prefactor1*np.sqrt(final_var)  # our error
+[[0.    0.29  0.107 ... 0.    0.    0.   ]
+ [0.296 0.    0.    ... 0.    0.    0.   ]
+ [0.122 0.    0.    ... 0.    0.    0.   ]
+ ...
+ [0.    0.    0.    ... 0.    0.    0.   ]
+ [0.    0.    0.    ... 0.    0.    0.   ]
+ [0.    0.    0.    ... 0.    0.    0.   ]]
+Potential
+Task 4.1a: All boundaries 1V :                 potential = 1.000000
+Task 4.1b: T:1V, B:1V, L:-1V, R:-1V :                 potential = -0.028000
+Task 4.1c: T:2V, B:0V, L:2V, R:-4V :                 potential = 1.992000
+
+Task 4.1a boundaries and uniform grid :                 1.000001
+Task 4.1b boundaries and uniform grid :                 -0.027999
+Task 4.1c boundaries and uniform grid :                 1.992001
+
+Task 4.1a boundaries and uniform gradient :                 1.000000
+Task 4.1b boundaries and uniform gradient :                 -0.028000
+Task 4.1c boundaries and uniform gradient :                 1.992000
+
+Task 4.1a boundaries and point charge at centre :                 1.000000
+Task 4.1b boundaries and point charge at centre :                 -0.028000
+Task 4.1c boundaries and point charge at centre :                 1.992000
+
+
+
+/users/xgb19123/PH510hub/Project4/monte_carlo.py:165: RuntimeWarning: invalid value encountered in sqrt
+  final_error = prefactor1*np.sqrt(final_var)  # our error
+===================================================================================
+SLURM job 12012996 ended:     Sun May 11 21:49:09 BST 2025 (Unix Epoch time: 1746996549)
+This is an estimated end time using the 'date' command from node wee12.hpc.strath.ac.uk
+For accurate timings, use 'sacct -j 12012996 -X --format=Submit,Start,End,Elapsed'
+======================================================================================

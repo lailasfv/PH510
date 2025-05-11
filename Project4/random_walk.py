@@ -69,9 +69,9 @@ h = 10e-1/n  # Step size, since grid is 10cm x 10cm
 grid = np.zeros([n+2, n+2]) # Grid for evaluating Green's at i, j
 
 # Walker starting points
-i_val = np.array([int((n+1)/2), int((n+1)/4),
+i_val = np.array([int((n-1)/2), int((n+1)/4),
                   int((n+1)/100), int((n+1)/100)])
-j_val = np.array([int((n+1)/2), int((n+1)/4),
+j_val = np.array([int((n-1)/2), int((n+1)/4),
                   int((n+1)/4), int((n+1)/100)])
 
 vari = np.array([i_val, j_val, grid], dtype=object)
@@ -130,7 +130,7 @@ for i in range(0, len(i_val)):
     solve = MonteCarlo.method(setup, NUM_WALKERS, seed=SEED, method=0)
 
     if rank == 0:
-        print(f"For i = {(10*i_val[i]-1)/(n-1)}cm and j = {(10*j_val[i]-1)/(n-1)}m:")
+        print(f"For i = {(10*i_val[i])/(n-1)}cm and j = {(10*j_val[i])/(n-1)}cm:")
         print(solve[0]*boundarray)
         print("Potential")
         # For boundaries ONLY (first part of task 4)
