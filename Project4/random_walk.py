@@ -1,6 +1,7 @@
 #!/bin/python3
 
 import numpy as np
+#import matplotlib.pyplot as plt
 from mpi4py import MPI
 from monte_carlo import MonteCarlo
 
@@ -99,12 +100,24 @@ grid_4a[1:-1, 1:-1] = 10/n**2  # charge not at boundaries
 
 grid_4b = np.zeros_like(grid)
 charge_gradient = np.linspace(1, 0, len(grid)-2) # creates the correct gradient scale over the grid
-#for i in range(1, len(grid_4b)-1):
-#    grid_4b[i, 1:-1] = charge_gradient[i] * h**2
+for i in range(1, len(grid_4b)-1):
+    grid_4b[i, 1:-1] = charge_gradient[i-1] * h**2
+    
+# plt.figure(figsize=(6,6))
+# plt.pcolormesh(grid_4b, cmap='gist_gray')
+# plt.colorbar(label="Intensity")
 
 grid_4c = np.zeros_like(grid)
-#for i in range(1, len(grid_4c)-1):
-#    for j in range(1, len(grid_4c[0])-1):
+centre = (len(grid)-1)/2 # works best for odd n
+
+for x in range(1, len(grid_4c)-1):
+    for y in range(1, len(grid_4c)-1):
+        r = np.sqrt(((x - centre)*h)**2 + ((y - centre)*h)**2)
+        grid_4c[x, y] = np.exp(-2000*r)
+        
+# plt.figure(figsize=(6,6))
+# plt.pcolormesh(grid_4c, cmap='gist_gray')
+# plt.colorbar(label="Intensity")
 
 
 #-------------------------------------------
