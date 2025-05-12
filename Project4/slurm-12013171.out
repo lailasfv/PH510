@@ -1,0 +1,17 @@
+===================================================================================
+SLURM Job ID:            12013171
+Submit time:             Sun May 11 23:48:28 BST 2025 (Unix Epoch time: 1747003708)
+Start time:              Sun May 11 23:49:51 BST 2025 (Unix Epoch time: 1747003791)
+No. nodes:               1
+No. tasks:               1
+Job name:                PH510Assignment4
+Account:                 teaching
+QoS:                     teaching
+Partition (queue):       teaching
+Submit directory:        /users/xgb19123/PH510hub/Project4
+Script name:             /users/xgb19123/PH510hub/Project4/rel.sh
+Master node:             wee12
+Nodes used:              wee12
+Task distribution:       block:block
+===================================================================================
+

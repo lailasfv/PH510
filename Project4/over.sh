@@ -21,7 +21,7 @@
 #SBATCH --distribution=block:block
 #
 # Specify (hard) runtime (HH:MM:SS)
-#SBATCH --time=01:00:00
+#SBATCH --time=08:00:00
 #
 # Job name
 #SBATCH --job-name=PH510Assignment4
@@ -44,7 +44,7 @@ module load fftw/gcc-8.5.0/3.3.10
 /opt/software/scripts/job_prologue.sh  
 #------------------------------------------------------
 
-python3 ./poisson_overrelaxation.py
+python3 poisson_overrelaxation.py
 
 #======================================================
 # Epilogue script to record job endtime and runtime
