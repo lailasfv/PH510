@@ -82,22 +82,17 @@ class relaxation_Poisson:
                     m2=m2+1
                 k2=k2+1
             
-            checking_array= np.zeros([self.N,self.N])
+            
             index1 = 0
+            max_change=0
             while index1<self.N:
                 index2=0
                 while index2<self.N:
-                    if check[index1,index2]!=0:
-                        checking_array[index1,index2] = abs((check[index1,index2]-self.grid[index1,index2])/check[index1,index2])
+                    change = abs(check[index1,index2]-self.grid[index1,index2])
+                    if change>max_change:
+                        max_change=change
                     index2=index2+1 
                 index1=index1+1
-            
-            
-            max_change = 0
-            #print("LOOK HERE", checking_array)
-            for line in checking_array:
-                if max(line)>max_change:
-                    max_change=max(line)*100
             
             if max_change<self.max_change_criteria:
                 #print("We found the result:")
@@ -117,41 +112,25 @@ class relaxation_Poisson:
                 print("point (2.5,2.5)cm", self.grid[25,25])
                 print("point (0.1,2.5)cm",self.grid[1,25])
                 print("point (0.1,0.1cm)",self.grid[1,1])
-                
+                print("max change", max_change)
+            #print(t)
             t=t+1
             
-            
 
 
 
-h1= 0.5
-N1 = 4
-w_test = 2/(1+np.sin(np.pi/N1))
-"""
-(0,0)   (0,0.5)   (0,1.0)
-(0.5,0)   (0.5,0.5)   (0.5,1.0)
-(1,0)   (1,0.5)   (1,1.0)
-
-"""
-"""
-PLS = np.array([[0,0,2], [0,0.5,2],[0,1,2],[0,1.5,2],
-                [0.5,0,2],[0.5,1.5,2],
-                [1,0,2],[1,1.5,2],
-                [1.5,0,2],[1.5,0.5,2],[1.5,1,2],[1.5,1.5,2]])
-f_trying_smth = np.array([[0.5,0.5,1.1]])
-#f_trying_smth = np.array([])
-
-TEST=relaxation_Poisson(N1,h1,f_trying_smth,PLS,10**(-5),1000,w_test)
-"""
 # TASK 5 (/4)
 # we want side length of 10cm, so 
 # if we have h=1cm, then N=11
 # if we have N=101 then h=0.1cm
 length2=10 / 100 # m
 N2=101
+w_test = 2/(1+np.sin(np.pi/N2))
 #N2 = 5
 h2=length2/(N2-1) #m
-# f=0 everywhere initially???
+convergence = 10**(-8)
+run_limit = 20000
+
 
 def boundary_conditions(N,h,top,bottom,left,right):
     conditions = []
@@ -166,17 +145,18 @@ def boundary_conditions(N,h,top,bottom,left,right):
     return(np.array(conditions))
 f2 = np.array([])
 
+
 print("Task 4a)")
 conds2_a = boundary_conditions(N2, h2, 1, 1, 1, 1)
-task4_relaxation_a = relaxation_Poisson(N2,h2,f2,conds2_a,10**(-4),20000,w_test)
+task4_relaxation_a = relaxation_Poisson(N2,h2,f2,conds2_a,convergence,run_limit,w_test)
 
 print("Task 4b)")
 conds2_b = boundary_conditions(N2,h2, 1, 1, -1, -1)
-task4_relaxation_b = relaxation_Poisson(N2,h2,f2,conds2_b,10**(-3),20000,w_test)
+task4_relaxation_b = relaxation_Poisson(N2,h2,f2,conds2_b,convergence,run_limit,w_test)
 
 print("Task 4c)")
 conds2_c = boundary_conditions(N2,h2, 2, 0, 2, -4)
-task4_relaxation_c = relaxation_Poisson(N2,h2,f2,conds2_c,10**(-3),20000,w_test)
+task4_relaxation_c = relaxation_Poisson(N2,h2,f2,conds2_c,convergence,run_limit,w_test)
 
 index3_1=1
 
@@ -192,11 +172,11 @@ f3_array_a = np.array(f3)
 
 print("UNIFORM GRID")
 print("condition a")
-task4_relaxation_a_a = relaxation_Poisson(N2, h2, f3_array_a, conds2_a, 10**(-3),20000,w_test)
+task4_relaxation_a_a = relaxation_Poisson(N2, h2, f3_array_a, conds2_a, convergence,run_limit,w_test)
 print("condition b")
-task4_relaxation_b_a = relaxation_Poisson(N2, h2, f3_array_a, conds2_b, 10**(-3),20000,w_test)
+task4_relaxation_b_a = relaxation_Poisson(N2, h2, f3_array_a, conds2_b, convergence,run_limit,w_test)
 print("condition c")
-task4_relaxation_c_a = relaxation_Poisson(N2, h2, f3_array_a, conds2_c, 10**(-3),20000,w_test)
+task4_relaxation_c_a = relaxation_Poisson(N2, h2, f3_array_a, conds2_c, convergence,run_limit,w_test)
 
 
 print("GRADIENT")
@@ -211,11 +191,11 @@ while index4_1<(N2-1):
     index4_1=index4_1+1
 f4_array_b = np.array(f4)
 print("condition a")
-task4_relaxation_a_b = relaxation_Poisson(N2, h2, f4_array_b, conds2_a, 10**(-3),20000,w_test)
+task4_relaxation_a_b = relaxation_Poisson(N2, h2, f4_array_b, conds2_a, convergence,run_limit,w_test)
 print("condition b")
-task4_relaxation_b_b = relaxation_Poisson(N2, h2, f4_array_b, conds2_b, 10**(-3),20000,w_test)
+task4_relaxation_b_b = relaxation_Poisson(N2, h2, f4_array_b, conds2_b, convergence,run_limit,w_test)
 print("condition c")
-task4_relaxation_c_b = relaxation_Poisson(N2, h2, f4_array_b, conds2_c, 10**(-3),20000,w_test)
+task4_relaxation_c_b = relaxation_Poisson(N2, h2, f4_array_b, conds2_c, convergence,run_limit,w_test)
 
 print("DECAY")
 centre = (N2-1)/2 # works best for odd N
@@ -231,8 +211,8 @@ while index5_1<N2-1:
 f5_array_c = np.array(f5)
 
 print("condition a")
-task4_relaxation_a_c = relaxation_Poisson(N2, h2, f5_array_c, conds2_a, 10**(-3),20000,w_test)
+task4_relaxation_a_c = relaxation_Poisson(N2, h2, f5_array_c, conds2_a, convergence,run_limit,w_test)
 print("condition b")
-task4_relaxation_b_c = relaxation_Poisson(N2, h2, f5_array_c, conds2_b, 10**(-3),20000,w_test)
+task4_relaxation_b_c = relaxation_Poisson(N2, h2, f5_array_c, conds2_b, convergence,run_limit,w_test)
 print("condition c")
-task4_relaxation_c_c = relaxation_Poisson(N2, h2, f5_array_c, conds2_c, 10**(-3),20000,w_test)
+task4_relaxation_c_c = relaxation_Poisson(N2, h2, f5_array_c, conds2_c, convergence,run_limit,w_test)
