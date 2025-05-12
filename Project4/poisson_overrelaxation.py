@@ -79,7 +79,7 @@ class relaxation_Poisson:
             while k2<N-1:
                 m2 = 1
                 while m2<N-1:
-                    self.grid[k2,m2]=self.w*(self.grid_f[k2,m2]+1/4*(self.grid[k2+1,m2]+self.grid[k2-1,m2]+self.grid[k2,m2+1]+self.grid[k2,m2-1]))+(1-self.w)*self.grid[k2,m2]
+                    self.grid[k2,m2]=self.w/4*(self.grid_f[k2,m2]*self.h**2+(self.grid[k2+1,m2]+self.grid[k2-1,m2]+self.grid[k2,m2+1]+self.grid[k2,m2-1]))+(1-self.w)*self.grid[k2,m2]
                     m2=m2+1
                 k2=k2+1
             
@@ -169,7 +169,7 @@ f2 = np.array([])
 
 print("Task 4a)")
 conds2_a = boundary_conditions(N2, h2, 1, 1, 1, 1)
-task4_relaxation_a = relaxation_Poisson(N2,h2,f2,conds2_a,10**(-3),20000,w_test)
+task4_relaxation_a = relaxation_Poisson(N2,h2,f2,conds2_a,10**(-4),20000,w_test)
 
 print("Task 4b)")
 conds2_b = boundary_conditions(N2,h2, 1, 1, -1, -1)
