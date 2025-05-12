@@ -1,0 +1,97 @@
+===================================================================================
+SLURM Job ID:            12013917
+Submit time:             Mon May 12 13:59:10 BST 2025 (Unix Epoch time: 1747054750)
+Start time:              Mon May 12 13:59:10 BST 2025 (Unix Epoch time: 1747054750)
+No. nodes:               1
+No. tasks:               1
+Job name:                PH510Assignment4
+Account:                 teaching
+QoS:                     teaching
+Partition (queue):       teaching
+Submit directory:        /users/xgb19123/PH510hub/Project4
+Script name:             /users/xgb19123/PH510hub/Project4/over.sh
+Master node:             wee09
+Nodes used:              wee09
+Task distribution:       block:block
+===================================================================================
+
+Task 4a)
+in 2579 iterations
+point (5,5)cm 0.9780025725841097
+point (2.5,2.5)cm 0.9886159953218272
+point (0.1,2.5)cm 0.9994858045293897
+point (0.1,0.1cm) 0.9999767760845328
+Task 4b)
+we ran out of time!
+point (5,5)cm 6.024372414171358e-13
+point (2.5,2.5)cm 3.1162559335963304e-13
+point (0.1,2.5)cm 0.9481284642481715
+point (0.1,0.1cm) 6.661338147750939e-16
+Task 4c)
+we ran out of time!
+point (5,5)cm 6.762120901292813e-13
+point (2.5,2.5)cm 1.4561752900791365
+point (0.1,2.5)cm 1.9768355861450897
+point (0.1,0.1cm) 1.999124514425918
+UNIFORM GRID
+condition a
+in 923 iterations
+point (5,5)cm 0.779457073962263
+point (2.5,2.5)cm 0.8872514137032168
+point (0.1,2.5)cm 0.9949057724321186
+point (0.1,0.1cm) 0.9997698144614345
+condition b
+in 12583 iterations
+point (5,5)cm 7.707467805163234e-07
+point (2.5,2.5)cm 4.719216005320824e-07
+point (0.1,2.5)cm 0.9481284928967983
+point (0.1,0.1cm) 2.8257857956747813e-09
+condition c
+in 13578 iterations
+point (5,5)cm 7.570241437478337e-07
+point (2.5,2.5)cm 1.4561757548952914
+point (0.1,2.5)cm 1.976835614472762
+point (0.1,0.1cm) 1.999124517237204
+GRADIENT
+condition a
+in 927 iterations
+point (5,5)cm 0.7793589182133608
+point (2.5,2.5)cm 0.8871790126623096
+point (0.1,2.5)cm 0.99491260478599
+point (0.1,0.1cm) 0.9997714511303075
+condition b
+in 7743 iterations
+point (5,5)cm 0.00038459005746150894
+point (2.5,2.5)cm 0.00029675828417005624
+point (0.1,2.5)cm 0.9481497337477183
+point (0.1,0.1cm) 2.4024669316986928e-06
+condition c
+in 8316 iterations
+point (5,5)cm 0.00037670323371456467
+point (2.5,2.5)cm 1.456467964860399
+point (0.1,2.5)cm 1.9768566711841342
+point (0.1,0.1cm) 1.9991269085603751
+DECAY
+condition a
+in 929 iterations
+point (5,5)cm 0.7801228730743274
+point (2.5,2.5)cm 0.8875064998163926
+point (0.1,2.5)cm 0.9949155166310159
+point (0.1,0.1cm) 0.9997703129550375
+condition b
+in 14384 iterations
+point (5,5)cm 1.4843926111999232e-06
+point (2.5,2.5)cm 1.4055266982831764e-07
+point (0.1,2.5)cm 0.9481284696365221
+point (0.1,0.1cm) 2.196448211074492e-10
+condition c
+in 13086 iterations
+point (5,5)cm 1.4935601466212883e-06
+point (2.5,2.5)cm 1.456175435378061
+point (0.1,2.5)cm 1.976835591747852
+point (0.1,0.1cm) 1.9991245146552474
+===================================================================================
+SLURM job 12013917 ended:     Mon May 12 16:13:26 BST 2025 (Unix Epoch time: 1747062806)
+This is an estimated end time using the 'date' command from node wee09.hpc.strath.ac.uk
+For accurate timings, use 'sacct -j 12013917 -X --format=Submit,Start,End,Elapsed'
+======================================================================================
