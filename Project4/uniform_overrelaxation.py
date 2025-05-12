@@ -1,3 +1,4 @@
+
 #!/bin/python3
 
 import numpy as np
@@ -82,30 +83,40 @@ class relaxation_Poisson:
                     m2=m2+1
                 k2=k2+1
             
-            checking_array= np.zeros([self.N,self.N])
+            
             index1 = 0
+            max_change=0
             while index1<self.N:
                 index2=0
                 while index2<self.N:
-                    if check[index1,index2]!=0:
-                        checking_array[index1,index2] = abs((check[index1,index2]-self.grid[index1,index2])/check[index1,index2])
+                    change = abs(check[index1,index2]-self.grid[index1,index2])
+                    if change>max_change:
+                        max_change=change
                     index2=index2+1 
                 index1=index1+1
             
-            
-            
-            #print("LOOK HERE", checking_array)
-            
-            if t==(self.iteration_limit-1):
+            if max_change<self.max_change_criteria:
+                #print("We found the result:")
+                #print(np.round(self.grid,5))
+                #print(self.grid[1,1])
+                #print(self.grid[1,25])
+                print("in", t+1, "iterations")
+                
                 print("point (5,5)cm", self.grid[50,50])
                 print("point (2.5,2.5)cm", self.grid[25,25])
                 print("point (0.1,2.5)cm",self.grid[1,25])
                 print("point (0.1,0.1cm)",self.grid[1,1])
+                t=self.iteration_limit
+            elif t==(self.iteration_limit-1):
+                print("we ran out of time!")
+                print("point (5,5)cm", self.grid[50,50])
+                print("point (2.5,2.5)cm", self.grid[25,25])
+                print("point (0.1,2.5)cm",self.grid[1,25])
+                print("point (0.1,0.1cm)",self.grid[1,1])
+                print("max change", max_change)
                 
             t=t+1
             
-            
-
 
 
 h1= 0.5
