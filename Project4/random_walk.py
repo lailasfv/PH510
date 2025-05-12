@@ -24,11 +24,14 @@ def random_walk(i, j, grid):
     move = directions[np.random.randint(0, len(directions))]
     pos += move
 
+    num_steps = 0
+
     while pos[0]>0 and pos[0]<x and pos[1]>0 and pos[1]<y:  # While not at boundary
         newgrid[pos[0], pos[1]] += 1  # adding instance of being at site p,q
         move = directions[np.random.randint(0, len(directions))]
         #print(pos)
         pos += move
+        num_steps += 1
 
     newgrid[pos[0], pos[1]] = 1  # Adds one instance of walker reaching boundary site
     #print("BOUNDARY REACHED:", pos)
