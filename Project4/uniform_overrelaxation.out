@@ -1,0 +1,40 @@
+===================================================================================
+SLURM Job ID:            12014477
+Submit time:             Mon May 12 19:00:01 BST 2025 (Unix Epoch time: 1747072801)
+Start time:              Mon May 12 19:00:22 BST 2025 (Unix Epoch time: 1747072822)
+No. nodes:               1
+No. tasks:               1
+Job name:                PH510Assignment4
+Account:                 teaching
+QoS:                     teaching
+Partition (queue):       teaching
+Submit directory:        /users/xgb19123/PH510hub/Project4
+Script name:             /users/xgb19123/PH510hub/Project4/uniform.sh
+Master node:             wee09
+Nodes used:              wee09
+Task distribution:       block:block
+===================================================================================
+
+UNIFORM GRID
+condition a
+point (5,5)cm 1.0000007516118488
+point (2.5,2.5)cm 1.0000004620142362
+point (0.1,2.5)cm 1.0000000282011037
+point (0.1,0.1cm) 1.000000002805569
+GRADIENT
+condition a
+point (5,5)cm 1.0003683277446176
+point (2.5,2.5)cm 1.0002883382673433
+point (0.1,2.5)cm 1.0000208891494904
+point (0.1,0.1cm) 1.00000238528571
+DECAY
+condition a
+point (5,5)cm 1.0000014828710027
+point (2.5,2.5)cm 1.0000001397648357
+point (0.1,2.5)cm 1.000000005352776
+point (0.1,0.1cm) 1.0000000002180371
+===================================================================================
+SLURM job 12014477 ended:     Mon May 12 20:01:51 BST 2025 (Unix Epoch time: 1747076511)
+This is an estimated end time using the 'date' command from node wee09.hpc.strath.ac.uk
+For accurate timings, use 'sacct -j 12014477 -X --format=Submit,Start,End,Elapsed'
+======================================================================================
