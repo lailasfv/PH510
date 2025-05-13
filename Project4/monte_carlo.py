@@ -145,8 +145,9 @@ class MonteCarlo:
                 count = count+1
             """
             # we get sum(f) and sum(f**2) for each worker
-            sum_f = sum_f + self.f(*self.variables)
-            expect_f_squared = expect_f_squared + (self.f(*self.variables))**2
+            func_value = self.f(*self.variables)
+            sum_f = sum_f + func
+            expect_f_squared = expect_f_squared + func_value**2
 
         final_sum_f = MonteCarlo.reduce_sum(self, sum_f)
         final_f_squared = MonteCarlo.reduce_sum(self, expect_f_squared)

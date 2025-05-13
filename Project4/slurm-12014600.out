@@ -1,0 +1,44 @@
+===================================================================================
+SLURM Job ID:            12014600
+Submit time:             Mon May 12 20:46:53 BST 2025 (Unix Epoch time: 1747079213)
+Start time:              Mon May 12 20:46:53 BST 2025 (Unix Epoch time: 1747079213)
+No. nodes:               1
+No. tasks:               1
+Job name:                PH510Assignment4
+Account:                 teaching
+QoS:                     teaching
+Partition (queue):       teaching
+Submit directory:        /users/xgb19123/PH510hub/Project4
+Script name:             /users/xgb19123/PH510hub/Project4/uniform.sh
+Master node:             wee09
+Nodes used:              wee09
+Task distribution:       block:block
+===================================================================================
+
+UNIFORM GRID
+condition a
+in 204 iterations
+point (5,5)cm 0.5208860556997627
+point (2.5,2.5)cm 0.6392932888154912
+point (0.1,2.5)cm 0.9797581386415202
+point (0.1,0.1cm) 0.9988508373709951
+GRADIENT
+condition a
+in 193 iterations
+point (5,5)cm 0.5051029243813018
+point (2.5,2.5)cm 0.6289716170157987
+point (0.1,2.5)cm 0.9788835045839047
+point (0.1,0.1cm) 0.9987987011654945
+DECAY
+condition a
+in 193 iterations
+point (5,5)cm 0.5126559422131954
+point (2.5,2.5)cm 0.6365989839710555
+point (0.1,2.5)cm 0.9792572890539177
+point (0.1,0.1cm) 0.998807201380378
+===================================================================================
+SLURM job 12014600 ended:     Mon May 12 20:45:26 BST 2025 (Unix Epoch time: 1747079126)
+This is an estimated end time using the 'date' command from node wee09.hpc.strath.ac.uk
+For accurate timings, use 'sacct -j 12014600 -X --format=Submit,Start,End,Elapsed'
+======================================================================================
+slurmstepd: error: Pid 3388356 is still in the freezer job cgroup.  It might be left uncleaned after the job.
