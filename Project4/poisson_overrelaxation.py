@@ -1,11 +1,19 @@
-
 #!/bin/python3
+"""
+Module for INSERT HERE
+
+MIT License
+
+Copyright (c) 2025 Tyler Chauvy, Adam John Rae, Laila Safavi
+
+See LICENSE.txt for details
+"""
 
 import numpy as np
 
 
-def over_relaxation_poisson(grid_length_n, h, f, conditions, max_change_criteria,
-             iteration_limit, w, points):
+def over_relaxation_poisson(grid_length_n, h, f, conditions,
+                            max_change_criteria, iteration_limit, w, points):
     """
     Over-relaxation method to calculate the solution of Poisson's
     equation at specific grid sites.
@@ -59,16 +67,20 @@ def over_relaxation_poisson(grid_length_n, h, f, conditions, max_change_criteria
 
     Returns
     -------
-    None.
+    Array
+        Values of the potential, in volts, at the points [x,y] that we passed
+        to the function to evaluate the potential at.
+        Each potential value corresponds to the point [x,y] at the same index
+        in the array 'points'.
 
     """
     grid_length_n = int(grid_length_n)
-    grid = np.zeros([grid_length_n, grid_length_n])  # Creating the base for the
-    # NxN grid.
+    grid = np.zeros([grid_length_n, grid_length_n])  # Creating the base for
+    # the NxN grid.
     # We then put the potential bondary conditions on the
     # the edge of the grid we just constructed
     # using the conditions array which described what value should go where
-    points=points
+    points = points
     for cond in conditions:
         # we turn the position (x,y)cm into grid index going from 0 to N-1
         axis1 = int(cond[0]/h)
@@ -160,11 +172,13 @@ def over_relaxation_poisson(grid_length_n, h, f, conditions, max_change_criteria
             # If the grid elements have converged we print the values
             print("We found the result in", t+1, "iterations:")
             # we have t+1 as we start at t=0
+            potential_at_points = []  # prepping the return array
             for p in points:
                 print("point (", p[0], ",", p[1], ")m: ",
-                         str.format("{0:.4f}", grid[int(p[0]/h),
+                         str.format("{0:.3e}", grid[int(p[0]/h),
                                                     int(p[1]/h)]),
                     "V", sep="")
+                potential_at_points.append(grid[int(p[0]/h), int(p[1]/h)])
                 # we print the potential at each desired grid point
             t = iteration_limit  # to stop the while loop
         # If the elements have not converged yet, we check if
@@ -175,11 +189,13 @@ def over_relaxation_poisson(grid_length_n, h, f, conditions, max_change_criteria
             # convergence
             print("We ran out of time!")
             # but still print some results to inform
+            potential_at_points = []  # prepping the return array
             for p in points:
                 print("point (", p[0], ",", p[1], ")m: ",
-                     str.format("{0:.4f}", grid[int(p[0]/h),
+                     str.format("{0:.3e}", grid[int(p[0]/h),
                                                 int(p[1]/h)]),
                      "V", sep="")
+                potential_at_points.append(grid[int(p[0]/h), int(p[1]/h)])
                 # we print the potential at each desired grid point
             # and print what was the biggest change between this last
             # interation and the previous one
@@ -188,19 +204,7 @@ def over_relaxation_poisson(grid_length_n, h, f, conditions, max_change_criteria
             # those results and possibly how to change the convergence
             # parameter or iteration limit
         t = t+1
-    return grid[int(p[0]/h), int(p[1]/h)]
-
-# TASK 5
-LENGTH = 10 / 100  # in meters, as 10cm=10/100m=0.1m
-N2 = 101  # number of grid points such that we get H2=0.001m=0.1cm
-# this is needed so we can calculate values at points (0.1,2.5)cm and
-# (0.1,0.1cm)
-H2 = LENGTH/(N2-1)  # in meters, the spacing between the grid points
-CONVERGENCE = 10**(-8)
-RUN_LIMIT = 20000
-w_optimal = 2/(1+np.sin(np.pi/N2))  # the optimal parametter for
-# over-relaxation on an NxN square grid
-points_desired = np.array([[5.0/100,5.0/100],[2.5/100,2.5/100],[0.1/100,2.5/100],[0.1/100,0.1/100]])
+    return np.array(potential_at_points)
 
 
 def boundary_conditions(grid_length_n, h, top, bottom, left, right):
@@ -257,6 +261,19 @@ def boundary_conditions(grid_length_n, h, top, bottom, left, right):
     # method uses array that are easier to INDEX
     return np.array(conditions)
 
+
+# TASK 5
+LENGTH = 10 / 100  # in meters, as 10cm=10/100m=0.1m
+N2 = 101  # number of grid points such that we get H2=0.001m=0.1cm
+# this is needed so we can calculate values at points (0.1,2.5)cm and
+# (0.1,0.1cm)
+H2 = LENGTH/(N2-1)  # in meters, the spacing between the grid points
+CONVERGENCE = 10**(-8)
+RUN_LIMIT = 20000
+w_optimal = 2/(1+np.sin(np.pi/N2))  # the optimal parametter for
+# over-relaxation on an NxN square grid
+points_desired = np.array([[5.0/100, 5.0/100], [2.5/100, 2.5/100],
+                           [0.1/100, 2.5/100], [0.1/100, 0.1/100]])
 
 print("NO CHARGE")
 f2 = np.array([])  # empty array as there is no charge in the grid
