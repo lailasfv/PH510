@@ -12,32 +12,36 @@ nworkers = comm.Get_size()
 
 def random_walk(i, j, grid):
     """
-    Random walker starting at (i,j) in a grid
-    This function should add 1 to its ending position
+    N random walker starting at (i,j) in a grid
     """
-    newgrid = np.zeros_like(grid)
-    pos = np.array([i,j])  # Starting position
+    sum_grid = np.zeros_like(grid)
     directions = np.array([[-1, 0], [1, 0], [0, -1], [0, 1]])  # Possible walks
     x = len(grid) - 1    # x boundary
     y = len(grid[0]) - 1 # y boundary
 
-    move = directions[np.random.randint(0, len(directions))]
-    pos += move
+    N = 100  # Hardcoded bc variable passing broke
 
-    num_steps = 0
-
-    while pos[0]>0 and pos[0]<x and pos[1]>0 and pos[1]<y:  # While not at boundary
-        newgrid[pos[0], pos[1]] += 1  # adding instance of being at site p,q
+    for walker in range (0, N):  # Iterates over each walker
+        newgrid = np.zeros_like(grid)
+        pos = np.array([i,j])  # Starting position
         move = directions[np.random.randint(0, len(directions))]
-        #print(pos)
         pos += move
-        num_steps += 1
+        num_steps = 1  # One small step for a walker
 
-    newgrid[pos[0], pos[1]] = 1  # Adds one instance of walker reaching boundary site
-    #print("BOUNDARY REACHED:", pos)
-    #print(newgrid)
+        while pos[0]>0 and pos[0]<x and pos[1]>0 and pos[1]<y:  # While not at boundary
+            newgrid[pos[0], pos[1]] += 1  # adding instance of being at site p,q
+            move = directions[np.random.randint(0, len(directions))]
+            pos += move
+            num_steps += 1
 
-    return newgrid
+        newgrid[pos[0], pos[1]] = 1  # Adds one instance of walker reaching boundary site
+        newgrid[1:-1, 1:-1] = newgrid[1:-1, 1:-1]/num_steps
+        sum_grid += newgrid
+
+    final_grid = sum_grid/N    
+    # print(final_grid)
+
+    return final_grid
 
 
 def boundaries(n, top, bottom, left, right):
@@ -62,21 +66,21 @@ def boundaries(n, top, bottom, left, right):
 #-------------------------------------------
 # GENERAL INITIALISATION
 
-NUM_WALKERS = int(100000)  # This is split across cores
+NUM_WALKERS = int(1000)  # This is split across cores
 SEED = 27347  # Random seed passed in to class methods
 
 #-------------------------------------------
 # The following arrays are used for all of tasks 3-5
 
-n = 101  # Number of points in the grid - odd number 101 or greater
+n = 99  # Number of points in the grid
 h = 10e-1/n  # Step size, since grid is 10cm x 10cm
 
 grid = np.zeros([n+2, n+2]) # Grid for evaluating Green's at i, j
 
 # Walker starting points
-i_val = np.array([int((n-1)/2), int((n+1)/4),
+i_val = np.array([int((n+1)/2), int((n+1)/4),
                   int((n+1)/100), int((n+1)/100)])
-j_val = np.array([int((n-1)/2), int((n+1)/4),
+j_val = np.array([int((n+1)/2), int((n+1)/4),
                   int((n+1)/4), int((n+1)/100)])
 
 vari = np.array([i_val, j_val, grid], dtype=object)
@@ -132,10 +136,10 @@ for i in range(0, len(i_val)):
     vari = np.array([i_val[i], j_val[i], grid], dtype=object)
 
     setup = MonteCarlo([0], [1], random_walk, variables = vari)
-    solve = MonteCarlo.method(setup, NUM_ITERATIONS, seed=SEED, method=0)
+    solve = MonteCarlo.method(setup, NUM_WALKERS, seed=SEED, method=0)
 
     if rank == 0:
-        print(f"For i = {(10*i_val[i])/(n-1)}cm and j = {(10*j_val[i])/(n-1)}cm:")
+        print(f"For i = {(10*i_val[i])/(n+1)}cm and j = {(10*j_val[i])/(n+1)}cm:")
         print(solve[0]*boundarray)
         print("Potential")
         # For boundaries ONLY (first part of task 4)
