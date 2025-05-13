@@ -4,7 +4,7 @@
 import numpy as np
 
 
-def OverRelaxationPoisson(grid_length_n, h, f, conditions, max_change_criteria,
+def over_relaxation_poisson(grid_length_n, h, f, conditions, max_change_criteria,
              iteration_limit, w, points):
     """
     Over-relaxation method to calculate the solution of Poisson's
@@ -158,7 +158,7 @@ def OverRelaxationPoisson(grid_length_n, h, f, conditions, max_change_criteria,
         # criteria given to the method
         if max_change < max_change_criteria:
             # If the grid elements have converged we print the values
-            print("We found the result in", t+1, "interations:")
+            print("We found the result in", t+1, "iterations:")
             # we have t+1 as we start at t=0
             for p in points:
                 print("point (", p[0], ",", p[1], ")m: ",
@@ -188,7 +188,7 @@ def OverRelaxationPoisson(grid_length_n, h, f, conditions, max_change_criteria,
             # those results and possibly how to change the convergence
             # parameter or iteration limit
         t = t+1
-
+    return grid[int(p[0]/h), int(p[1]/h)]
 
 # TASK 5
 LENGTH = 10 / 100  # in meters, as 10cm=10/100m=0.1m
@@ -263,20 +263,20 @@ f2 = np.array([])  # empty array as there is no charge in the grid
 print("Uniform +1V edges")
 conds2_a = boundary_conditions(N2, H2, 1, 1, 1, 1)  # using function to
 # create the potential boundaries arrays
-task4_relaxation_a = OverRelaxationPoisson(N2, H2, f2, conds2_a, CONVERGENCE,
+task4_relaxation_a = over_relaxation_poisson(N2, H2, f2, conds2_a, CONVERGENCE,
                                              RUN_LIMIT, w_optimal,
                                              points_desired)
 print("")
 # then using over-relaxation method to get the potential at the desired points
 print("Top and bottom edges at +1V, left and right at -1V")
 conds2_b = boundary_conditions(N2, H2, 1, 1, -1, -1)
-task4_relaxation_b = OverRelaxationPoisson(N2, H2, f2, conds2_b, CONVERGENCE,
+task4_relaxation_b = over_relaxation_poisson(N2, H2, f2, conds2_b, CONVERGENCE,
                                              RUN_LIMIT, w_optimal,
                                              points_desired)
 print("")
 print("Top and left edges at +2V, bottom at 0V, and right at -4V")
 conds2_c = boundary_conditions(N2, H2, 2, 0, 2, -4)
-task4_relaxation_c = OverRelaxationPoisson(N2, H2, f2, conds2_c, CONVERGENCE,
+task4_relaxation_c = over_relaxation_poisson(N2, H2, f2, conds2_c, CONVERGENCE,
                                              RUN_LIMIT, w_optimal,
                                              points_desired)
 print("")
@@ -303,17 +303,17 @@ while INDEX3_1 < N2-1:
 f3_array_a = np.array(f3)  # turning our list into an array for the method
 
 print("Uniform +1V edges")
-task4_relaxation_a_a = OverRelaxationPoisson(N2, H2, f3_array_a, conds2_a,
+task4_relaxation_a_a = over_relaxation_poisson(N2, H2, f3_array_a, conds2_a,
                                                CONVERGENCE, RUN_LIMIT,
                                                w_optimal, points_desired)
 print("")
 print("Top and bottom edges at +1V, left and right at -1V")
-task4_relaxation_b_a = OverRelaxationPoisson(N2, H2, f3_array_a, conds2_b,
+task4_relaxation_b_a = over_relaxation_poisson(N2, H2, f3_array_a, conds2_b,
                                                CONVERGENCE, RUN_LIMIT,
                                                w_optimal, points_desired)
 print("")
 print("Top and left edges at +2V, bottom at 0V, and right at -4V")
-task4_relaxation_c_a = OverRelaxationPoisson(N2, H2, f3_array_a, conds2_c,
+task4_relaxation_c_a = over_relaxation_poisson(N2, H2, f3_array_a, conds2_c,
                                                CONVERGENCE, RUN_LIMIT,
                                                w_optimal, points_desired)
 print("")
@@ -339,17 +339,17 @@ while INDEX4_1 < (N2-1):
     INDEX4_1 = INDEX4_1+1
 f4_array_b = np.array(f4)
 print("Uniform +1V edges")
-task4_relaxation_a_b = OverRelaxationPoisson(N2, H2, f4_array_b, conds2_a,
+task4_relaxation_a_b = over_relaxation_poisson(N2, H2, f4_array_b, conds2_a,
                                                CONVERGENCE, RUN_LIMIT,
                                                w_optimal, points_desired)
 print("")
 print("Top and bottom edges at +1V, left and right at -1V")
-task4_relaxation_b_b = OverRelaxationPoisson(N2, H2, f4_array_b, conds2_b,
+task4_relaxation_b_b = over_relaxation_poisson(N2, H2, f4_array_b, conds2_b,
                                                CONVERGENCE, RUN_LIMIT,
                                                w_optimal, points_desired)
 print("")
 print("Top and left edges at +2V, bottom at 0V, and right at -4V")
-task4_relaxation_c_b = OverRelaxationPoisson(N2, H2, f4_array_b, conds2_c,
+task4_relaxation_c_b = over_relaxation_poisson(N2, H2, f4_array_b, conds2_c,
                                                CONVERGENCE, RUN_LIMIT,
                                                w_optimal, points_desired)
 
@@ -375,16 +375,16 @@ while INDEX5_1 < N2-1:
 f5_array_c = np.array(f5)
 
 print("Uniform +1V edges")
-task4_relaxation_a_c = OverRelaxationPoisson(N2, H2, f5_array_c, conds2_a,
+task4_relaxation_a_c = over_relaxation_poisson(N2, H2, f5_array_c, conds2_a,
                                                CONVERGENCE, RUN_LIMIT,
                                                w_optimal, points_desired)
 print("")
 print("Top and bottom edges at +1V, left and right at -1V")
-task4_relaxation_b_c = OverRelaxationPoisson(N2, H2, f5_array_c, conds2_b,
+task4_relaxation_b_c = over_relaxation_poisson(N2, H2, f5_array_c, conds2_b,
                                                CONVERGENCE, RUN_LIMIT,
                                                w_optimal, points_desired)
 print("")
 print("Top and left edges at +2V, bottom at 0V, and right at -4V")
-task4_relaxation_c_c = OverRelaxationPoisson(N2, H2, f5_array_c, conds2_c,
+task4_relaxation_c_c = over_relaxation_poisson(N2, H2, f5_array_c, conds2_c,
                                                CONVERGENCE, RUN_LIMIT,
                                                w_optimal, points_desired)
