@@ -6,9 +6,10 @@ import numpy as np
 
 class over_relaxation_Poisson:
     def __init__(self, N, h, f, conditions, max_change_criteria,
-                 iteration_limit, w):
+                 iteration_limit, w, points):
         """
-        ADD DESCRIPTION HERE
+        Over-relaxation method to calculate the solution of Poisson's
+        equation at specific grid sites.
 
         Parameters
         ----------
@@ -53,6 +54,9 @@ class over_relaxation_Poisson:
             becomes a Gauss-Siedel relaxation method.
             For this over-relaxation method to converge, we need 0<w<2.
             To have accelerated convergence, we need 1<w<2.
+        points: Array
+            Array of arrays of the form [x,y] which are the position of
+            the grids points, in meters, where we want to know the potential V.
 
         Returns
         -------
@@ -70,6 +74,7 @@ class over_relaxation_Poisson:
         # We then put the potential bondary conditions on the
         # the edge of the grid we just constructed
         # using the conditions array which described what value should go where
+        self.points=points
         for cond in conditions:
             # we turn the position (x,y)cm into grid index going from 0 to N-1
             axis1 = int(cond[0]/h)
@@ -161,10 +166,12 @@ class over_relaxation_Poisson:
                 # If the grid elements have converged we print the values
                 print("We found the result in", t+1, "interations:")
                 # we have t+1 as we start at t=0
-                print("point (5.0,5.0)cm", self.grid[50, 50])
-                print("point (2.5,2.5)cm", self.grid[25, 25])
-                print("point (0.1,2.5)cm", self.grid[1, 25])
-                print("point (0.1,0.1)cm", self.grid[1, 1])
+                for p in self.points:
+                    print("point (", p[0], ",", p[1], ")m: ",
+                          str.format("{0:.4f}", self.grid[int(p[0]/self.h),
+                                                          int(p[1]/self.h)]),
+                          "V", sep="")
+                    # we print the potential at each desired grid point
                 t = self.iteration_limit  # to stop the while loop
             # If the elements have not converged yet, we check if
             # we are about to reach the iteration limit/if this is
@@ -174,10 +181,12 @@ class over_relaxation_Poisson:
                 # convergence
                 print("We ran out of time!")
                 # but still print some results to inform
-                print("point (5.0,5.0)cm", self.grid[50, 50])
-                print("point (2.5,2.5)cm", self.grid[25, 25])
-                print("point (0.1,2.5)cm", self.grid[1, 25])
-                print("point (0.1,0.1)cm", self.grid[1, 1])
+                for p in self.points:
+                    print("point (", p[0], ",", p[1], ")m: ",
+                          str.format("{0:.4f}", self.grid[int(p[0]/self.h),
+                                                          int(p[1]/self.h)]),
+                          "V", sep="")
+                    # we print the potential at each desired grid point
                 # and print what was the biggest change between this last
                 # interation and the previous one
                 print("max change:", max_change)
@@ -197,6 +206,7 @@ convergence = 10**(-8)
 run_limit = 20000
 w_optimal = 2/(1+np.sin(np.pi/N2))  # the optimal parametter for
 # over-relaxation on an NxN square grid
+points_desired = np.array([[5.0/100,5.0/100],[2.5/100,2.5/100],[0.1/100,2.5/100],[0.1/100,0.1/100]])
 
 
 def boundary_conditions(N, h, top, bottom, left, right):
@@ -260,17 +270,22 @@ print("Uniform +1V edges")
 conds2_a = boundary_conditions(N2, h2, 1, 1, 1, 1)  # using function to
 # create the potential boundaries arrays
 task4_relaxation_a = over_relaxation_Poisson(N2, h2, f2, conds2_a, convergence,
-                                             run_limit, w_optimal)
+                                             run_limit, w_optimal,
+                                             points_desired)
+print("")
 # then using over-relaxation method to get the potential at the desired points
 print("Top and bottom edges at +1V, left and right at -1V")
 conds2_b = boundary_conditions(N2, h2, 1, 1, -1, -1)
 task4_relaxation_b = over_relaxation_Poisson(N2, h2, f2, conds2_b, convergence,
-                                             run_limit, w_optimal)
-
+                                             run_limit, w_optimal,
+                                             points_desired)
+print("")
 print("Top and left edges at +2V, bottom at 0V, and right at -4V")
 conds2_c = boundary_conditions(N2, h2, 2, 0, 2, -4)
 task4_relaxation_c = over_relaxation_Poisson(N2, h2, f2, conds2_c, convergence,
-                                             run_limit, w_optimal)
+                                             run_limit, w_optimal,
+                                             points_desired)
+print("")
 print("")
 
 print("10C CHARGE SPREAD UNIFORMLY")
@@ -296,15 +311,18 @@ f3_array_a = np.array(f3)  # turning our list into an array for the method
 print("Uniform +1V edges")
 task4_relaxation_a_a = over_relaxation_Poisson(N2, h2, f3_array_a, conds2_a,
                                                convergence, run_limit,
-                                               w_optimal)
+                                               w_optimal, points_desired)
+print("")
 print("Top and bottom edges at +1V, left and right at -1V")
 task4_relaxation_b_a = over_relaxation_Poisson(N2, h2, f3_array_a, conds2_b,
                                                convergence, run_limit,
-                                               w_optimal)
+                                               w_optimal, points_desired)
+print("")
 print("Top and left edges at +2V, bottom at 0V, and right at -4V")
 task4_relaxation_c_a = over_relaxation_Poisson(N2, h2, f3_array_a, conds2_c,
                                                convergence, run_limit,
-                                               w_optimal)
+                                               w_optimal, points_desired)
+print("")
 print("")
 
 print("UNIFORM CHARGE GRADIENT")
@@ -329,17 +347,20 @@ f4_array_b = np.array(f4)
 print("Uniform +1V edges")
 task4_relaxation_a_b = over_relaxation_Poisson(N2, h2, f4_array_b, conds2_a,
                                                convergence, run_limit,
-                                               w_optimal)
+                                               w_optimal, points_desired)
+print("")
 print("Top and bottom edges at +1V, left and right at -1V")
 task4_relaxation_b_b = over_relaxation_Poisson(N2, h2, f4_array_b, conds2_b,
                                                convergence, run_limit,
-                                               w_optimal)
+                                               w_optimal, points_desired)
+print("")
 print("Top and left edges at +2V, bottom at 0V, and right at -4V")
 task4_relaxation_c_b = over_relaxation_Poisson(N2, h2, f4_array_b, conds2_c,
                                                convergence, run_limit,
-                                               w_optimal)
+                                               w_optimal, points_desired)
 
-print()
+print("")
+print("")
 
 print("EXPONENTIALLY DECAYING CHARGE")
 centre = (N2-1)/2  # We get the index of the grid's centre
@@ -362,12 +383,14 @@ f5_array_c = np.array(f5)
 print("Uniform +1V edges")
 task4_relaxation_a_c = over_relaxation_Poisson(N2, h2, f5_array_c, conds2_a,
                                                convergence, run_limit,
-                                               w_optimal)
+                                               w_optimal, points_desired)
+print("")
 print("Top and bottom edges at +1V, left and right at -1V")
 task4_relaxation_b_c = over_relaxation_Poisson(N2, h2, f5_array_c, conds2_b,
                                                convergence, run_limit,
-                                               w_optimal)
+                                               w_optimal, points_desired)
+print("")
 print("Top and left edges at +2V, bottom at 0V, and right at -4V")
 task4_relaxation_c_c = over_relaxation_Poisson(N2, h2, f5_array_c, conds2_c,
                                                convergence, run_limit,
-                                               w_optimal)
+                                               w_optimal, points_desired)
