@@ -1,7 +1,17 @@
 #!/bin/python3
+"""
+Module for solving the Poisson and Laplace equations on a square grid using the random walk method,
+in conjunction with a previously created monte_carlo class. Boundary function is used for the
+Laplace boundaries, and charge grids for the Poisson equation are created independently.
+
+MIT License
+
+Copyright (c) 2025 Tyler Chauvy, Adam John Rae, Laila Safavi
+
+See LICENSE.txt for details
+"""
 
 import numpy as np
-#import matplotlib.pyplot as plt
 from mpi4py import MPI
 from monte_carlo import MonteCarlo
 
@@ -10,20 +20,38 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 nworkers = comm.Get_size()
 
-def random_walk(i, j, grid):
+def random_walk(i_index, j_index, grid):
     """
-    N random walker starting at (i,j) in a grid
+    Walkers starting at a given point i,j in a grid take random steps in one of four directions
+    with equal probability. At every step, each walker adds one instance of stepping on that
+    grid point. Each walker continues taking random steps until it reaches the grid boundary.
+    Function returns a probability grid of any random walker reaching each of the grid points
+
+    Parameters
+    ----------
+    i_index : INT
+        Walker starting point in index 0 of the grid
+    j_index : INT
+        Walker starting point in index 1 of the grid
+    grid : ARRAY
+        Empty square grid that the walker begins in
+
+    Returns
+    -------
+    final_grid : ARRAY
+        A grid showing the probability that a walker encounters each grid point
+
     """
     sum_grid = np.zeros_like(grid)
     directions = np.array([[-1, 0], [1, 0], [0, -1], [0, 1]])  # Possible walks
     x = len(grid) - 1    # x boundary
     y = len(grid[0]) - 1 # y boundary
 
-    N = 100  # Hardcoded bc variable passing broke
+    num_walkers = 100  # Hardcoded bc variable passing broke
 
-    for walker in range (0, N):  # Iterates over each walker
+    for walker in range (0, num_walkers):  # Iterates over each walker
         newgrid = np.zeros_like(grid)
-        pos = np.array([i,j])  # Starting position
+        pos = np.array([i_index, j_index])  # Starting position
         move = directions[np.random.randint(0, len(directions))]
         pos += move
         num_steps = 1  # One small step for a walker
@@ -38,14 +66,34 @@ def random_walk(i, j, grid):
         newgrid[1:-1, 1:-1] = newgrid[1:-1, 1:-1]/num_steps
         sum_grid += newgrid
 
-    final_grid = sum_grid/N    
-    # print(final_grid)
+    final_grid = sum_grid/num_walkers
 
     return final_grid
 
 
 def boundaries(n, top, bottom, left, right):
-    "Adds boundary values to an n by n array"
+    """
+    A function that adds given boundaries to a grid.
+
+    Parameters
+    ----------
+    n : INT
+        The length of the grid
+    top : FLOAT
+        The desired boundary value at the top of the grid
+    bottom : FLOAT
+        The desired boundary value at the bottom of the grid
+    left : FLOAT
+        The desired boundary value at the left-side of the grid
+    right : FLOAT
+        The desired boundary value at the right-side of the grid
+
+    Returns
+    -------
+    boundary_grid : ARRAY
+        An empty grid with desired boundary values
+
+    """
     emp_grid = np.zeros([n, n])
     top_row = np.repeat(top, n)
     bot_row = np.repeat(bottom, n)
@@ -66,7 +114,7 @@ def boundaries(n, top, bottom, left, right):
 #-------------------------------------------
 # GENERAL INITIALISATION
 
-NUM_WALKERS = int(1600)  # This is split across cores
+NUM_ITERATIONS = int(1600)  # This is split across cores
 SEED = 27347  # Random seed passed in to class methods
 
 #-------------------------------------------
@@ -75,74 +123,65 @@ SEED = 27347  # Random seed passed in to class methods
 if rank == 0:
     print("TRYING FINER GRID SPACING")
 
-n = 499  # Number of points in the grid
-h = 10e-1/n  # Step size, since grid is 10cm x 10cm
+GRID_POINTS = 499  # Number of points in the grid
+H = 10e-1/GRID_POINTS  # Step size, since grid is 10cm x 10cm
 
-grid = np.zeros([n+2, n+2]) # Grid for evaluating Green's at i, j
+greens_grid = np.zeros([GRID_POINTS+2, GRID_POINTS+2]) # Grid for evaluating Green's at i, j
 
 # Walker starting points
-i_val = np.array([int((n+1)/2), int((n+1)/4),
-                  int((n+1)/100), int((n+1)/100)])
-j_val = np.array([int((n+1)/2), int((n+1)/4),
-                  int((n+1)/4), int((n+1)/100)])
+i_val = np.array([int((GRID_POINTS+1)/2), int((GRID_POINTS+1)/4),
+                  int((GRID_POINTS+1)/100), int((GRID_POINTS+1)/100)])
+j_val = np.array([int((GRID_POINTS+1)/2), int((GRID_POINTS+1)/4),
+                  int((GRID_POINTS+1)/4), int((GRID_POINTS+1)/100)])
 
-vari = np.array([i_val, j_val, grid], dtype=object)
+vari = np.array([i_val, j_val, greens_grid], dtype=object)
 
-boundarray = np.ones_like(grid)
+boundarray = np.ones_like(greens_grid)
 boundarray[1:-1, 1:-1] = 0
 
 #-------------------------------------------
 # SETTING UP TASKS 3-5
 
 # BOUNDARIES
-# n steps, top, bottom, left, right
-boundary_4a = boundaries(n, 1, 1, 1, 1)
+# GRID_POINTS steps, top, bottom, left, right
+boundary_4a = boundaries(GRID_POINTS, 1, 1, 1, 1)
 
-boundary_4b = boundaries(n, 1, 1, -1, -1)
+boundary_4b = boundaries(GRID_POINTS, 1, 1, -1, -1)
 
-boundary_4c = boundaries(n, 2, 0, 2, -4)
+boundary_4c = boundaries(GRID_POINTS, 2, 0, 2, -4)
 
 
 # CHARGE GRIDS
 # We use full size grid to make things easier
-grid_4a = np.zeros_like(grid)
-grid_4a[1:-1, 1:-1] = 10/(n**2)  # charge not at boundaries
+grid_4a = np.zeros_like(greens_grid)
+grid_4a[1:-1, 1:-1] = 10/(GRID_POINTS**2)  # charge not at boundaries
 
-grid_4b = np.zeros_like(grid)
-charge_gradient = np.linspace(1, 0, len(grid)-2) # creates the correct gradient scale over the grid
+grid_4b = np.zeros_like(greens_grid)
+charge_gradient = np.linspace(1, 0, GRID_POINTS) # creates the correct gradient scale over the grid
 for i in range(1, len(grid_4b)-1):
-    grid_4b[i, 1:-1] = charge_gradient[i-1] * h**2
-    
-# plt.figure(figsize=(6,6))
-# plt.pcolormesh(grid_4b, cmap='gist_gray')
-# plt.colorbar(label="Intensity")
+    grid_4b[i, 1:-1] = charge_gradient[i-1] * H**2
 
+grid_4c = np.zeros_like(greens_grid)
+CENTRE = (len(greens_grid)-1)/2 # works best for odd GRID_POINTS
 
-grid_4c = np.zeros_like(grid)
-centre = (len(grid)-1)/2 # works best for odd n
-
-for x in range(1, len(grid_4c)-1):
-    for y in range(1, len(grid_4c)-1):
-        r = np.sqrt(((x - centre)*h)**2 + ((y - centre)*h)**2)
-        grid_4c[x, y] = np.exp(-2000*r)
-        
-# plt.figure(figsize=(6,6))
-# plt.pcolormesh(grid_4c, cmap='gist_gray')
-# plt.colorbar(label="Intensity")
-
+for k in range(1, len(grid_4c)-1):
+    for l in range(1, len(grid_4c)-1):
+        r = np.sqrt(((k - CENTRE)*H)**2 + ((l - CENTRE)*H)**2)
+        grid_4c[k, l] = np.exp(-2000*r)
 
 #-------------------------------------------
 # FINAL RUNNING OF THE CODE FOR TASKS 2-5
 
 # This loop iterates through all 4 starting positions stated in task 3
 for i in range(0, len(i_val)):
-    vari = np.array([i_val[i], j_val[i], grid], dtype=object)
+    vari = np.array([i_val[i], j_val[i], greens_grid], dtype=object)
 
     setup = MonteCarlo([0], [1], random_walk, variables = vari)
-    solve = MonteCarlo.method(setup, NUM_WALKERS, seed=SEED, method=0)
+    solve = MonteCarlo.method(setup, NUM_ITERATIONS, seed=SEED, method=0)
 
     if rank == 0:
-        print(f"For i = {(10*i_val[i])/(n+1)}cm and j = {(10*j_val[i])/(n+1)}cm:")
+        print(f"For i = {(10*i_val[i])/(GRID_POINTS+1)}cm and\
+              j = {(10*j_val[i])/(GRID_POINTS+1)}cm:")
         print(solve[0]*boundarray)
         print(f"Average error: {np.mean(solve[2])} \n")
         print("Potential")
@@ -156,23 +195,23 @@ for i in range(0, len(i_val)):
 
         # For boundaries AND grid charge
         print(f"Task 4.1a boundaries and uniform grid : \
-                {np.sum(solve[0]*boundary_4a) + np.sum(h**2*solve[0]*grid_4a):4f}")
+                {np.sum(solve[0]*boundary_4a) + np.sum(H**2*solve[0]*grid_4a):4f}")
         print(f"Task 4.1b boundaries and uniform grid : \
-                {np.sum(solve[0]*boundary_4b) + np.sum(h**2*solve[0]*grid_4a):4f}")
+                {np.sum(solve[0]*boundary_4b) + np.sum(H**2*solve[0]*grid_4a):4f}")
         print(f"Task 4.1c boundaries and uniform grid : \
-                {np.sum(solve[0]*boundary_4c) + np.sum(h**2*solve[0]*grid_4a):4f}\n")
+                {np.sum(solve[0]*boundary_4c) + np.sum(H**2*solve[0]*grid_4a):4f}\n")
 
         print(f"Task 4.1a boundaries and uniform gradient : \
-                {np.sum(solve[0]*boundary_4a) + np.sum(h**2*solve[0]*grid_4b):4f}")
+                {np.sum(solve[0]*boundary_4a) + np.sum(H**2*solve[0]*grid_4b):4f}")
         print(f"Task 4.1b boundaries and uniform gradient : \
-                {np.sum(solve[0]*boundary_4b) + np.sum(h**2*solve[0]*grid_4b):4f}")
+                {np.sum(solve[0]*boundary_4b) + np.sum(H**2*solve[0]*grid_4b):4f}")
         print(f"Task 4.1c boundaries and uniform gradient : \
-                {np.sum(solve[0]*boundary_4c) + np.sum(h**2*solve[0]*grid_4b):4f}\n")
+                {np.sum(solve[0]*boundary_4c) + np.sum(H**2*solve[0]*grid_4b):4f}\n")
 
         print(f"Task 4.1a boundaries and point charge at centre : \
-                {np.sum(solve[0]*boundary_4a) + np.sum(h**2*solve[0]*grid_4c):4f}")
+                {np.sum(solve[0]*boundary_4a) + np.sum(H**2*solve[0]*grid_4c):4f}")
         print(f"Task 4.1b boundaries and point charge at centre : \
-                {np.sum(solve[0]*boundary_4b) + np.sum(h**2*solve[0]*grid_4c):4f}")
+                {np.sum(solve[0]*boundary_4b) + np.sum(H**2*solve[0]*grid_4c):4f}")
         print(f"Task 4.1c boundaries and point charge at centre : \
-                {np.sum(solve[0]*boundary_4c) + np.sum(h**2*solve[0]*grid_4c):4f}\n")
+                {np.sum(solve[0]*boundary_4c) + np.sum(H**2*solve[0]*grid_4c):4f}\n")
         print("\n")
