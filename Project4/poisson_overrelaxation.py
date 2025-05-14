@@ -1,6 +1,9 @@
 #!/bin/python3
 """
-Module for INSERT HERE
+Module for solving the Poisson's equation on a square grid at specified
+grid sites, potential edge boundary conditions, and charge boundary condition
+inside the grid, giving the potential values at those points under those
+conditions.
 
 MIT License
 
@@ -80,7 +83,6 @@ def over_relaxation_poisson(grid_length_n, h, f, conditions,
     # We then put the potential bondary conditions on the
     # the edge of the grid we just constructed
     # using the conditions array which described what value should go where
-    points = points
     for cond in conditions:
         # we turn the position (x,y)cm into grid index going from 0 to N-1
         axis1 = int(cond[0]/h)
@@ -142,10 +144,10 @@ def over_relaxation_poisson(grid_length_n, h, f, conditions,
             m2 = 1
             while m2 < grid_length_n-1:
                 grid[k2, m2] = (w/4*(grid_f[k2, m2]*h**2
-                                                  + (grid[k2+1, m2]
-                                                  + grid[k2-1, m2]
-                                                  + grid[k2, m2+1]
-                                                  + grid[k2, m2-1]))
+                                     + (grid[k2+1, m2]
+                                        + grid[k2-1, m2]
+                                        + grid[k2, m2+1]
+                                        + grid[k2, m2-1]))
                                 + (1-w)*grid[k2, m2])
                 m2 = m2+1
             k2 = k2+1
@@ -175,9 +177,9 @@ def over_relaxation_poisson(grid_length_n, h, f, conditions,
             potential_at_points = []  # prepping the return array
             for p in points:
                 print("point (", p[0], ",", p[1], ")m: ",
-                         str.format("{0:.3e}", grid[int(p[0]/h),
-                                                    int(p[1]/h)]),
-                    "V", sep="")
+                      str.format("{0:.3e}", grid[int(p[0]/h),
+                                                 int(p[1]/h)]),
+                      "V", sep="")
                 potential_at_points.append(grid[int(p[0]/h), int(p[1]/h)])
                 # we print the potential at each desired grid point
             t = iteration_limit  # to stop the while loop
@@ -192,9 +194,9 @@ def over_relaxation_poisson(grid_length_n, h, f, conditions,
             potential_at_points = []  # prepping the return array
             for p in points:
                 print("point (", p[0], ",", p[1], ")m: ",
-                     str.format("{0:.3e}", grid[int(p[0]/h),
-                                                int(p[1]/h)]),
-                     "V", sep="")
+                      str.format("{0:.3e}", grid[int(p[0]/h),
+                                                 int(p[1]/h)]),
+                      "V", sep="")
                 potential_at_points.append(grid[int(p[0]/h), int(p[1]/h)])
                 # we print the potential at each desired grid point
             # and print what was the biggest change between this last
