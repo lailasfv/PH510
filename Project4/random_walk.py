@@ -66,7 +66,7 @@ def boundaries(n, top, bottom, left, right):
 #-------------------------------------------
 # GENERAL INITIALISATION
 
-NUM_WALKERS = int(2000)  # This is split across cores
+NUM_WALKERS = int(1600)  # This is split across cores
 SEED = 27347  # Random seed passed in to class methods
 
 #-------------------------------------------
@@ -75,7 +75,7 @@ SEED = 27347  # Random seed passed in to class methods
 if rank == 0:
     print("TRYING FINER GRID SPACING")
 
-n = 999  # Number of points in the grid
+n = 499  # Number of points in the grid
 h = 10e-1/n  # Step size, since grid is 10cm x 10cm
 
 grid = np.zeros([n+2, n+2]) # Grid for evaluating Green's at i, j
