@@ -66,13 +66,16 @@ def boundaries(n, top, bottom, left, right):
 #-------------------------------------------
 # GENERAL INITIALISATION
 
-NUM_WALKERS = int(1000)  # This is split across cores
+NUM_WALKERS = int(2000)  # This is split across cores
 SEED = 27347  # Random seed passed in to class methods
 
 #-------------------------------------------
 # The following arrays are used for all of tasks 3-5
 
-n = 99  # Number of points in the grid
+if rank == 0:
+    print("TRYING FINER GRID SPACING")
+
+n = 999  # Number of points in the grid
 h = 10e-1/n  # Step size, since grid is 10cm x 10cm
 
 grid = np.zeros([n+2, n+2]) # Grid for evaluating Green's at i, j
@@ -141,6 +144,7 @@ for i in range(0, len(i_val)):
     if rank == 0:
         print(f"For i = {(10*i_val[i])/(n+1)}cm and j = {(10*j_val[i])/(n+1)}cm:")
         print(solve[0]*boundarray)
+        print(f"Average error: {np.mean(solve[2])} \n")
         print("Potential")
         # For boundaries ONLY (first part of task 4)
         print(f"Task 4.1a: All boundaries 1V : \
