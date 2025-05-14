@@ -270,8 +270,8 @@ N2 = 101  # number of grid points such that we get H2=0.001m=0.1cm
 # this is needed so we can calculate values at points (0.1,2.5)cm and
 # (0.1,0.1cm)
 H2 = LENGTH/(N2-1)  # in meters, the spacing between the grid points
-CONVERGENCE = 10**(-8)
-RUN_LIMIT = 20000
+CONVERGENCE = 10**(-14)
+RUN_LIMIT = 2000
 w_optimal = 2/(1+np.sin(np.pi/N2))  # the optimal parametter for
 # over-relaxation on an NxN square grid
 points_desired = np.array([[5.0/100, 5.0/100], [2.5/100, 2.5/100],
