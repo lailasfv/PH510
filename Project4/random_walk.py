@@ -114,16 +114,13 @@ def boundaries(n, top, bottom, left, right):
 #-------------------------------------------
 # GENERAL INITIALISATION
 
-NUM_ITERATIONS = int(1600)  # This is split across cores
+NUM_ITERATIONS = int(1000)  # This is split across cores
 SEED = 27347  # Random seed passed in to class methods
 
 #-------------------------------------------
 # The following arrays are used for all of tasks 3-5
 
-if rank == 0:
-    print("TRYING FINER GRID SPACING")
-
-GRID_POINTS = 499  # Number of points in the grid
+GRID_POINTS = 99  # Number of points in the grid
 H = 10e-1/GRID_POINTS  # Step size, since grid is 10cm x 10cm
 
 greens_grid = np.zeros([GRID_POINTS+2, GRID_POINTS+2]) # Grid for evaluating Green's at i, j
