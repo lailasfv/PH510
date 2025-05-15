@@ -1,0 +1,11 @@
+************* Module monte_carlo
+monte_carlo.py:54:4: R0913: Too many arguments (6/5) (too-many-arguments)
+monte_carlo.py:54:4: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)
+monte_carlo.py:110:4: R0914: Too many local variables (18/15) (too-many-locals)
+monte_carlo.py:138:12: W0612: Unused variable 'p' (unused-variable)
+monte_carlo.py:162:4: R0914: Too many local variables (22/15) (too-many-locals)
+monte_carlo.py:224:4: R0914: Too many local variables (18/15) (too-many-locals)
+
+------------------------------------------------------------------
+Your code has been rated at 9.44/10 (previous run: 9.35/10, +0.09)
+

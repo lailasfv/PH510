@@ -1,0 +1,7 @@
+************* Module random_walk
+random_walk.py:52:8: W0612: Unused variable 'walker' (unused-variable)
+random_walk.py:176:0: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+
+-----------------------------------
+Your code has been rated at 9.77/10
+

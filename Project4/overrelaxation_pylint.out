@@ -1,0 +1,12 @@
+************* Module poisson_overrelaxation
+poisson_overrelaxation.py:18:0: R0913: Too many arguments (8/5) (too-many-arguments)
+poisson_overrelaxation.py:18:0: R0917: Too many positional arguments (8/5) (too-many-positional-arguments)
+poisson_overrelaxation.py:18:0: R0914: Too many local variables (28/15) (too-many-locals)
+poisson_overrelaxation.py:166:16: R1731: Consider using 'max_change = max(max_change, change)' instead of unnecessary if block (consider-using-max-builtin)
+poisson_overrelaxation.py:18:0: R0912: Too many branches (16/12) (too-many-branches)
+poisson_overrelaxation.py:212:0: R0913: Too many arguments (6/5) (too-many-arguments)
+poisson_overrelaxation.py:212:0: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)
+
+-----------------------------------
+Your code has been rated at 9.56/10
+

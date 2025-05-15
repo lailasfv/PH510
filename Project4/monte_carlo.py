@@ -38,7 +38,7 @@ class MonteCarlo:
         """
         Assumes floating point when printing
         """
-        return (f"(Integrand: {self.f}, Limits: {self.starts:.4g} - {self.ends:.4g}")
+        return f"(Integrand: {self.f}, Limits: {self.starts:.4g} - {self.ends:.4g}"
 
 
     def random(self, seed):
@@ -82,7 +82,7 @@ class MonteCarlo:
             self.data = self.infinity(seed, num_counts)
         elif method == 2:
             self.data = self.integral_importance_sampling(seed, num_counts, func2, func3)
-        return (np.array([self.data[0], self.data[1], self.data[2]]))
+        return np.array([self.data[0], self.data[1], self.data[2]])
 
     def reduce_sum(self, value):
         """
@@ -136,14 +136,6 @@ class MonteCarlo:
         expect_f_squared = 0
 
         for p in points:
-            """
-            count = 0
-            while count < dim:
-                # making sure they are in the interval we need them to be
-                p[count] = p[count] * \
-                    (self.ends[count]-self.starts[count])+self.starts[count]
-                count = count+1
-            """
             # we get sum(f) and sum(f**2) for each worker
             func_value = self.f(*self.variables)
             sum_f = sum_f + func_value
